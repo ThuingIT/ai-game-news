@@ -4,8 +4,11 @@ on:
   schedule:
     # 6:00 AM ICT (UTC+7) = 23:00 UTC ngày hôm trước
     - cron: '0 23 * * *'
-  # Cho phép chạy thủ công từ GitHub UI để test
   workflow_dispatch:
+
+# --- ĐÂY LÀ PHẦN QUAN TRỌNG ĐỂ FIX LỖI 403 ---
+permissions:
+  contents: write
 
 jobs:
   update:
@@ -23,7 +26,12 @@ jobs:
           cache: 'pip'
 
       - name: Install dependencies
-        run: pip install -r requirements.txt
+        run: |
+          if [ -f requirements.txt ]; then
+            pip install -r requirements.txt
+          else
+            echo "requirements.txt not found, skipping pip install"
+          fi
 
       - name: Step 1 — Fetch Steam data → Supabase
         run: python scripts/fetch_data.py
@@ -40,7 +48,10 @@ jobs:
           GROQ_API_KEY: ${{ secrets.GROQ_API_KEY }}
 
       - name: Step 3 — Generate static HTML
-        run: python scripts/generate_html.py
+        run: |
+          # Đảm bảo thư mục docs tồn tại trước khi chạy script
+          mkdir -p docs
+          python scripts/generate_html.py
         env:
           SUPABASE_URL: ${{ secrets.SUPABASE_URL }}
           SUPABASE_KEY: ${{ secrets.SUPABASE_KEY }}
@@ -49,5 +60,5 @@ jobs:
         uses: peaceiris/actions-gh-pages@v4
         with:
           github_token: ${{ secrets.GITHUB_TOKEN }}
-          publish_dir: ./docs
+          publish_dir: ./docs  # Đảm bảo script generate_html.py của bạn lưu file vào thư mục docs/
           commit_message: "chore: update Steam data ${{ github.run_id }}"
