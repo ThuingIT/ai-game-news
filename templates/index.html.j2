@@ -1,8 +1,7 @@
 <!DOCTYPE html>
 <html lang="vi">
 <head>
-<meta charset="UTF-8">
-<meta name="viewport" content="width=device-width,initial-scale=1.0">
+<meta charset="UTF-8"><meta name="viewport" content="width=device-width,initial-scale=1">
 <title>Steam Pulse — Trending Games Today</title>
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link href="https://fonts.googleapis.com/css2?family=Bebas+Neue&family=DM+Sans:wght@300;400;500&family=DM+Mono:wght@400;500&display=swap" rel="stylesheet">
@@ -11,348 +10,488 @@
 *,*::before,*::after{box-sizing:border-box;margin:0;padding:0}
 :root{
   --bg:#09090e;--bg2:#111119;--bg3:#17171f;--bg4:#1d1d27;
-  --border:rgba(255,255,255,0.07);--border2:rgba(255,255,255,0.13);
-  --text:#e6e6f0;--muted:#62627a;--muted2:#9494ac;
+  --border:rgba(255,255,255,.07);--border2:rgba(255,255,255,.13);
+  --text:#e6e6f0;--muted:#62627a;--muted2:#9090aa;
   --accent:#5b6af8;--accent2:#7c8aff;
-  --green:#22c984;--green-dim:#166644;
-  --amber:#f5a623;--red:#f05252;
-  --fh:'Bebas Neue',sans-serif;
-  --fb:'DM Sans',sans-serif;
-  --fm:'DM Mono',monospace;
+  --green:#22c984;--green-dim:rgba(34,201,132,.15);
+  --amber:#f5a623;--amber-dim:rgba(245,166,35,.15);
+  --red:#f05252;--red-dim:rgba(240,82,82,.15);
+  --surge:#ff6b35;--surge-dim:rgba(255,107,53,.15);
+  --fh:'Bebas Neue',sans-serif;--fb:'DM Sans',sans-serif;--fm:'DM Mono',monospace;
   --r:10px;--rl:16px;
 }
 html{scroll-behavior:smooth}
 body{background:var(--bg);color:var(--text);font-family:var(--fb);font-size:15px;line-height:1.65;overflow-x:hidden}
-body::before{content:'';position:fixed;inset:0;opacity:.35;pointer-events:none;z-index:0;
-  background-image:url("data:image/svg+xml,%3Csvg viewBox='0 0 200 200' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.85' numOctaves='4' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23n)' opacity='.05'/%3E%3C/svg%3E")}
-.wrap{position:relative;z-index:1;max-width:1380px;margin:0 auto;padding:0 22px 80px}
+body::before{content:'';position:fixed;inset:0;opacity:.3;pointer-events:none;z-index:0;
+  background-image:url("data:image/svg+xml,%3Csvg viewBox='0 0 200 200' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='.85' numOctaves='4' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23n)' opacity='.05'/%3E%3C/svg%3E")}
+.w{position:relative;z-index:1;max-width:1380px;margin:0 auto;padding:0 20px 80px}
 
 /* HEADER */
-.hd{display:flex;align-items:flex-end;justify-content:space-between;padding:44px 0 28px;border-bottom:1px solid var(--border);flex-wrap:wrap;gap:16px}
+.hd{display:flex;align-items:flex-end;justify-content:space-between;padding:40px 0 24px;border-bottom:1px solid var(--border);flex-wrap:wrap;gap:14px}
 .logo{display:flex;align-items:baseline;gap:10px}
-.logo-t{font-family:var(--fh);font-size:clamp(44px,7vw,76px);line-height:1;letter-spacing:.02em;
-  background:linear-gradient(130deg,#fff 25%,var(--accent2));-webkit-background-clip:text;-webkit-text-fill-color:transparent}
-.live-badge{background:var(--accent);color:#fff;font-family:var(--fm);font-size:10px;
-  padding:3px 8px;border-radius:4px;letter-spacing:.08em;margin-bottom:8px}
-.hd-meta{text-align:right}
-.hd-meta .lbl{font-size:11px;color:var(--muted);letter-spacing:.1em;text-transform:uppercase}
-.hd-meta .val{font-family:var(--fm);font-size:13px;color:var(--muted2);margin-top:2px}
+.logo-t{font-family:var(--fh);font-size:clamp(42px,6.5vw,72px);line-height:1;letter-spacing:.02em;
+  background:linear-gradient(130deg,#fff 20%,var(--accent2));-webkit-background-clip:text;-webkit-text-fill-color:transparent}
+.badge{background:var(--accent);color:#fff;font-family:var(--fm);font-size:10px;padding:3px 8px;border-radius:4px;letter-spacing:.08em;margin-bottom:7px}
+.hd-r{text-align:right}
+.hd-r .l{font-size:10px;color:var(--muted);letter-spacing:.1em;text-transform:uppercase}
+.hd-r .v{font-family:var(--fm);font-size:12px;color:var(--muted2);margin-top:2px}
 
-/* SUMMARY BANNER */
-.banner{margin:28px 0;background:var(--bg3);border:1px solid var(--border2);border-left:3px solid var(--accent);
-  border-radius:var(--rl);padding:22px 26px;display:flex;gap:16px;align-items:flex-start}
-.ai-tag{background:var(--accent);color:#fff;font-family:var(--fm);font-size:10px;padding:3px 8px;
-  border-radius:4px;white-space:nowrap;margin-top:3px;letter-spacing:.06em;flex-shrink:0}
-.banner-text{color:var(--text);font-size:14px;line-height:1.75;font-weight:300}
-.banner-text p{margin-bottom:.6em}.banner-text p:last-child{margin-bottom:0}
-.banner-text strong{font-weight:500;color:#fff}
+/* BANNER */
+.banner{margin:24px 0;background:var(--bg3);border:1px solid var(--border2);border-left:3px solid var(--accent);
+  border-radius:var(--rl);padding:20px 24px;display:flex;gap:14px;align-items:flex-start}
+.ai-tag{background:var(--accent);color:#fff;font-family:var(--fm);font-size:10px;padding:3px 8px;border-radius:4px;white-space:nowrap;margin-top:2px;letter-spacing:.06em}
+.banner p{font-size:14px;color:var(--text);line-height:1.8;font-weight:300;margin-bottom:.5em}
+.banner p:last-child{margin-bottom:0}
+.banner strong{font-weight:500;color:#fff}
 
 /* STATS ROW */
-.stats{display:grid;grid-template-columns:repeat(auto-fit,minmax(170px,1fr));gap:10px;margin:24px 0 40px}
-.sc{background:var(--bg2);border:1px solid var(--border);border-radius:var(--r);padding:18px 20px;transition:border-color .2s}
+.stats{display:grid;grid-template-columns:repeat(auto-fit,minmax(150px,1fr));gap:9px;margin:20px 0 36px}
+.sc{background:var(--bg2);border:1px solid var(--border);border-radius:var(--r);padding:16px 18px;transition:border-color .2s}
 .sc:hover{border-color:var(--border2)}
-.sc .lbl{font-size:10px;color:var(--muted);letter-spacing:.1em;text-transform:uppercase;margin-bottom:7px}
-.sc .val{font-family:var(--fh);font-size:34px;line-height:1;color:var(--text)}
-.sc .val.lg{font-size:18px;font-family:var(--fb);font-weight:500}
-.sc .sub{font-size:11px;color:var(--muted2);margin-top:4px}
-.sc .val.green{color:var(--green)}
-.sc .val.accent{color:var(--accent2)}
+.sc .l{font-size:10px;color:var(--muted);letter-spacing:.1em;text-transform:uppercase;margin-bottom:6px}
+.sc .v{font-family:var(--fh);font-size:32px;line-height:1}
+.sc .v.sm{font-size:16px;font-family:var(--fb);font-weight:500}
+.sc .s{font-size:11px;color:var(--muted2);margin-top:4px}
+.sc .v.green{color:var(--green)}.sc .v.surge{color:var(--surge)}.sc .v.accent{color:var(--accent2)}
 
-/* SECTION */
-.sec{margin-bottom:52px}
-.sec-hd{display:flex;align-items:center;justify-content:space-between;margin-bottom:18px;padding-bottom:10px;border-bottom:1px solid var(--border)}
-.sec-title{font-family:var(--fh);font-size:26px;letter-spacing:.03em;display:flex;align-items:center;gap:9px}
-.dot{width:7px;height:7px;border-radius:50%;background:var(--accent);flex-shrink:0;display:inline-block}
-.dot.g{background:var(--green)}.dot.a{background:var(--amber)}
-.sec-count{font-family:var(--fm);font-size:11px;color:var(--muted)}
+/* TABS */
+.tabs{display:flex;gap:4px;margin-bottom:20px;background:var(--bg2);border:1px solid var(--border);
+  border-radius:var(--r);padding:4px;width:fit-content;flex-wrap:wrap}
+.tab{font-family:var(--fm);font-size:11px;letter-spacing:.06em;padding:7px 16px;border-radius:6px;
+  cursor:pointer;color:var(--muted);border:none;background:none;transition:all .2s;white-space:nowrap}
+.tab:hover{color:var(--text);background:var(--bg3)}
+.tab.active{background:var(--accent);color:#fff}
+.tab .cnt{background:rgba(255,255,255,.2);border-radius:3px;padding:1px 5px;margin-left:5px;font-size:9px}
+.tab.surge-tab.active{background:var(--surge)}
+.tab.deal-tab.active{background:var(--green-dim);color:var(--green);border:1px solid rgba(34,201,132,.3)}
+.tab.insight-tab.active{background:var(--amber-dim);color:var(--amber);border:1px solid rgba(245,166,35,.3)}
 
-/* TRENDING GRID */
-.t-grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(260px,1fr));gap:12px}
-@media(min-width:860px){.t-grid .gc:nth-child(1){grid-column:span 2}}
+.panel{display:none}.panel.active{display:block}
 
+/* SECTION HEAD */
+.sh{display:flex;align-items:center;justify-content:space-between;margin-bottom:16px;padding-bottom:10px;border-bottom:1px solid var(--border)}
+.st{font-family:var(--fh);font-size:24px;letter-spacing:.03em;display:flex;align-items:center;gap:8px}
+.dot{width:7px;height:7px;border-radius:50%;background:var(--accent);display:inline-block}
+.dot.g{background:var(--green)}.dot.a{background:var(--amber)}.dot.s{background:var(--surge)}
+.sc2{font-family:var(--fm);font-size:11px;color:var(--muted)}
+
+/* GAME CARD */
+.tg{display:grid;grid-template-columns:repeat(auto-fill,minmax(255px,1fr));gap:11px}
+@media(min-width:860px){.tg .gc:nth-child(1){grid-column:span 2}}
 .gc{background:var(--bg2);border:1px solid var(--border);border-radius:var(--rl);overflow:hidden;
   display:flex;flex-direction:column;transition:transform .2s,border-color .2s,box-shadow .2s;cursor:pointer}
-.gc:hover{transform:translateY(-3px);border-color:var(--border2);box-shadow:0 10px 36px rgba(0,0,0,.5)}
+.gc:hover{transform:translateY(-3px);border-color:var(--border2);box-shadow:0 10px 32px rgba(0,0,0,.5)}
 .gc a{text-decoration:none;color:inherit;display:flex;flex-direction:column;height:100%}
 .gc-img{width:100%;aspect-ratio:460/215;object-fit:cover;display:block;background:var(--bg3)}
 .gc:nth-child(1) .gc-img{aspect-ratio:16/6}
-.gc-body{padding:13px 15px 15px;flex:1;display:flex;flex-direction:column}
-.gc-rank{font-family:var(--fm);font-size:10px;color:var(--accent2);letter-spacing:.07em;margin-bottom:5px}
-.gc-name{font-size:14px;font-weight:500;line-height:1.3;margin-bottom:8px;
-  display:-webkit-box;-webkit-line-clamp:2;-webkit-box-orient:vertical;overflow:hidden}
-.gc:nth-child(1) .gc-name{font-size:18px}
-.tags{display:flex;flex-wrap:wrap;gap:4px;margin-bottom:10px}
-.tag{font-size:9px;font-family:var(--fm);color:var(--muted2);background:var(--bg3);
-  border:1px solid var(--border);padding:2px 6px;border-radius:3px;letter-spacing:.04em}
-.gc-stats{display:flex;gap:12px;margin-top:auto;flex-wrap:wrap}
-.cs .v{font-family:var(--fm);font-size:13px;font-weight:500;color:var(--text)}
-.cs .l{font-size:9px;color:var(--muted);letter-spacing:.06em;margin-top:1px}
-.cs .v.green{color:var(--green)}.cs .v.amber{color:var(--amber)}.cs .v.red{color:var(--red)}
-.rbar{height:2px;background:var(--bg4);border-radius:2px;margin-top:10px;overflow:hidden}
-.rfill{height:100%;border-radius:2px;background:var(--green)}
+.gc-body{padding:12px 14px 14px;flex:1;display:flex;flex-direction:column}
 
-/* DEALS GRID */
-.d-grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(240px,1fr));gap:10px}
+/* rank row */
+.gc-top{display:flex;align-items:center;justify-content:space-between;margin-bottom:5px}
+.gc-rank{font-family:var(--fm);font-size:10px;color:var(--accent2);letter-spacing:.07em}
+.gc-badges{display:flex;gap:4px;align-items:center}
+.pill{font-size:9px;font-family:var(--fm);padding:2px 6px;border-radius:3px;font-weight:500}
+.pill.free{background:var(--amber-dim);color:var(--amber)}
+.pill.sale{background:var(--green-dim);color:var(--green)}
+.pill.surge{background:var(--surge-dim);color:var(--surge)}
+.pill.drop{background:var(--red-dim);color:var(--red)}
+.pill.change{background:var(--bg3);color:var(--muted2);border:1px solid var(--border)}
+
+.gc-name{font-size:14px;font-weight:500;line-height:1.3;margin-bottom:7px;
+  display:-webkit-box;-webkit-line-clamp:2;-webkit-box-orient:vertical;overflow:hidden}
+.gc:nth-child(1) .gc-name{font-size:17px}
+.tags{display:flex;flex-wrap:wrap;gap:3px;margin-bottom:9px}
+.tag{font-size:9px;font-family:var(--fm);color:var(--muted2);background:var(--bg3);
+  border:1px solid var(--border);padding:2px 6px;border-radius:3px}
+
+/* stats row in card */
+.gs{display:flex;gap:11px;margin-top:auto;flex-wrap:wrap}
+.cs .v{font-family:var(--fm);font-size:12px;font-weight:500;color:var(--text)}
+.cs .l{font-size:9px;color:var(--muted);letter-spacing:.05em;margin-top:1px}
+.cs .v.g{color:var(--green)}.cs .v.a{color:var(--amber)}.cs .v.r{color:var(--red)}
+
+/* review bar: positive + negative */
+.rev-bar{height:3px;background:var(--bg4);border-radius:2px;margin-top:10px;overflow:hidden;display:flex}
+.rev-pos{height:100%;background:var(--green)}
+.rev-neg{height:100%;background:var(--red)}
+
+/* review counts under bar */
+.rev-counts{display:flex;justify-content:space-between;margin-top:4px}
+.rev-counts span{font-family:var(--fm);font-size:9px;color:var(--muted)}
+.rev-counts .pos{color:var(--green);opacity:.7}
+.rev-counts .neg{color:var(--red);opacity:.7}
+
+/* owners row */
+.owners-row{font-family:var(--fm);font-size:10px;color:var(--muted);margin-top:5px}
+.owners-row span{color:var(--muted2)}
+
+/* SURGE PANEL */
+.sg{display:grid;grid-template-columns:repeat(auto-fill,minmax(280px,1fr));gap:10px}
+.sgc{background:var(--bg2);border:1px solid var(--border);border-radius:var(--rl);
+  overflow:hidden;cursor:pointer;transition:border-color .2s,transform .2s}
+.sgc:hover{border-color:rgba(255,107,53,.4);transform:translateY(-2px)}
+.sgc a{text-decoration:none;color:inherit;display:flex;gap:0;flex-direction:column}
+.sgc-img{width:100%;aspect-ratio:460/180;object-fit:cover;display:block;background:var(--bg3)}
+.sgc-body{padding:13px 15px 15px;display:flex;flex-direction:column;gap:8px}
+.surge-num{font-family:var(--fh);font-size:38px;line-height:1;color:var(--surge)}
+.surge-sub{font-size:11px;color:var(--muted);font-family:var(--fm)}
+.surge-abs{font-family:var(--fm);font-size:12px;color:var(--muted2)}
+.sgc-name{font-size:14px;font-weight:500;line-height:1.3}
+.sgc-tags{display:flex;gap:4px;flex-wrap:wrap}
+
+/* DEAL CARDS */
+.dg{display:grid;grid-template-columns:repeat(auto-fill,minmax(240px,1fr));gap:10px}
 .dc{background:var(--bg2);border:1px solid var(--border);border-radius:var(--rl);
-  padding:14px;transition:border-color .2s,transform .2s;cursor:pointer}
+  padding:13px;cursor:pointer;transition:border-color .2s,transform .2s}
 .dc:hover{border-color:var(--green-dim);transform:translateY(-2px)}
-.dc a{text-decoration:none;color:inherit;display:flex;gap:12px;align-items:flex-start}
-.d-img{width:72px;height:34px;object-fit:cover;border-radius:5px;background:var(--bg3);flex-shrink:0}
+.dc a{text-decoration:none;color:inherit;display:flex;gap:11px;align-items:flex-start}
+.d-img{width:68px;height:32px;object-fit:cover;border-radius:5px;background:var(--bg3);flex-shrink:0}
 .d-info{flex:1;min-width:0}
 .d-name{font-size:12px;font-weight:500;white-space:nowrap;overflow:hidden;text-overflow:ellipsis;margin-bottom:5px}
-.d-prices{display:flex;align-items:center;gap:7px;flex-wrap:wrap}
-.d-badge{background:var(--green-dim);color:var(--green);font-family:var(--fm);
-  font-size:11px;font-weight:500;padding:1px 6px;border-radius:3px}
+.d-prices{display:flex;align-items:center;gap:6px;flex-wrap:wrap}
+.d-badge{background:var(--green-dim);color:var(--green);font-family:var(--fm);font-size:11px;padding:1px 6px;border-radius:3px}
 .d-orig{font-size:11px;color:var(--muted);text-decoration:line-through}
 .d-cur{font-size:13px;font-weight:500;color:var(--green)}
-.d-rev{margin-left:auto;font-family:var(--fm);font-size:11px;color:var(--green);white-space:nowrap;padding-top:1px}
+.d-rev-row{display:flex;align-items:center;gap:6px;margin-top:5px}
+.d-rev-badge{font-family:var(--fm);font-size:10px;padding:1px 6px;border-radius:3px}
+.d-rev-badge.good{background:var(--green-dim);color:var(--green)}
+.d-rev-badge.ok{background:var(--amber-dim);color:var(--amber)}
+.d-owners{font-family:var(--fm);font-size:10px;color:var(--muted)}
 
-/* INSIGHTS */
-.i-grid{display:grid;grid-template-columns:repeat(auto-fit,minmax(300px,1fr));gap:14px}
-.ic{background:var(--bg2);border:1px solid var(--border);border-radius:var(--rl);padding:20px 22px}
+/* INSIGHT PANEL */
+.ig{display:grid;grid-template-columns:repeat(auto-fit,minmax(290px,1fr));gap:13px}
+.ic{background:var(--bg2);border:1px solid var(--border);border-radius:var(--rl);padding:18px 20px}
 .ic.feat{border-color:rgba(91,106,248,.25);background:linear-gradient(135deg,var(--bg2),#121220)}
-.ic-hd{display:flex;align-items:center;gap:10px;margin-bottom:13px}
-.ic-icon{width:30px;height:30px;border-radius:7px;background:var(--bg3);border:1px solid var(--border2);
-  display:flex;align-items:center;justify-content:center;font-size:14px;flex-shrink:0}
+.ic-hd{display:flex;align-items:center;gap:9px;margin-bottom:12px}
+.ic-icon{width:28px;height:28px;border-radius:6px;background:var(--bg3);border:1px solid var(--border2);
+  display:flex;align-items:center;justify-content:center;font-size:13px;flex-shrink:0}
 .ic-title{font-weight:500;font-size:13px}
 .ic-sub{font-size:10px;color:var(--muted);margin-top:1px;font-family:var(--fm)}
-.ic-body{font-size:13px;color:var(--muted2);line-height:1.75}
-.ic-body p{margin-bottom:.7em}.ic-body p:last-child{margin-bottom:0}
+.ic-body{font-size:13px;color:var(--muted2);line-height:1.78}
+.ic-body p{margin-bottom:.65em}.ic-body p:last-child{margin-bottom:0}
 .ic-body strong{color:var(--text);font-weight:500}
-.ic-body ol,.ic-body ul{padding-left:1.3em;margin:.4em 0}
-.ic-body li{margin-bottom:.5em}
+.ic-body ol,.ic-body ul{padding-left:1.2em;margin:.4em 0}
+.ic-body li{margin-bottom:.45em}
 
 /* CHARTS */
-.chart-box{background:var(--bg2);border:1px solid var(--border);border-radius:var(--rl);padding:22px}
-.chart-box + .chart-box{margin-top:14px}
-.chart-title{font-family:var(--fm);font-size:11px;color:var(--muted);letter-spacing:.08em;
-  text-transform:uppercase;margin-bottom:16px}
-.chart-h{position:relative;height:260px}
-
-/* 2-col chart layout */
-.chart-row{display:grid;grid-template-columns:1fr 1fr;gap:14px}
+.chart-row{display:grid;grid-template-columns:1fr 1fr;gap:12px}
 @media(max-width:720px){.chart-row{grid-template-columns:1fr}}
+.cb{background:var(--bg2);border:1px solid var(--border);border-radius:var(--rl);padding:20px}
+.cb-title{font-family:var(--fm);font-size:10px;color:var(--muted);letter-spacing:.08em;text-transform:uppercase;margin-bottom:14px}
+.ch{position:relative;height:250px}
 
 /* FOOTER */
-footer{border-top:1px solid var(--border);padding:24px 0 0;
-  display:flex;justify-content:space-between;align-items:center;flex-wrap:wrap;gap:10px}
-.f-brand{font-family:var(--fh);font-size:18px;color:var(--muted)}
-.f-note{font-size:11px;color:var(--muted);font-family:var(--fm)}
+footer{border-top:1px solid var(--border);padding:22px 0 0;display:flex;justify-content:space-between;align-items:center;flex-wrap:wrap;gap:10px}
+.f-brand{font-family:var(--fh);font-size:17px;color:var(--muted)}
+.f-note{font-size:10px;color:var(--muted);font-family:var(--fm)}
 
-/* ANIMS */
-@keyframes fu{from{opacity:0;transform:translateY(14px)}to{opacity:1;transform:translateY(0)}}
-.sec{animation:fu .45s ease both}
-.sec:nth-child(2){animation-delay:.05s}.sec:nth-child(3){animation-delay:.1s}
-.sec:nth-child(4){animation-delay:.15s}.sec:nth-child(5){animation-delay:.2s}
-.sec:nth-child(6){animation-delay:.25s}
+/* ANIM */
+@keyframes fu{from{opacity:0;transform:translateY(12px)}to{opacity:1;transform:translateY(0)}}
+.panel.active{animation:fu .35s ease both}
 
 @media(max-width:600px){
   .banner{flex-direction:column;gap:10px}
   .dc a{flex-direction:column}
-  .d-img{width:100%;height:44px}
+  .d-img{width:100%;height:42px}
+  .sgc-body{padding:10px 12px 12px}
 }
 </style>
 </head>
 <body>
-<div class="wrap">
+<div class="w">
 
 <!-- HEADER -->
 <header class="hd">
   <div class="logo">
     <span class="logo-t">STEAM PULSE</span>
-    <span class="live-badge">LIVE</span>
+    <span class="badge">LIVE</span>
   </div>
-  <div class="hd-meta">
-    <div class="lbl">Cập nhật lúc</div>
-    <div class="val">{{ updated_at }}</div>
-    <div class="val" style="font-size:11px;margin-top:3px">{{ total_games }} games · {{ total_deals }} deals hôm nay</div>
+  <div class="hd-r">
+    <div class="l">Cập nhật lúc</div>
+    <div class="v">{{ updated_at }}</div>
+    <div class="v" style="font-size:10px;margin-top:2px">{{ total_games }} games · {{ total_deals }} deals · {{ total_surge }} đột biến</div>
   </div>
 </header>
 
-<!-- AI SUMMARY BANNER -->
+<!-- BANNER -->
 {% if summary %}
 <div class="banner">
   <span class="ai-tag">AI · GROQ</span>
-  <div class="banner-text">{{ summary | safe }}</div>
+  <div>{{ summary | safe }}</div>
 </div>
 {% endif %}
 
-<!-- STATS ROW -->
+<!-- STATS -->
 <div class="stats">
   <div class="sc">
-    <div class="lbl">Top game</div>
-    <div class="val lg">{% if top_game %}{{ top_game.name | truncate(26,true,'…') }}{% else %}—{% endif %}</div>
-    <div class="sub">{% if top_game and top_game.concurrent_peak %}{{ top_game.concurrent_peak | commas }} players online{% endif %}</div>
+    <div class="l">Top game</div>
+    <div class="v sm">{% if top_game %}{{ top_game.name | truncate(24,true,'…') }}{% else %}—{% endif %}</div>
+    <div class="s">{% if top_game and top_game.concurrent_peak %}{{ top_game.concurrent_peak | commas }} players{% endif %}</div>
   </div>
   <div class="sc">
-    <div class="lbl">Tổng games</div>
-    <div class="val accent">{{ total_games }}</div>
-    <div class="sub">trong top hôm nay</div>
+    <div class="l">Games trending</div>
+    <div class="v accent">{{ total_games }}</div>
+    <div class="s">deduplicated</div>
   </div>
   <div class="sc">
-    <div class="lbl">Deals chất lượng</div>
-    <div class="val green">{{ total_deals }}</div>
-    <div class="sub">sale ≥ 20% · review ≥ 65%</div>
+    <div class="l">Deals hôm nay</div>
+    <div class="v green">{{ total_deals }}</div>
+    <div class="s">sale ≥ 20% · review ≥ 65%</div>
+  </div>
+  <div class="sc">
+    <div class="l">Đột biến</div>
+    <div class="v surge">{{ total_surge }}</div>
+    <div class="s">tăng >10% so hôm qua</div>
   </div>
   {% if stats.total_players %}
   <div class="sc">
-    <div class="lbl">Tổng players</div>
-    <div class="val">{{ stats.total_players | abbr }}</div>
-    <div class="sub">đang online</div>
+    <div class="l">Tổng players</div>
+    <div class="v">{{ stats.total_players | abbr }}</div>
+    <div class="s">đang online</div>
   </div>
   {% endif %}
   {% if stats.avg_review_pct %}
   <div class="sc">
-    <div class="lbl">Review TB</div>
-    <div class="val" style="font-size:28px">{{ stats.avg_review_pct | int }}%</div>
-    <div class="sub">trung bình top games</div>
+    <div class="l">Review TB</div>
+    <div class="v" style="font-size:26px">{{ stats.avg_review_pct | int }}%</div>
+    <div class="s">trung bình top games</div>
   </div>
   {% endif %}
-  {% if genre_stats %}
+  {% if genre_stat %}
   <div class="sc">
-    <div class="lbl">Genre #1</div>
-    <div class="val lg">{{ genre_stats[0].genre }}</div>
-    <div class="sub">{{ genre_stats[0].total_players | abbr }} players</div>
+    <div class="l">Genre #1</div>
+    <div class="v sm">{{ genre_stat[0].genre }}</div>
+    <div class="s">{{ genre_stat[0].total_players | abbr }} players</div>
   </div>
   {% endif %}
 </div>
 
-<!-- TRENDING -->
-{% if trending %}
-<section class="sec">
-  <div class="sec-hd">
-    <h2 class="sec-title"><span class="dot"></span>Trending hôm nay</h2>
-    <span class="sec-count">{{ trending | length }} games · deduplicated</span>
+<!-- TABS -->
+<div class="tabs" id="tabs">
+  <button class="tab active" data-panel="p-trending">
+    Trending <span class="cnt">{{ total_games }}</span>
+  </button>
+  <button class="tab surge-tab" data-panel="p-surge">
+    Đột biến <span class="cnt">{{ total_surge }}</span>
+  </button>
+  <button class="tab deal-tab" data-panel="p-deals">
+    Deals <span class="cnt">{{ total_deals }}</span>
+  </button>
+  <button class="tab" data-panel="p-charts">Charts</button>
+  <button class="tab insight-tab" data-panel="p-insights">AI Insights</button>
+</div>
+
+<!-- PANEL: TRENDING -->
+<div class="panel active" id="p-trending">
+  <div class="sh">
+    <h2 class="st"><span class="dot"></span>Trending hôm nay</h2>
+    <span class="sc2">Composite score · không chỉ player count</span>
   </div>
-  <div class="t-grid">
+  <div class="tg">
     {% for g in trending %}
     <div class="gc">
       <a href="{{ g.steam_url }}" target="_blank" rel="noopener">
-        <img class="gc-img"
-          src="{{ g.img_header }}"
-          alt="{{ g.name }}"
-          loading="{{ 'eager' if loop.index <= 4 else 'lazy' }}"
+        <img class="gc-img" src="{{ g.img_header }}" alt="{{ g.name }}"
+          loading="{{ 'eager' if loop.index<=4 else 'lazy' }}"
           onerror="this.style.display='none'">
         <div class="gc-body">
-          <div class="gc-rank">
-            #{{ g.rank_trending or loop.index }}
-            {% if g.discount_pct and g.discount_pct > 0 %} · <span style="color:var(--green)">-{{ g.discount_pct }}%</span>{% endif %}
-            {% if g.is_free %} · <span style="color:var(--amber)">FREE</span>{% endif %}
+          <div class="gc-top">
+            <span class="gc-rank">#{{ g.rank_trending or loop.index }}</span>
+            <div class="gc-badges">
+              {% if g.is_free %}<span class="pill free">FREE</span>{% endif %}
+              {% if g.discount_pct and g.discount_pct > 0 %}<span class="pill sale">-{{ g.discount_pct }}%</span>{% endif %}
+              {% if g.player_change_pct is not none %}
+                {% if g.player_change_pct > 20 %}<span class="pill surge">+{{ g.player_change_pct | int }}%</span>
+                {% elif g.player_change_pct < -15 %}<span class="pill drop">{{ g.player_change_pct | int }}%</span>
+                {% else %}<span class="pill change">{{ g.player_change_pct | sign }}</span>{% endif %}
+              {% endif %}
+            </div>
           </div>
           <div class="gc-name">{{ g.name }}</div>
           {% if g.genres %}
           <div class="tags">{% for t in g.genres[:3] %}<span class="tag">{{ t }}</span>{% endfor %}</div>
           {% endif %}
-          <div class="gc-stats">
-            {% if g.concurrent_peak %}
-            <div class="cs">
-              <div class="v">{{ g.concurrent_peak | commas }}</div>
-              <div class="l">PLAYING NOW</div>
-            </div>
-            {% endif %}
+          <div class="gs">
+            {% if g.concurrent_peak %}<div class="cs"><div class="v">{{ g.concurrent_peak | commas }}</div><div class="l">PLAYING NOW</div></div>{% endif %}
             {% if g.review_pct %}
             <div class="cs">
-              <div class="v {% if g.review_pct >= 80 %}green{% elif g.review_pct >= 60 %}amber{% else %}red{% endif %}">
-                {{ g.review_pct }}%
-              </div>
+              <div class="v {% if g.review_pct>=80 %}g{% elif g.review_pct>=60 %}a{% else %}r{% endif %}">{{ g.review_pct }}%</div>
               <div class="l">REVIEW</div>
             </div>
             {% endif %}
-            {% if g.is_free %}
-            <div class="cs">
-              <div class="v amber">Free</div>
-              <div class="l">GIÁ</div>
-            </div>
-            {% elif g.price_current is not none %}
-            <div class="cs">
-              <div class="v">{{ g.price_current | usd }}</div>
-              <div class="l">GIÁ</div>
-            </div>
-            {% endif %}
-            {% if g.owners_estimate %}
-            <div class="cs">
-              <div class="v">{{ g.owners_estimate | abbr }}</div>
-              <div class="l">OWNERS</div>
-            </div>
-            {% endif %}
+            {% if g.is_free %}<div class="cs"><div class="v a">Free</div><div class="l">GIÁ</div></div>
+            {% elif g.price_current is not none %}<div class="cs"><div class="v">{{ g.price_current | usd }}</div><div class="l">GIÁ</div></div>{% endif %}
+            {% if g.owners_estimate %}<div class="cs"><div class="v">{{ g.owners_estimate | abbr }}</div><div class="l">OWNERS</div></div>{% endif %}
           </div>
-          {% if g.review_pct %}
-          <div class="rbar"><div class="rfill" style="width:{{ g.review_pct }}%"></div></div>
+          {% if g.review_pct and g.review_count %}
+          {% set pos_w = g.review_pct %}
+          {% set neg_w = 100 - g.review_pct %}
+          <div class="rev-bar">
+            <div class="rev-pos" style="width:{{ pos_w }}%"></div>
+            <div class="rev-neg" style="width:{{ neg_w }}%"></div>
+          </div>
+          {% if g.positive_reviews and g.negative_reviews %}
+          <div class="rev-counts">
+            <span class="pos">+{{ g.positive_reviews | abbr }}</span>
+            <span>{{ g.review_count | abbr }} reviews</span>
+            <span class="neg">-{{ g.negative_reviews | abbr }}</span>
+          </div>
+          {% endif %}
+          {% endif %}
+          {% if g.owners_text %}
+          <div class="owners-row">Owners: <span>{{ g.owners_text }}</span></div>
           {% endif %}
         </div>
       </a>
     </div>
     {% endfor %}
   </div>
-</section>
-{% endif %}
+</div>
 
-<!-- CHARTS: LINE HISTORY + BAR GENRE side by side -->
-<section class="sec">
-  <div class="sec-hd">
-    <h2 class="sec-title"><span class="dot a"></span>Thống kê & Biểu đồ</h2>
-    <span class="sec-count">Dữ liệu {{ chart_labels | length }} ngày gần nhất</span>
+<!-- PANEL: SURGE -->
+<div class="panel" id="p-surge">
+  <div class="sh">
+    <h2 class="st"><span class="dot s"></span>Đột biến hôm nay</h2>
+    <span class="sc2">So với hôm qua · tăng >10%</span>
   </div>
-  <div class="chart-row">
-    {% if has_history %}
-    <div class="chart-box">
-      <div class="chart-title">Lịch sử players (top games)</div>
-      <div class="chart-h"><canvas id="lineChart"></canvas></div>
+  {% if surge %}
+  <div class="sg">
+    {% for g in surge %}
+    <div class="sgc">
+      <a href="{{ g.steam_url }}" target="_blank" rel="noopener">
+        <img class="sgc-img" src="{{ g.img_header }}" alt="{{ g.name }}" loading="lazy" onerror="this.style.display='none'">
+        <div class="sgc-body">
+          <div style="display:flex;align-items:flex-end;justify-content:space-between;gap:12px">
+            <div>
+              <div class="surge-num">+{{ g.surge_pct | int }}%</div>
+              <div class="surge-sub">tăng so hôm qua</div>
+            </div>
+            <div style="text-align:right">
+              {% if g.concurrent_peak %}<div style="font-family:var(--fm);font-size:16px;font-weight:500;color:var(--text)">{{ g.concurrent_peak | commas }}</div><div class="surge-sub">players now</div>{% endif %}
+            </div>
+          </div>
+          <div style="display:flex;align-items:center;gap:8px">
+            <div class="sgc-name">{{ g.name }}</div>
+          </div>
+          {% if g.peak_yesterday %}
+          <div class="surge-abs">Hôm qua: {{ g.peak_yesterday | commas }} → Hôm nay: {{ g.concurrent_peak | commas if g.concurrent_peak else '?' }}
+            (+{{ g.surge_abs | commas if g.surge_abs else '?' }})</div>
+          {% endif %}
+          <div class="sgc-tags">
+            {% if g.genres %}{% for t in g.genres[:3] %}<span class="tag">{{ t }}</span>{% endfor %}{% endif %}
+            {% if g.review_pct %}<span class="tag" style="color:var(--green)">{{ g.review_pct }}%</span>{% endif %}
+            {% if g.owners_text %}<span class="tag">{{ g.owners_text }}</span>{% endif %}
+          </div>
+          {% if g.positive_reviews and g.negative_reviews %}
+          {% set tot = g.positive_reviews + g.negative_reviews %}
+          <div class="rev-bar">
+            <div class="rev-pos" style="width:{{ (g.positive_reviews / tot * 100) | int }}%"></div>
+            <div class="rev-neg" style="width:{{ (g.negative_reviews / tot * 100) | int }}%"></div>
+          </div>
+          <div class="rev-counts">
+            <span class="pos">+{{ g.positive_reviews | abbr }}</span>
+            <span>{{ tot | abbr }} reviews</span>
+            <span class="neg">-{{ g.negative_reviews | abbr }}</span>
+          </div>
+          {% endif %}
+        </div>
+      </a>
     </div>
-    {% endif %}
-    {% if genre_stats %}
-    <div class="chart-box">
-      <div class="chart-title">Genre · tổng players hôm nay</div>
-      <div class="chart-h"><canvas id="barChart"></canvas></div>
-    </div>
-    {% endif %}
+    {% endfor %}
   </div>
-</section>
+  {% else %}
+  <div style="padding:40px 0;text-align:center;color:var(--muted);font-family:var(--fm);font-size:13px">
+    Chưa đủ dữ liệu lịch sử để tính đột biến. Cần ít nhất 2 ngày snapshot.
+  </div>
+  {% endif %}
+</div>
 
-<!-- DEALS -->
-{% if deals %}
-<section class="sec">
-  <div class="sec-hd">
-    <h2 class="sec-title"><span class="dot g"></span>Deals đáng mua</h2>
-    <span class="sec-count">Sale ≥ 20% · Review ≥ 65%</span>
+<!-- PANEL: DEALS -->
+<div class="panel" id="p-deals">
+  <div class="sh">
+    <h2 class="st"><span class="dot g"></span>Deals đáng mua</h2>
+    <span class="sc2">Sale ≥ 20% · Review ≥ 65%</span>
   </div>
-  <div class="d-grid">
+  {% if deals %}
+  <div class="dg">
     {% for d in deals %}
     <div class="dc">
       <a href="{{ d.steam_url }}" target="_blank" rel="noopener">
-        <img class="d-img"
-          src="{{ d.img_capsule or d.img_header }}"
-          alt="{{ d.name }}"
-          loading="lazy"
-          onerror="this.style.display='none'">
+        <img class="d-img" src="{{ d.img_capsule or d.img_header }}" alt="{{ d.name }}" loading="lazy" onerror="this.style.display='none'">
         <div class="d-info">
           <div class="d-name">{{ d.name }}</div>
           <div class="d-prices">
             <span class="d-badge">-{{ d.discount_pct }}%</span>
             {% if d.price_usd %}<span class="d-orig">{{ d.price_usd | usd }}</span>{% endif %}
-            <span class="d-cur">{% if d.is_free %}Free{% else %}{{ d.price_current | usd }}{% endif %}</span>
+            <span class="d-cur">{{ d.price_current | usd }}</span>
           </div>
+          <div class="d-rev-row">
+            {% if d.review_pct %}
+            <span class="d-rev-badge {% if d.review_pct>=80 %}good{% else %}ok{% endif %}">{{ d.review_pct }}%</span>
+            {% endif %}
+            {% if d.owners_text %}<span class="d-owners">{{ d.owners_text }} owners</span>{% endif %}
+          </div>
+          {% if d.positive_reviews and d.negative_reviews %}
+          {% set tot = d.positive_reviews + d.negative_reviews %}
+          <div class="rev-bar" style="margin-top:7px">
+            <div class="rev-pos" style="width:{{ (d.positive_reviews/tot*100)|int }}%"></div>
+            <div class="rev-neg" style="width:{{ (d.negative_reviews/tot*100)|int }}%"></div>
+          </div>
+          <div class="rev-counts">
+            <span class="pos">+{{ d.positive_reviews | abbr }}</span>
+            <span class="neg">-{{ d.negative_reviews | abbr }}</span>
+          </div>
+          {% endif %}
         </div>
-        {% if d.review_pct %}<div class="d-rev">{{ d.review_pct }}%</div>{% endif %}
       </a>
     </div>
     {% endfor %}
   </div>
-</section>
-{% endif %}
-
-<!-- AI INSIGHTS -->
-{% if trend_analysis or deal_picks or hidden_gems %}
-<section class="sec">
-  <div class="sec-hd">
-    <h2 class="sec-title"><span class="dot a"></span>AI Insights</h2>
-    <span class="sec-count">Groq · Llama 3.3 70B</span>
+  {% else %}
+  <div style="padding:40px 0;text-align:center;color:var(--muted);font-family:var(--fm);font-size:13px">
+    Không có deals thỏa điều kiện hôm nay.
   </div>
-  <div class="i-grid">
+  {% endif %}
+</div>
+
+<!-- PANEL: CHARTS -->
+<div class="panel" id="p-charts">
+  <div class="sh">
+    <h2 class="st"><span class="dot a"></span>Biểu đồ & Thống kê</h2>
+    <span class="sc2">{{ chart_labels | length }} ngày dữ liệu</span>
+  </div>
+  <div class="chart-row" style="margin-bottom:14px">
+    {% if has_history %}
+    <div class="cb">
+      <div class="cb-title">Lịch sử players — top games</div>
+      <div class="ch"><canvas id="lineChart"></canvas></div>
+    </div>
+    {% endif %}
+    {% if genre_stat %}
+    <div class="cb">
+      <div class="cb-title">Genre — tổng players hôm nay</div>
+      <div class="ch"><canvas id="barChart"></canvas></div>
+    </div>
+    {% endif %}
+  </div>
+  {% if surge %}
+  <div class="cb">
+    <div class="cb-title">Top đột biến — % tăng so hôm qua</div>
+    <div class="ch"><canvas id="surgeChart"></canvas></div>
+  </div>
+  {% endif %}
+</div>
+
+<!-- PANEL: INSIGHTS -->
+<div class="panel" id="p-insights">
+  <div class="sh">
+    <h2 class="st"><span class="dot a"></span>AI Insights</h2>
+    <span class="sc2">Groq · Llama 3.3 70B</span>
+  </div>
+  <div class="ig">
     {% if trend_analysis %}
     <div class="ic feat">
-      <div class="ic-hd">
-        <div class="ic-icon">📈</div>
+      <div class="ic-hd"><div class="ic-icon">📈</div>
         <div><div class="ic-title">Xu hướng tuần này</div><div class="ic-sub">trend_analysis</div></div>
       </div>
       <div class="ic-body">{{ trend_analysis | safe }}</div>
@@ -360,8 +499,7 @@ footer{border-top:1px solid var(--border);padding:24px 0 0;
     {% endif %}
     {% if deal_picks %}
     <div class="ic">
-      <div class="ic-hd">
-        <div class="ic-icon">🎯</div>
+      <div class="ic-hd"><div class="ic-icon">🎯</div>
         <div><div class="ic-title">Top picks đáng mua</div><div class="ic-sub">deal_picks</div></div>
       </div>
       <div class="ic-body">{{ deal_picks | safe }}</div>
@@ -369,86 +507,96 @@ footer{border-top:1px solid var(--border);padding:24px 0 0;
     {% endif %}
     {% if hidden_gems %}
     <div class="ic">
-      <div class="ic-hd">
-        <div class="ic-icon">💎</div>
+      <div class="ic-hd"><div class="ic-icon">💎</div>
         <div><div class="ic-title">Hidden gems</div><div class="ic-sub">hidden_gems</div></div>
       </div>
       <div class="ic-body">{{ hidden_gems | safe }}</div>
     </div>
     {% endif %}
   </div>
-</section>
-{% endif %}
+</div>
 
 <!-- FOOTER -->
 <footer>
   <span class="f-brand">STEAM PULSE</span>
   <span class="f-note">Steam API · SteamSpy · Groq Llama 3.3 70B · {{ updated_at }}</span>
 </footer>
+</div>
 
-</div><!-- .wrap -->
-
-<!-- CHARTS JS -->
 <script>
-const CHART_DEFAULTS = {
+// ── Tab switching ──────────────────────────────────────────
+document.querySelectorAll('.tab').forEach(btn => {
+  btn.addEventListener('click', () => {
+    document.querySelectorAll('.tab').forEach(b => b.classList.remove('active'));
+    document.querySelectorAll('.panel').forEach(p => p.classList.remove('active'));
+    btn.classList.add('active');
+    document.getElementById(btn.dataset.panel).classList.add('active');
+  });
+});
+
+// ── Chart defaults ─────────────────────────────────────────
+const CD = {
   responsive:true, maintainAspectRatio:false,
-  plugins:{legend:{display:true,labels:{color:'#6b6b80',font:{family:'DM Mono',size:10},boxWidth:10,padding:12}}},
+  plugins:{legend:{labels:{color:'#62627a',font:{family:'DM Mono',size:10},boxWidth:9,padding:10}}},
   scales:{
-    x:{grid:{color:'rgba(255,255,255,0.04)'},ticks:{color:'#55556a',font:{family:'DM Mono',size:10},maxRotation:30}},
-    y:{grid:{color:'rgba(255,255,255,0.04)'},ticks:{color:'#55556a',font:{family:'DM Mono',size:10},
-       callback:v=>v>=1000000?(v/1000000).toFixed(1)+'M':v>=1000?(v/1000).toFixed(0)+'K':v}}
+    x:{grid:{color:'rgba(255,255,255,.04)'},ticks:{color:'#50506a',font:{family:'DM Mono',size:10},maxRotation:30,maxTicksLimit:7}},
+    y:{grid:{color:'rgba(255,255,255,.04)'},ticks:{color:'#50506a',font:{family:'DM Mono',size:10},
+       callback:v=>v>=1e6?(v/1e6).toFixed(1)+'M':v>=1e3?(v/1e3).toFixed(0)+'K':v}}
   }
 };
-const TOOLTIP = {
-  backgroundColor:'#17171f',borderColor:'rgba(255,255,255,0.1)',borderWidth:1,
-  titleColor:'#e6e6f0',bodyColor:'#9494ac',padding:12,
-};
+const TIP = {backgroundColor:'#17171f',borderColor:'rgba(255,255,255,.1)',borderWidth:1,
+  titleColor:'#e6e6f0',bodyColor:'#9090aa',padding:11};
 
 {% if has_history %}
-(function(){
-  const labels = {{ chart_labels | tojson }};
-  const datasets = {{ chart_datasets | tojson }}.map(d => ({
-    label: d.label,
-    data: d.data,
-    borderColor: d.color,
-    backgroundColor: d.color + '18',
-    borderWidth: 2,
-    pointRadius: 3,
-    pointHoverRadius: 5,
-    tension: 0.35,
-    spanGaps: true,
-    fill: false,
-  }));
-  new Chart(document.getElementById('lineChart').getContext('2d'), {
-    type:'line',
-    data:{labels, datasets},
-    options:{...CHART_DEFAULTS, plugins:{...CHART_DEFAULTS.plugins,
-      tooltip:{...TOOLTIP, callbacks:{label:c=>` ${c.dataset.label}: ${(c.parsed.y||0).toLocaleString()}`}}}}
+new Chart(document.getElementById('lineChart').getContext('2d'),{
+  type:'line',
+  data:{
+    labels:{{ chart_labels | tojson }},
+    datasets:{{ chart_line | tojson }}.map(d=>({
+      label:d.label, data:d.data,
+      borderColor:d.color, backgroundColor:d.color+'14',
+      borderWidth:2, pointRadius:3, pointHoverRadius:5,
+      tension:.35, spanGaps:true, fill:false,
+    }))
+  },
+  options:{...CD, plugins:{...CD.plugins,
+    tooltip:{...TIP,callbacks:{label:c=>` ${c.dataset.label}: ${(c.parsed.y||0).toLocaleString()}`}}}}
+});
+{% endif %}
+
+{% if genre_stat %}
+(()=>{
+  const labels={{ genre_stat | map(attribute='genre') | list | tojson }};
+  const vals={{ genre_stat | map(attribute='total_players') | list | tojson }};
+  const mx=Math.max(...vals);
+  new Chart(document.getElementById('barChart').getContext('2d'),{
+    type:'bar',
+    data:{labels,datasets:[{data:vals,
+      backgroundColor:vals.map(v=>`rgba(91,106,248,${.28+v/mx*.55})`),
+      borderColor:'rgba(91,106,248,.35)',borderWidth:1,borderRadius:5}]},
+    options:{...CD,plugins:{legend:{display:false},
+      tooltip:{...TIP,callbacks:{label:c=>` ${c.parsed.y.toLocaleString()} players`}}}}
   });
 })();
 {% endif %}
 
-{% if genre_stats %}
-(function(){
-  const labels = {{ genre_stats | map(attribute='genre') | list | tojson }};
-  const values = {{ genre_stats | map(attribute='total_players') | list | tojson }};
-  const mx = Math.max(...values);
-  new Chart(document.getElementById('barChart').getContext('2d'), {
+{% if surge %}
+(()=>{
+  const labels={{ surge | map(attribute='name') | list | tojson }}.map(s=>s.length>18?s.slice(0,18)+'…':s);
+  const vals={{ surge | map(attribute='surge_pct') | list | tojson }};
+  new Chart(document.getElementById('surgeChart').getContext('2d'),{
     type:'bar',
-    data:{labels, datasets:[{
-      data: values,
-      backgroundColor: values.map(v=>{
-        const r=v/mx;
-        return `rgba(91,106,248,${.3+r*.55})`;
-      }),
-      borderColor:'rgba(91,106,248,.4)',
-      borderWidth:1, borderRadius:5,
-    }]},
+    data:{labels,datasets:[{data:vals,
+      backgroundColor:'rgba(255,107,53,.45)',borderColor:'rgba(255,107,53,.7)',
+      borderWidth:1,borderRadius:5}]},
     options:{
-      ...CHART_DEFAULTS,
-      plugins:{
-        legend:{display:false},
-        tooltip:{...TOOLTIP, callbacks:{label:c=>` ${c.parsed.y.toLocaleString()} players`}}
+      ...CD,
+      indexAxis:'y',
+      plugins:{legend:{display:false},
+        tooltip:{...TIP,callbacks:{label:c=>` +${c.parsed.x.toFixed(1)}% tăng`}}},
+      scales:{
+        x:{...CD.scales.x,ticks:{...CD.scales.x.ticks,callback:v=>'+'+v+'%'}},
+        y:{...CD.scales.y,ticks:{color:'#9090aa',font:{family:'DM Mono',size:10}}}
       }
     }
   });
