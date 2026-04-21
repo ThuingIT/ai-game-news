@@ -17,6 +17,7 @@
   --amber:#f5a623;--amber-dim:rgba(245,166,35,.15);
   --red:#f05252;--red-dim:rgba(240,82,82,.15);
   --surge:#ff6b35;--surge-dim:rgba(255,107,53,.15);
+  --new:#a855f7;--new-dim:rgba(168,85,247,.15);--new-bright:#c084fc;
   --fh:'Bebas Neue',sans-serif;--fb:'DM Sans',sans-serif;--fm:'DM Mono',monospace;
   --r:10px;--rl:16px;
 }
@@ -52,7 +53,7 @@ body::before{content:'';position:fixed;inset:0;opacity:.3;pointer-events:none;z-
 .sc .v{font-family:var(--fh);font-size:32px;line-height:1}
 .sc .v.sm{font-size:16px;font-family:var(--fb);font-weight:500}
 .sc .s{font-size:11px;color:var(--muted2);margin-top:4px}
-.sc .v.green{color:var(--green)}.sc .v.surge{color:var(--surge)}.sc .v.accent{color:var(--accent2)}
+.sc .v.green{color:var(--green)}.sc .v.surge{color:var(--surge)}.sc .v.accent{color:var(--accent2)}.sc .v.new-c{color:var(--new-bright)}
 
 /* TABS */
 .tabs{display:flex;gap:4px;margin-bottom:20px;background:var(--bg2);border:1px solid var(--border);
@@ -64,6 +65,7 @@ body::before{content:'';position:fixed;inset:0;opacity:.3;pointer-events:none;z-
 .tab .cnt{background:rgba(255,255,255,.2);border-radius:3px;padding:1px 5px;margin-left:5px;font-size:9px}
 .tab.surge-tab.active{background:var(--surge)}
 .tab.deal-tab.active{background:var(--green-dim);color:var(--green);border:1px solid rgba(34,201,132,.3)}
+.tab.new-tab.active{background:var(--new-dim);color:var(--new-bright);border:1px solid rgba(168,85,247,.4)}
 .tab.insight-tab.active{background:var(--amber-dim);color:var(--amber);border:1px solid rgba(245,166,35,.3)}
 
 .panel{display:none}.panel.active{display:block}
@@ -72,10 +74,10 @@ body::before{content:'';position:fixed;inset:0;opacity:.3;pointer-events:none;z-
 .sh{display:flex;align-items:center;justify-content:space-between;margin-bottom:16px;padding-bottom:10px;border-bottom:1px solid var(--border)}
 .st{font-family:var(--fh);font-size:24px;letter-spacing:.03em;display:flex;align-items:center;gap:8px}
 .dot{width:7px;height:7px;border-radius:50%;background:var(--accent);display:inline-block}
-.dot.g{background:var(--green)}.dot.a{background:var(--amber)}.dot.s{background:var(--surge)}
+.dot.g{background:var(--green)}.dot.a{background:var(--amber)}.dot.s{background:var(--surge)}.dot.n{background:var(--new)}
 .sc2{font-family:var(--fm);font-size:11px;color:var(--muted)}
 
-/* GAME CARD */
+/* GAME CARD (trending) */
 .tg{display:grid;grid-template-columns:repeat(auto-fill,minmax(255px,1fr));gap:11px}
 @media(min-width:860px){.tg .gc:nth-child(1){grid-column:span 2}}
 .gc{background:var(--bg2);border:1px solid var(--border);border-radius:var(--rl);overflow:hidden;
@@ -85,8 +87,6 @@ body::before{content:'';position:fixed;inset:0;opacity:.3;pointer-events:none;z-
 .gc-img{width:100%;aspect-ratio:460/215;object-fit:cover;display:block;background:var(--bg3)}
 .gc:nth-child(1) .gc-img{aspect-ratio:16/6}
 .gc-body{padding:12px 14px 14px;flex:1;display:flex;flex-direction:column}
-
-/* rank row */
 .gc-top{display:flex;align-items:center;justify-content:space-between;margin-bottom:5px}
 .gc-rank{font-family:var(--fm);font-size:10px;color:var(--accent2);letter-spacing:.07em}
 .gc-badges{display:flex;gap:4px;align-items:center}
@@ -96,34 +96,168 @@ body::before{content:'';position:fixed;inset:0;opacity:.3;pointer-events:none;z-
 .pill.surge{background:var(--surge-dim);color:var(--surge)}
 .pill.drop{background:var(--red-dim);color:var(--red)}
 .pill.change{background:var(--bg3);color:var(--muted2);border:1px solid var(--border)}
-
+.pill.new-badge{background:var(--new-dim);color:var(--new-bright);border:1px solid rgba(168,85,247,.3)}
 .gc-name{font-size:14px;font-weight:500;line-height:1.3;margin-bottom:7px;
   display:-webkit-box;-webkit-line-clamp:2;-webkit-box-orient:vertical;overflow:hidden}
 .gc:nth-child(1) .gc-name{font-size:17px}
 .tags{display:flex;flex-wrap:wrap;gap:3px;margin-bottom:9px}
 .tag{font-size:9px;font-family:var(--fm);color:var(--muted2);background:var(--bg3);
   border:1px solid var(--border);padding:2px 6px;border-radius:3px}
-
-/* stats row in card */
 .gs{display:flex;gap:11px;margin-top:auto;flex-wrap:wrap}
 .cs .v{font-family:var(--fm);font-size:12px;font-weight:500;color:var(--text)}
 .cs .l{font-size:9px;color:var(--muted);letter-spacing:.05em;margin-top:1px}
 .cs .v.g{color:var(--green)}.cs .v.a{color:var(--amber)}.cs .v.r{color:var(--red)}
-
-/* review bar: positive + negative */
 .rev-bar{height:3px;background:var(--bg4);border-radius:2px;margin-top:10px;overflow:hidden;display:flex}
 .rev-pos{height:100%;background:var(--green)}
 .rev-neg{height:100%;background:var(--red)}
-
-/* review counts under bar */
 .rev-counts{display:flex;justify-content:space-between;margin-top:4px}
 .rev-counts span{font-family:var(--fm);font-size:9px;color:var(--muted)}
 .rev-counts .pos{color:var(--green);opacity:.7}
 .rev-counts .neg{color:var(--red);opacity:.7}
-
-/* owners row */
 .owners-row{font-family:var(--fm);font-size:10px;color:var(--muted);margin-top:5px}
 .owners-row span{color:var(--muted2)}
+
+/* ═══════════════════════════════════════════════════
+   NEW RELEASES PANEL
+═══════════════════════════════════════════════════ */
+.nr-header-strip{
+  background:linear-gradient(135deg, rgba(168,85,247,.12), rgba(91,106,248,.08));
+  border:1px solid rgba(168,85,247,.2);
+  border-radius:var(--rl);
+  padding:18px 22px;
+  margin-bottom:20px;
+  display:flex;
+  align-items:center;
+  justify-content:space-between;
+  flex-wrap:wrap;
+  gap:12px;
+}
+.nr-header-strip .nr-title{
+  font-family:var(--fh);font-size:20px;letter-spacing:.05em;
+  color:var(--new-bright);display:flex;align-items:center;gap:8px;
+}
+.nr-header-strip .nr-sub{font-size:12px;color:var(--muted);font-family:var(--fm);margin-top:4px}
+.nr-header-strip .nr-stats{display:flex;gap:20px;flex-wrap:wrap}
+.nr-header-strip .nrs{text-align:center}
+.nr-header-strip .nrs .v{font-family:var(--fh);font-size:24px;color:var(--new-bright)}
+.nr-header-strip .nrs .l{font-size:9px;color:var(--muted);font-family:var(--fm);letter-spacing:.07em;text-transform:uppercase;margin-top:2px}
+
+/* Grid layout: featured (large) + list */
+.nr-grid{display:grid;grid-template-columns:1fr 1fr;gap:12px;margin-bottom:16px}
+@media(max-width:860px){.nr-grid{grid-template-columns:1fr}}
+
+/* Featured card (rank 1) */
+.nr-feat{
+  background:var(--bg2);
+  border:1px solid rgba(168,85,247,.25);
+  border-radius:var(--rl);
+  overflow:hidden;
+  cursor:pointer;
+  transition:transform .2s,border-color .2s,box-shadow .2s;
+  position:relative;
+}
+.nr-feat::before{
+  content:'';position:absolute;inset:0;
+  background:linear-gradient(135deg,rgba(168,85,247,.06),transparent 60%);
+  pointer-events:none;z-index:0;
+}
+.nr-feat:hover{transform:translateY(-3px);border-color:rgba(168,85,247,.5);box-shadow:0 12px 36px rgba(168,85,247,.15)}
+.nr-feat a{text-decoration:none;color:inherit;display:flex;flex-direction:column;height:100%;position:relative;z-index:1}
+.nr-feat .feat-img{width:100%;aspect-ratio:16/7;object-fit:cover;display:block;background:var(--bg3)}
+.nr-feat .feat-body{padding:16px 18px 18px;flex:1;display:flex;flex-direction:column;gap:10px}
+.nr-feat .feat-top{display:flex;align-items:center;justify-content:space-between}
+.nr-feat .feat-rank{
+  font-family:var(--fm);font-size:10px;color:var(--new-bright);letter-spacing:.1em;
+  background:var(--new-dim);border:1px solid rgba(168,85,247,.3);padding:2px 8px;border-radius:3px;
+}
+.nr-feat .feat-days{
+  font-family:var(--fm);font-size:10px;color:var(--muted);
+}
+.nr-feat .feat-name{font-size:18px;font-weight:500;line-height:1.3}
+.nr-feat .feat-dev{font-size:11px;color:var(--muted2);margin-top:2px}
+
+/* Launch score meter */
+.score-meter{margin-top:4px}
+.score-meter .sm-label{display:flex;justify-content:space-between;align-items:center;margin-bottom:5px}
+.score-meter .sm-label .t{font-family:var(--fm);font-size:10px;color:var(--muted);letter-spacing:.07em;text-transform:uppercase}
+.score-meter .sm-label .v{font-family:var(--fh);font-size:20px;color:var(--new-bright)}
+.score-meter .bar-bg{height:5px;background:var(--bg4);border-radius:3px;overflow:hidden}
+.score-meter .bar-fill{height:100%;border-radius:3px;
+  background:linear-gradient(90deg,var(--new),var(--new-bright));
+  transition:width .6s ease;}
+
+/* Stats row in feat card */
+.feat-stats{display:flex;gap:14px;flex-wrap:wrap}
+.feat-stat .v{font-family:var(--fm);font-size:13px;font-weight:500}
+.feat-stat .v.g{color:var(--green)}.feat-stat .v.n{color:var(--new-bright)}.feat-stat .v.a{color:var(--amber)}
+.feat-stat .l{font-size:9px;color:var(--muted);letter-spacing:.05em;margin-top:1px}
+
+/* Small new release cards (rank 2+) */
+.nr-list{display:flex;flex-direction:column;gap:8px}
+.nrc{
+  background:var(--bg2);border:1px solid var(--border);border-radius:var(--r);
+  padding:12px 14px;cursor:pointer;
+  transition:border-color .2s,transform .2s,background .2s;
+  display:flex;gap:12px;align-items:center;
+}
+.nrc:hover{border-color:rgba(168,85,247,.3);transform:translateX(3px);background:var(--bg3)}
+.nrc a{text-decoration:none;color:inherit;display:flex;gap:12px;align-items:center;width:100%}
+.nrc-img{width:72px;height:34px;object-fit:cover;border-radius:5px;background:var(--bg3);flex-shrink:0}
+.nrc-main{flex:1;min-width:0}
+.nrc-top{display:flex;align-items:center;gap:7px;margin-bottom:3px}
+.nrc-rank{font-family:var(--fm);font-size:9px;color:var(--new-bright);letter-spacing:.07em}
+.nrc-name{font-size:13px;font-weight:500;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
+.nrc-meta{display:flex;gap:8px;align-items:center;flex-wrap:wrap}
+.nrc-tag{font-size:9px;font-family:var(--fm);color:var(--muted2);background:var(--bg3);
+  border:1px solid var(--border);padding:1px 5px;border-radius:3px}
+.nrc-right{text-align:right;flex-shrink:0;display:flex;flex-direction:column;align-items:flex-end;gap:4px}
+.nrc-score{font-family:var(--fh);font-size:19px;color:var(--new-bright)}
+.nrc-score-l{font-size:8px;color:var(--muted);font-family:var(--fm);letter-spacing:.06em}
+/* mini bar inside list card */
+.nrc-bar{width:48px;height:3px;background:var(--bg4);border-radius:2px;overflow:hidden}
+.nrc-bar-fill{height:100%;background:linear-gradient(90deg,var(--new),var(--new-bright));border-radius:2px}
+
+/* Days badge */
+.days-badge{
+  font-family:var(--fm);font-size:9px;padding:1px 6px;border-radius:3px;
+  background:var(--new-dim);color:var(--new-bright);border:1px solid rgba(168,85,247,.25);
+  white-space:nowrap;
+}
+.days-badge.fresh{background:rgba(34,201,132,.15);color:var(--green);border-color:rgba(34,201,132,.3)}
+
+/* Velocity badge */
+.vel-badge{
+  font-family:var(--fm);font-size:9px;padding:1px 6px;border-radius:3px;
+  background:var(--bg3);color:var(--muted2);border:1px solid var(--border);
+}
+.vel-badge.hot{background:var(--surge-dim);color:var(--surge);border-color:rgba(255,107,53,.3)}
+
+/* AI Buzz card inside new releases */
+.buzz-card{
+  background:linear-gradient(135deg,rgba(168,85,247,.08),rgba(91,106,248,.05));
+  border:1px solid rgba(168,85,247,.2);
+  border-radius:var(--rl);
+  padding:18px 20px;
+  margin-top:16px;
+}
+.buzz-hd{display:flex;align-items:center;gap:9px;margin-bottom:12px}
+.buzz-icon{width:28px;height:28px;border-radius:6px;
+  background:var(--new-dim);border:1px solid rgba(168,85,247,.3);
+  display:flex;align-items:center;justify-content:center;font-size:13px;flex-shrink:0}
+.buzz-title{font-weight:500;font-size:13px;color:var(--new-bright)}
+.buzz-sub{font-size:10px;color:var(--muted);margin-top:1px;font-family:var(--fm)}
+.buzz-body{font-size:13px;color:var(--muted2);line-height:1.78}
+.buzz-body p{margin-bottom:.65em}.buzz-body p:last-child{margin-bottom:0}
+.buzz-body strong{color:var(--text);font-weight:500}
+.buzz-body ol,.buzz-body ul{padding-left:1.2em;margin:.4em 0}
+.buzz-body li{margin-bottom:.45em}
+
+/* empty state */
+.empty-nr{
+  text-align:center;padding:60px 20px;
+  color:var(--muted);font-family:var(--fm);font-size:12px;
+}
+.empty-nr .icon{font-size:36px;margin-bottom:12px;opacity:.5}
 
 /* SURGE PANEL */
 .sg{display:grid;grid-template-columns:repeat(auto-fill,minmax(280px,1fr));gap:10px}
@@ -188,12 +322,15 @@ footer{border-top:1px solid var(--border);padding:22px 0 0;display:flex;justify-
 /* ANIM */
 @keyframes fu{from{opacity:0;transform:translateY(12px)}to{opacity:1;transform:translateY(0)}}
 .panel.active{animation:fu .35s ease both}
+@keyframes barGrow{from{width:0}to{width:var(--target-w)}}
 
 @media(max-width:600px){
   .banner{flex-direction:column;gap:10px}
   .dc a{flex-direction:column}
   .d-img{width:100%;height:42px}
   .sgc-body{padding:10px 12px 12px}
+  .nr-grid{grid-template-columns:1fr}
+  .nr-header-strip{flex-direction:column;align-items:flex-start}
 }
 </style>
 </head>
@@ -209,17 +346,15 @@ footer{border-top:1px solid var(--border);padding:22px 0 0;display:flex;justify-
   <div class="hd-r">
     <div class="l">Cập nhật lúc</div>
     <div class="v">21/04/2026 07:14 UTC</div>
-    <div class="v" style="font-size:10px;margin-top:2px">4 games · 2 deals · 2 đột biến</div>
+    <div class="v" style="font-size:10px;margin-top:2px">4 games · 2 deals · 2 đột biến · 3 game mới</div>
   </div>
 </header>
 
 <!-- BANNER -->
-
 <div class="banner">
   <span class="ai-tag">AI · GROQ</span>
-  <div><p>Hôm nay Steam chứng kiến <strong>đột biến mạnh từ Palworld</strong> (+28%) và Apex Legends. Genre Action vẫn thống trị. Có <strong>2 deals chất lượng</strong> đáng chú ý hôm nay.</p></div>
+  <div><p>Hôm nay Steam chứng kiến <strong>đột biến mạnh từ Palworld</strong> (+28%) và Apex Legends. Genre Action vẫn thống trị. Có <strong>2 deals chất lượng</strong> và <strong>3 game mới</strong> đáng theo dõi hôm nay.</p></div>
 </div>
-
 
 <!-- STATS -->
 <div class="stats">
@@ -243,27 +378,26 @@ footer{border-top:1px solid var(--border);padding:22px 0 0;display:flex;justify-
     <div class="v surge">2</div>
     <div class="s">tăng >10% so hôm qua</div>
   </div>
-  
+  <div class="sc">
+    <div class="l">Game mới nổi</div>
+    <div class="v new-c">3</div>
+    <div class="s">ra trong 14 ngày · lọc chất lượng</div>
+  </div>
   <div class="sc">
     <div class="l">Tổng players</div>
     <div class="v">1.2M</div>
     <div class="s">đang online</div>
   </div>
-  
-  
   <div class="sc">
     <div class="l">Review TB</div>
     <div class="v" style="font-size:26px">85%</div>
     <div class="s">trung bình top games</div>
   </div>
-  
-  
   <div class="sc">
     <div class="l">Genre #1</div>
     <div class="v sm">Action</div>
     <div class="s">720K players</div>
   </div>
-  
 </div>
 
 <!-- TABS -->
@@ -277,6 +411,9 @@ footer{border-top:1px solid var(--border);padding:22px 0 0;display:flex;justify-
   <button class="tab deal-tab" data-panel="p-deals">
     Deals <span class="cnt">2</span>
   </button>
+  <button class="tab new-tab" data-panel="p-new">
+    ✦ Game Mới <span class="cnt">3</span>
+  </button>
   <button class="tab" data-panel="p-charts">Charts</button>
   <button class="tab insight-tab" data-panel="p-insights">AI Insights</button>
 </div>
@@ -288,219 +425,98 @@ footer{border-top:1px solid var(--border);padding:22px 0 0;display:flex;justify-
     <span class="sc2">Composite score · không chỉ player count</span>
   </div>
   <div class="tg">
-    
+
     <div class="gc">
       <a href="https://store.steampowered.com/app/730" target="_blank" rel="noopener">
-        <img class="gc-img" src="https://cdn.akamai.steamstatic.com/steam/apps/730/header.jpg" alt="Counter-Strike 2"
-          loading="eager"
-          onerror="this.style.display='none'">
+        <img class="gc-img" src="https://cdn.akamai.steamstatic.com/steam/apps/730/header.jpg" alt="Counter-Strike 2" loading="eager" onerror="this.style.display='none'">
         <div class="gc-body">
           <div class="gc-top">
             <span class="gc-rank">#1</span>
-            <div class="gc-badges">
-              <span class="pill free">FREE</span>
-              
-              
-                <span class="pill change">+3.2%</span>
-              
-            </div>
+            <div class="gc-badges"><span class="pill free">FREE</span><span class="pill change">+3.2%</span></div>
           </div>
           <div class="gc-name">Counter-Strike 2</div>
-          
           <div class="tags"><span class="tag">Action</span><span class="tag">Free To Play</span></div>
-          
           <div class="gs">
             <div class="cs"><div class="v">637,017</div><div class="l">PLAYING NOW</div></div>
-            
-            <div class="cs">
-              <div class="v g">87%</div>
-              <div class="l">REVIEW</div>
-            </div>
-            
+            <div class="cs"><div class="v g">87%</div><div class="l">REVIEW</div></div>
             <div class="cs"><div class="v a">Free</div><div class="l">GIÁ</div></div>
-            
-            
           </div>
-          
-          
-          
-          <div class="rev-bar">
-            <div class="rev-pos" style="width:87%"></div>
-            <div class="rev-neg" style="width:13%"></div>
-          </div>
-          
-          <div class="rev-counts">
-            <span class="pos">+1.3M</span>
-            <span>1.5M reviews</span>
-            <span class="neg">-195K</span>
-          </div>
-          
-          
-          
+          <div class="rev-bar"><div class="rev-pos" style="width:87%"></div><div class="rev-neg" style="width:13%"></div></div>
+          <div class="rev-counts"><span class="pos">+1.3M</span><span>1.5M reviews</span><span class="neg">-195K</span></div>
           <div class="owners-row">Owners: <span>~50M–100M</span></div>
-          
         </div>
       </a>
     </div>
-    
+
     <div class="gc">
       <a href="https://store.steampowered.com/app/1623730" target="_blank" rel="noopener">
-        <img class="gc-img" src="https://cdn.akamai.steamstatic.com/steam/apps/1623730/header.jpg" alt="Palworld"
-          loading="eager"
-          onerror="this.style.display='none'">
+        <img class="gc-img" src="https://cdn.akamai.steamstatic.com/steam/apps/1623730/header.jpg" alt="Palworld" loading="eager" onerror="this.style.display='none'">
         <div class="gc-body">
           <div class="gc-top">
             <span class="gc-rank">#4</span>
-            <div class="gc-badges">
-              
-              
-              
-                <span class="pill surge">+28%</span>
-                
-              
-            </div>
+            <div class="gc-badges"><span class="pill surge">+28%</span></div>
           </div>
           <div class="gc-name">Palworld</div>
-          
           <div class="tags"><span class="tag">Action</span><span class="tag">Adventure</span><span class="tag">Indie</span></div>
-          
           <div class="gs">
             <div class="cs"><div class="v">15,069</div><div class="l">PLAYING NOW</div></div>
-            
-            <div class="cs">
-              <div class="v g">94%</div>
-              <div class="l">REVIEW</div>
-            </div>
-            
+            <div class="cs"><div class="v g">94%</div><div class="l">REVIEW</div></div>
             <div class="cs"><div class="v">$29.99</div><div class="l">GIÁ</div></div>
             <div class="cs"><div class="v">5.0M</div><div class="l">OWNERS</div></div>
           </div>
-          
-          
-          
-          <div class="rev-bar">
-            <div class="rev-pos" style="width:94%"></div>
-            <div class="rev-neg" style="width:6%"></div>
-          </div>
-          
-          <div class="rev-counts">
-            <span class="pos">+207K</span>
-            <span>220K reviews</span>
-            <span class="neg">-13K</span>
-          </div>
-          
-          
-          
+          <div class="rev-bar"><div class="rev-pos" style="width:94%"></div><div class="rev-neg" style="width:6%"></div></div>
+          <div class="rev-counts"><span class="pos">+207K</span><span>220K reviews</span><span class="neg">-13K</span></div>
           <div class="owners-row">Owners: <span>~5M–10M</span></div>
-          
         </div>
       </a>
     </div>
-    
+
     <div class="gc">
       <a href="https://store.steampowered.com/app/892970" target="_blank" rel="noopener">
-        <img class="gc-img" src="https://cdn.akamai.steamstatic.com/steam/apps/892970/header.jpg" alt="Valheim"
-          loading="eager"
-          onerror="this.style.display='none'">
+        <img class="gc-img" src="https://cdn.akamai.steamstatic.com/steam/apps/892970/header.jpg" alt="Valheim" loading="eager" onerror="this.style.display='none'">
         <div class="gc-body">
           <div class="gc-top">
             <span class="gc-rank">#7</span>
-            <div class="gc-badges">
-              
-              
-              
-                <span class="pill change">-8.1%</span>
-              
-            </div>
+            <div class="gc-badges"><span class="pill change">-8.1%</span></div>
           </div>
           <div class="gc-name">Valheim</div>
-          
           <div class="tags"><span class="tag">Survival</span><span class="tag">Viking</span></div>
-          
           <div class="gs">
             <div class="cs"><div class="v">42,100</div><div class="l">PLAYING NOW</div></div>
-            
-            <div class="cs">
-              <div class="v g">95%</div>
-              <div class="l">REVIEW</div>
-            </div>
-            
+            <div class="cs"><div class="v g">95%</div><div class="l">REVIEW</div></div>
             <div class="cs"><div class="v">$19.99</div><div class="l">GIÁ</div></div>
             <div class="cs"><div class="v">8.0M</div><div class="l">OWNERS</div></div>
           </div>
-          
-          
-          
-          <div class="rev-bar">
-            <div class="rev-pos" style="width:95%"></div>
-            <div class="rev-neg" style="width:5%"></div>
-          </div>
-          
-          <div class="rev-counts">
-            <span class="pos">+408K</span>
-            <span>430K reviews</span>
-            <span class="neg">-22K</span>
-          </div>
-          
-          
-          
+          <div class="rev-bar"><div class="rev-pos" style="width:95%"></div><div class="rev-neg" style="width:5%"></div></div>
+          <div class="rev-counts"><span class="pos">+408K</span><span>430K reviews</span><span class="neg">-22K</span></div>
           <div class="owners-row">Owners: <span>~8M–12M</span></div>
-          
         </div>
       </a>
     </div>
-    
+
     <div class="gc">
       <a href="https://store.steampowered.com/app/413150" target="_blank" rel="noopener">
-        <img class="gc-img" src="https://cdn.akamai.steamstatic.com/steam/apps/413150/header.jpg" alt="Stardew Valley"
-          loading="eager"
-          onerror="this.style.display='none'">
+        <img class="gc-img" src="https://cdn.akamai.steamstatic.com/steam/apps/413150/header.jpg" alt="Stardew Valley" loading="eager" onerror="this.style.display='none'">
         <div class="gc-body">
           <div class="gc-top">
             <span class="gc-rank">#9</span>
-            <div class="gc-badges">
-              
-              <span class="pill sale">-40%</span>
-              
-            </div>
+            <div class="gc-badges"><span class="pill sale">-40%</span></div>
           </div>
           <div class="gc-name">Stardew Valley</div>
-          
           <div class="tags"><span class="tag">Farming</span><span class="tag">RPG</span><span class="tag">Indie</span></div>
-          
           <div class="gs">
             <div class="cs"><div class="v">35,800</div><div class="l">PLAYING NOW</div></div>
-            
-            <div class="cs">
-              <div class="v g">98%</div>
-              <div class="l">REVIEW</div>
-            </div>
-            
+            <div class="cs"><div class="v g">98%</div><div class="l">REVIEW</div></div>
             <div class="cs"><div class="v">$8.99</div><div class="l">GIÁ</div></div>
             <div class="cs"><div class="v">12.0M</div><div class="l">OWNERS</div></div>
           </div>
-          
-          
-          
-          <div class="rev-bar">
-            <div class="rev-pos" style="width:98%"></div>
-            <div class="rev-neg" style="width:2%"></div>
-          </div>
-          
-          <div class="rev-counts">
-            <span class="pos">+902K</span>
-            <span>920K reviews</span>
-            <span class="neg">-18K</span>
-          </div>
-          
-          
-          
+          <div class="rev-bar"><div class="rev-pos" style="width:98%"></div><div class="rev-neg" style="width:2%"></div></div>
+          <div class="rev-counts"><span class="pos">+902K</span><span>920K reviews</span><span class="neg">-18K</span></div>
           <div class="owners-row">Owners: <span>~12M–20M</span></div>
-          
         </div>
       </a>
     </div>
-    
+
   </div>
 </div>
 
@@ -510,93 +526,48 @@ footer{border-top:1px solid var(--border);padding:22px 0 0;display:flex;justify-
     <h2 class="st"><span class="dot s"></span>Đột biến hôm nay</h2>
     <span class="sc2">So với hôm qua · tăng >10%</span>
   </div>
-  
   <div class="sg">
-    
     <div class="sgc">
       <a href="https://store.steampowered.com/app/1623730" target="_blank" rel="noopener">
         <img class="sgc-img" src="https://cdn.akamai.steamstatic.com/steam/apps/1623730/header.jpg" alt="Palworld" loading="lazy" onerror="this.style.display='none'">
         <div class="sgc-body">
           <div style="display:flex;align-items:flex-end;justify-content:space-between;gap:12px">
-            <div>
-              <div class="surge-num">+28%</div>
-              <div class="surge-sub">tăng so hôm qua</div>
-            </div>
-            <div style="text-align:right">
-              <div style="font-family:var(--fm);font-size:16px;font-weight:500;color:var(--text)">15,069</div><div class="surge-sub">players now</div>
-            </div>
+            <div><div class="surge-num">+28%</div><div class="surge-sub">tăng so hôm qua</div></div>
+            <div style="text-align:right"><div style="font-family:var(--fm);font-size:16px;font-weight:500;color:var(--text)">15,069</div><div class="surge-sub">players now</div></div>
           </div>
-          <div style="display:flex;align-items:center;gap:8px">
-            <div class="sgc-name">Palworld</div>
-          </div>
-          
-          <div class="surge-abs">Hôm qua: 11,722 → Hôm nay: 15,069
-            (+3,347)</div>
-          
+          <div style="display:flex;align-items:center;gap:8px"><div class="sgc-name">Palworld</div></div>
+          <div class="surge-abs">Hôm qua: 11,722 → Hôm nay: 15,069 (+3,347)</div>
           <div class="sgc-tags">
             <span class="tag">Action</span><span class="tag">Indie</span>
             <span class="tag" style="color:var(--green)">94%</span>
             <span class="tag">~5M–10M</span>
           </div>
-          
-          
-          <div class="rev-bar">
-            <div class="rev-pos" style="width:94%"></div>
-            <div class="rev-neg" style="width:6%"></div>
-          </div>
-          <div class="rev-counts">
-            <span class="pos">+207K</span>
-            <span>220K reviews</span>
-            <span class="neg">-13K</span>
-          </div>
-          
+          <div class="rev-bar"><div class="rev-pos" style="width:94%"></div><div class="rev-neg" style="width:6%"></div></div>
+          <div class="rev-counts"><span class="pos">+207K</span><span>220K reviews</span><span class="neg">-13K</span></div>
         </div>
       </a>
     </div>
-    
     <div class="sgc">
       <a href="https://store.steampowered.com/app/1172470" target="_blank" rel="noopener">
         <img class="sgc-img" src="https://cdn.akamai.steamstatic.com/steam/apps/1172470/header.jpg" alt="Apex Legends" loading="lazy" onerror="this.style.display='none'">
         <div class="sgc-body">
           <div style="display:flex;align-items:flex-end;justify-content:space-between;gap:12px">
-            <div>
-              <div class="surge-num">+24%</div>
-              <div class="surge-sub">tăng so hôm qua</div>
-            </div>
-            <div style="text-align:right">
-              <div style="font-family:var(--fm);font-size:16px;font-weight:500;color:var(--text)">88,420</div><div class="surge-sub">players now</div>
-            </div>
+            <div><div class="surge-num">+24%</div><div class="surge-sub">tăng so hôm qua</div></div>
+            <div style="text-align:right"><div style="font-family:var(--fm);font-size:16px;font-weight:500;color:var(--text)">88,420</div><div class="surge-sub">players now</div></div>
           </div>
-          <div style="display:flex;align-items:center;gap:8px">
-            <div class="sgc-name">Apex Legends</div>
-          </div>
-          
-          <div class="surge-abs">Hôm qua: 71,000 → Hôm nay: 88,420
-            (+17,420)</div>
-          
+          <div style="display:flex;align-items:center;gap:8px"><div class="sgc-name">Apex Legends</div></div>
+          <div class="surge-abs">Hôm qua: 71,000 → Hôm nay: 88,420 (+17,420)</div>
           <div class="sgc-tags">
             <span class="tag">Action</span><span class="tag">Free To Play</span>
             <span class="tag" style="color:var(--green)">72%</span>
             <span class="tag">~50M–100M</span>
           </div>
-          
-          
-          <div class="rev-bar">
-            <div class="rev-pos" style="width:72%"></div>
-            <div class="rev-neg" style="width:28%"></div>
-          </div>
-          <div class="rev-counts">
-            <span class="pos">+612K</span>
-            <span>850K reviews</span>
-            <span class="neg">-238K</span>
-          </div>
-          
+          <div class="rev-bar"><div class="rev-pos" style="width:72%"></div><div class="rev-neg" style="width:28%"></div></div>
+          <div class="rev-counts"><span class="pos">+612K</span><span>850K reviews</span><span class="neg">-238K</span></div>
         </div>
       </a>
     </div>
-    
   </div>
-  
 </div>
 
 <!-- PANEL: DEALS -->
@@ -605,74 +576,198 @@ footer{border-top:1px solid var(--border);padding:22px 0 0;display:flex;justify-
     <h2 class="st"><span class="dot g"></span>Deals đáng mua</h2>
     <span class="sc2">Sale ≥ 20% · Review ≥ 65%</span>
   </div>
-  
   <div class="dg">
-    
     <div class="dc">
       <a href="https://store.steampowered.com/app/413150" target="_blank" rel="noopener">
         <img class="d-img" src="https://cdn.akamai.steamstatic.com/steam/apps/413150/capsule_231x87.jpg" alt="Stardew Valley" loading="lazy" onerror="this.style.display='none'">
         <div class="d-info">
           <div class="d-name">Stardew Valley</div>
-          <div class="d-prices">
-            <span class="d-badge">-40%</span>
-            <span class="d-orig">$14.99</span>
-            <span class="d-cur">$8.99</span>
-          </div>
-          <div class="d-rev-row">
-            
-            <span class="d-rev-badge good">98%</span>
-            
-            <span class="d-owners">~12M–20M owners</span>
-          </div>
-          
-          
-          <div class="rev-bar" style="margin-top:7px">
-            <div class="rev-pos" style="width:98%"></div>
-            <div class="rev-neg" style="width:2%"></div>
-          </div>
-          <div class="rev-counts">
-            <span class="pos">+902K</span>
-            <span class="neg">-18K</span>
-          </div>
-          
+          <div class="d-prices"><span class="d-badge">-40%</span><span class="d-orig">$14.99</span><span class="d-cur">$8.99</span></div>
+          <div class="d-rev-row"><span class="d-rev-badge good">98%</span><span class="d-owners">~12M–20M owners</span></div>
+          <div class="rev-bar" style="margin-top:7px"><div class="rev-pos" style="width:98%"></div><div class="rev-neg" style="width:2%"></div></div>
+          <div class="rev-counts"><span class="pos">+902K</span><span class="neg">-18K</span></div>
         </div>
       </a>
     </div>
-    
     <div class="dc">
       <a href="https://store.steampowered.com/app/1091500" target="_blank" rel="noopener">
         <img class="d-img" src="https://cdn.akamai.steamstatic.com/steam/apps/1091500/capsule_231x87.jpg" alt="Cyberpunk 2077" loading="lazy" onerror="this.style.display='none'">
         <div class="d-info">
           <div class="d-name">Cyberpunk 2077</div>
-          <div class="d-prices">
-            <span class="d-badge">-50%</span>
-            <span class="d-orig">$59.99</span>
-            <span class="d-cur">$29.99</span>
-          </div>
-          <div class="d-rev-row">
-            
-            <span class="d-rev-badge good">86%</span>
-            
-            <span class="d-owners">~15M–20M owners</span>
-          </div>
-          
-          
-          <div class="rev-bar" style="margin-top:7px">
-            <div class="rev-pos" style="width:86%"></div>
-            <div class="rev-neg" style="width:14%"></div>
-          </div>
-          <div class="rev-counts">
-            <span class="pos">+585K</span>
-            <span class="neg">-95K</span>
-          </div>
-          
+          <div class="d-prices"><span class="d-badge">-50%</span><span class="d-orig">$59.99</span><span class="d-cur">$29.99</span></div>
+          <div class="d-rev-row"><span class="d-rev-badge good">86%</span><span class="d-owners">~15M–20M owners</span></div>
+          <div class="rev-bar" style="margin-top:7px"><div class="rev-pos" style="width:86%"></div><div class="rev-neg" style="width:14%"></div></div>
+          <div class="rev-counts"><span class="pos">+585K</span><span class="neg">-95K</span></div>
         </div>
       </a>
     </div>
-    
   </div>
-  
 </div>
+
+<!-- ════════════════════════════════════════════════════
+     PANEL: GAME MỚI ★ NEW
+════════════════════════════════════════════════════ -->
+<div class="panel" id="p-new">
+  <div class="sh">
+    <h2 class="st"><span class="dot n"></span>Game mới nổi bật</h2>
+    <span class="sc2">Ra trong 14 ngày · review ≥70% · ≥100 reviews · ≥500 players</span>
+  </div>
+
+  <!-- Summary strip -->
+  <div class="nr-header-strip">
+    <div>
+      <div class="nr-title">✦ New Releases Radar</div>
+      <div class="nr-sub">Lọc tự động · chỉ giữ game đáng theo dõi · sort theo Launch Score</div>
+    </div>
+    <div class="nr-stats">
+      <div class="nrs"><div class="v">3</div><div class="l">Games tracked</div></div>
+      <div class="nrs"><div class="v">91%</div><div class="l">Avg review</div></div>
+      <div class="nrs"><div class="v">~320</div><div class="l">Reviews/day avg</div></div>
+      <div class="nrs"><div class="v">7 ngày</div><div class="l">Avg age</div></div>
+    </div>
+  </div>
+
+  <!-- Featured (rank 1) + list (rank 2-N) side by side -->
+  <div class="nr-grid">
+
+    <!-- Featured card: Game mới #1 by launch score -->
+    <div class="nr-feat">
+      <a href="https://store.steampowered.com/app/2246680" target="_blank" rel="noopener">
+        <img class="feat-img" src="https://cdn.akamai.steamstatic.com/steam/apps/2246680/header.jpg"
+          alt="Schedule I" loading="eager" onerror="this.src='https://cdn.akamai.steamstatic.com/steam/apps/2246680/capsule_231x87.jpg'">
+        <div class="feat-body">
+          <div class="feat-top">
+            <span class="feat-rank">✦ #1 LAUNCH SCORE</span>
+            <span class="feat-days fresh" id="feat-days">Ra 5 ngày trước</span>
+          </div>
+          <div>
+            <div class="feat-name">Schedule I</div>
+            <div class="feat-dev">TVGS · Indie / Simulation</div>
+          </div>
+
+          <!-- Launch Score meter -->
+          <div class="score-meter">
+            <div class="sm-label">
+              <span class="t">Launch Score</span>
+              <span class="v" id="feat-score-val">0.847</span>
+            </div>
+            <div class="bar-bg">
+              <div class="bar-fill" id="feat-score-bar" style="width:0%"></div>
+            </div>
+          </div>
+
+          <div class="feat-stats">
+            <div class="feat-stat">
+              <div class="v g">93%</div><div class="l">REVIEW</div>
+            </div>
+            <div class="feat-stat">
+              <div class="v">3,840</div><div class="l">REVIEWS</div>
+            </div>
+            <div class="feat-stat">
+              <div class="v n">~768/ngày</div><div class="l">VELOCITY</div>
+            </div>
+            <div class="feat-stat">
+              <div class="v">12,400</div><div class="l">PLAYERS</div>
+            </div>
+            <div class="feat-stat">
+              <div class="v a">$14.99</div><div class="l">GIÁ</div>
+            </div>
+          </div>
+
+          <div class="rev-bar" style="margin-top:4px">
+            <div class="rev-pos" style="width:93%"></div>
+            <div class="rev-neg" style="width:7%"></div>
+          </div>
+          <div class="rev-counts">
+            <span class="pos">+3,572</span>
+            <span>3,840 reviews</span>
+            <span class="neg">-268</span>
+          </div>
+          <div class="owners-row" style="margin-top:6px">Owners: <span>~200K–500K</span></div>
+        </div>
+      </a>
+    </div>
+
+    <!-- List: rank 2 onwards -->
+    <div class="nr-list">
+
+      <div class="nrc">
+        <a href="https://store.steampowered.com/app/2379780" target="_blank" rel="noopener">
+          <img class="nrc-img" src="https://cdn.akamai.steamstatic.com/steam/apps/2379780/capsule_231x87.jpg"
+            alt="Clair Obscur" loading="lazy" onerror="this.style.display='none'">
+          <div class="nrc-main">
+            <div class="nrc-top">
+              <span class="nrc-rank">#2</span>
+              <span class="days-badge">Ra 8 ngày trước</span>
+              <span class="vel-badge hot">~290 reviews/ngày 🔥</span>
+            </div>
+            <div class="nrc-name">Clair Obscur: Expedition 33</div>
+            <div class="nrc-meta">
+              <span class="nrc-tag">RPG</span><span class="nrc-tag">Turn-Based</span>
+              <span class="nrc-tag" style="color:var(--green)">96%</span>
+              <span class="nrc-tag">$49.99</span>
+            </div>
+          </div>
+          <div class="nrc-right">
+            <div class="nrc-score">0.731</div>
+            <div class="nrc-score-l">LAUNCH SCORE</div>
+            <div class="nrc-bar"><div class="nrc-bar-fill" style="width:73.1%"></div></div>
+          </div>
+        </a>
+      </div>
+
+      <div class="nrc">
+        <a href="https://store.steampowered.com/app/2835570" target="_blank" rel="noopener">
+          <img class="nrc-img" src="https://cdn.akamai.steamstatic.com/steam/apps/2835570/capsule_231x87.jpg"
+            alt="Tempest Rising" loading="lazy" onerror="this.style.display='none'">
+          <div class="nrc-main">
+            <div class="nrc-top">
+              <span class="nrc-rank">#3</span>
+              <span class="days-badge">Ra 11 ngày trước</span>
+              <span class="vel-badge">~78 reviews/ngày</span>
+            </div>
+            <div class="nrc-name">Tempest Rising</div>
+            <div class="nrc-meta">
+              <span class="nrc-tag">RTS</span><span class="nrc-tag">Strategy</span>
+              <span class="nrc-tag" style="color:var(--green)">84%</span>
+              <span class="nrc-tag">$29.99</span>
+            </div>
+          </div>
+          <div class="nrc-right">
+            <div class="nrc-score">0.512</div>
+            <div class="nrc-score-l">LAUNCH SCORE</div>
+            <div class="nrc-bar"><div class="nrc-bar-fill" style="width:51.2%"></div></div>
+          </div>
+        </a>
+      </div>
+
+      <!-- Placeholder nếu có thêm game -->
+      <div style="padding:14px 16px;background:var(--bg2);border:1px dashed var(--border);border-radius:var(--r);text-align:center">
+        <div style="font-family:var(--fm);font-size:11px;color:var(--muted)">
+          Cập nhật mỗi ngày — game mới đủ tiêu chuẩn sẽ tự động xuất hiện
+        </div>
+      </div>
+
+    </div>
+  </div><!-- /nr-grid -->
+
+  <!-- AI Buzz insight for new releases -->
+  <div class="buzz-card">
+    <div class="buzz-hd">
+      <div class="buzz-icon">🚀</div>
+      <div>
+        <div class="buzz-title">New Releases Buzz — AI Analysis</div>
+        <div class="buzz-sub">Groq · Llama 3.3 70B · phân tích velocity, trajectory, dự báo</div>
+      </div>
+    </div>
+    <div class="buzz-body">
+      <p><strong>🚀 Ngôi sao mới nổi:</strong> <strong>Schedule I</strong> đang có trajectory ấn tượng nhất tuần này — 768 reviews/ngày trong 5 ngày đầu với tỷ lệ 93% positive là tín hiệu word-of-mouth rất mạnh. Đây là mức velocity hiếm thấy với game indie không có marketing lớn.</p>
+      <p><strong>⚡ Tốc độ tăng trưởng:</strong> <strong>Clair Obscur: Expedition 33</strong> (290 reviews/ngày) cho thấy cộng đồng RPG đang rất hào hứng — game này có nền tảng từ GamePass Day 1 nên cross-platform awareness cao. <strong>Tempest Rising</strong> chậm hơn (78/ngày) nhưng ổn định — phù hợp với audience niche RTS.</p>
+      <p><strong>🎯 Dự báo 2 tuần tới:</strong> Schedule I có khả năng maintain momentum nếu không có major bug reports — watch out nếu review đột ngột giảm xuống dưới 88%. Clair Obscur gần như chắc chắn giữ được vì đã có critical acclaim từ media lớn. Tempest Rising sẽ ổn định ở tệp RTS hardcore, khó breakout mainstream.</p>
+    </div>
+  </div>
+
+</div><!-- /p-new -->
 
 <!-- PANEL: CHARTS -->
 <div class="panel" id="p-charts">
@@ -681,25 +776,19 @@ footer{border-top:1px solid var(--border);padding:22px 0 0;display:flex;justify-
     <span class="sc2">7 ngày dữ liệu</span>
   </div>
   <div class="chart-row" style="margin-bottom:14px">
-    
     <div class="cb">
       <div class="cb-title">Lịch sử players — top games</div>
       <div class="ch"><canvas id="lineChart"></canvas></div>
     </div>
-    
-    
     <div class="cb">
       <div class="cb-title">Genre — tổng players hôm nay</div>
       <div class="ch"><canvas id="barChart"></canvas></div>
     </div>
-    
   </div>
-  
   <div class="cb">
     <div class="cb-title">Top đột biến — % tăng so hôm qua</div>
     <div class="ch"><canvas id="surgeChart"></canvas></div>
   </div>
-  
 </div>
 
 <!-- PANEL: INSIGHTS -->
@@ -709,32 +798,30 @@ footer{border-top:1px solid var(--border);padding:22px 0 0;display:flex;justify-
     <span class="sc2">Groq · Llama 3.3 70B</span>
   </div>
   <div class="ig">
-    
     <div class="ic feat">
       <div class="ic-hd"><div class="ic-icon">📈</div>
         <div><div class="ic-title">Xu hướng tuần này</div><div class="ic-sub">trend_analysis</div></div>
       </div>
-      <div class="ic-body"><p><ol><li><strong>Xu hướng</strong>: Survival và Indie đang tăng mạnh.</li></ol>
-<ol><li><strong>Điểm thú vị</strong>: Palworld tăng 28% sau update mới.</li></ol>
-<ol><li><strong>Dự báo</strong>: Tuần tới có thể thấy thêm game co-op.</li></ol></p></div>
+      <div class="ic-body"><p><ol><li><strong>Xu hướng</strong>: Survival và Indie đang tăng mạnh.</li></ol><ol><li><strong>Điểm thú vị</strong>: Palworld tăng 28% sau update mới.</li></ol><ol><li><strong>Dự báo</strong>: Tuần tới có thể thấy thêm game co-op.</li></ol></p></div>
     </div>
-    
-    
     <div class="ic">
       <div class="ic-hd"><div class="ic-icon">🎯</div>
         <div><div class="ic-title">Top picks đáng mua</div><div class="ic-sub">deal_picks</div></div>
       </div>
       <div class="ic-body"><p><ol><li><strong>Stardew Valley</strong> — 98% positive, -40% còn $8.99. Deal tốt nhất tuần này.</li><li><strong>Cyberpunk 2077</strong> — -50%, game đã hoàn thiện hoàn toàn.</li></ol></p></div>
     </div>
-    
-    
     <div class="ic">
       <div class="ic-hd"><div class="ic-icon">💎</div>
         <div><div class="ic-title">Hidden gems</div><div class="ic-sub">hidden_gems</div></div>
       </div>
       <div class="ic-body"><p><strong>Valheim</strong> — 95% review sau 3 năm, vẫn cực active.</p><p><strong>Palworld</strong> — indie depth không tưởng.</p></div>
     </div>
-    
+    <div class="ic" style="border-color:rgba(168,85,247,.25);background:linear-gradient(135deg,var(--bg2),rgba(168,85,247,.04))">
+      <div class="ic-hd"><div class="ic-icon" style="background:var(--new-dim);border-color:rgba(168,85,247,.3)">🚀</div>
+        <div><div class="ic-title" style="color:var(--new-bright)">New Releases Buzz</div><div class="ic-sub">new_releases_buzz</div></div>
+      </div>
+      <div class="ic-body"><p>Schedule I và Clair Obscur đang dẫn đầu tuần launch mới. Xem tab <strong>Game Mới</strong> để đọc phân tích chi tiết.</p></div>
+    </div>
   </div>
 </div>
 
@@ -756,6 +843,21 @@ document.querySelectorAll('.tab').forEach(btn => {
   });
 });
 
+// ── Animate launch score bar on page load ──────────────────
+window.addEventListener('load', () => {
+  // Featured score bar
+  const bar = document.getElementById('feat-score-bar');
+  if (bar) {
+    setTimeout(() => { bar.style.width = '84.7%'; }, 300);
+  }
+  // All nrc bars animate
+  document.querySelectorAll('.nrc-bar-fill').forEach(b => {
+    const w = b.style.width;
+    b.style.width = '0';
+    setTimeout(() => { b.style.width = w; b.style.transition = 'width .7s ease'; }, 400);
+  });
+});
+
 // ── Chart defaults ─────────────────────────────────────────
 const CD = {
   responsive:true, maintainAspectRatio:false,
@@ -769,53 +871,47 @@ const CD = {
 const TIP = {backgroundColor:'#17171f',borderColor:'rgba(255,255,255,.1)',borderWidth:1,
   titleColor:'#e6e6f0',bodyColor:'#9090aa',padding:11};
 
-
 new Chart(document.getElementById('lineChart').getContext('2d'),{
   type:'line',
   data:{
-    labels:["2026-04-15", "2026-04-16", "2026-04-17", "2026-04-18", "2026-04-19", "2026-04-20", "2026-04-21"],
-    datasets:[{"color": "#5b6af8", "data": [610000, 625000, null, 640000, 620000, 635000, 637017], "label": "Counter-Strike 2"}, {"color": "#22c984", "data": [38000, 40000, 43000, 42500, 41000, 43000, 42100], "label": "Valheim"}].map(d=>({
+    labels:["2026-04-15","2026-04-16","2026-04-17","2026-04-18","2026-04-19","2026-04-20","2026-04-21"],
+    datasets:[
+      {"color":"#5b6af8","data":[610000,625000,null,640000,620000,635000,637017],"label":"Counter-Strike 2"},
+      {"color":"#22c984","data":[38000,40000,43000,42500,41000,43000,42100],"label":"Valheim"}
+    ].map(d=>({
       label:d.label, data:d.data,
       borderColor:d.color, backgroundColor:d.color+'14',
       borderWidth:2, pointRadius:3, pointHoverRadius:5,
       tension:.35, spanGaps:true, fill:false,
     }))
   },
-  options:{...CD, plugins:{...CD.plugins,
-    tooltip:{...TIP,callbacks:{label:c=>` ${c.dataset.label}: ${(c.parsed.y||0).toLocaleString()}`}}}}
+  options:{...CD,plugins:{...CD.plugins,tooltip:{...TIP,callbacks:{label:c=>` ${c.dataset.label}: ${(c.parsed.y||0).toLocaleString()}`}}}}
 });
 
-
-
 (()=>{
-  const labels=["Action", "Survival", "RPG", "Indie", "Strategy"];
-  const vals=[720000, 180000, 140000, 90000, 60000];
+  const labels=["Action","Survival","RPG","Indie","Strategy"];
+  const vals=[720000,180000,140000,90000,60000];
   const mx=Math.max(...vals);
   new Chart(document.getElementById('barChart').getContext('2d'),{
     type:'bar',
     data:{labels,datasets:[{data:vals,
       backgroundColor:vals.map(v=>`rgba(91,106,248,${.28+v/mx*.55})`),
       borderColor:'rgba(91,106,248,.35)',borderWidth:1,borderRadius:5}]},
-    options:{...CD,plugins:{legend:{display:false},
-      tooltip:{...TIP,callbacks:{label:c=>` ${c.parsed.y.toLocaleString()} players`}}}}
+    options:{...CD,plugins:{legend:{display:false},tooltip:{...TIP,callbacks:{label:c=>` ${c.parsed.y.toLocaleString()} players`}}}}
   });
 })();
 
-
-
 (()=>{
-  const labels=["Palworld", "Apex Legends"].map(s=>s.length>18?s.slice(0,18)+'…':s);
-  const vals=[28.5, 24.5];
+  const labels=["Palworld","Apex Legends"].map(s=>s.length>18?s.slice(0,18)+'…':s);
+  const vals=[28.5,24.5];
   new Chart(document.getElementById('surgeChart').getContext('2d'),{
     type:'bar',
     data:{labels,datasets:[{data:vals,
       backgroundColor:'rgba(255,107,53,.45)',borderColor:'rgba(255,107,53,.7)',
       borderWidth:1,borderRadius:5}]},
     options:{
-      ...CD,
-      indexAxis:'y',
-      plugins:{legend:{display:false},
-        tooltip:{...TIP,callbacks:{label:c=>` +${c.parsed.x.toFixed(1)}% tăng`}}},
+      ...CD, indexAxis:'y',
+      plugins:{legend:{display:false},tooltip:{...TIP,callbacks:{label:c=>` +${c.parsed.x.toFixed(1)}% tăng`}}},
       scales:{
         x:{...CD.scales.x,ticks:{...CD.scales.x.ticks,callback:v=>'+'+v+'%'}},
         y:{...CD.scales.y,ticks:{color:'#9090aa',font:{family:'DM Mono',size:10}}}
@@ -823,7 +919,6 @@ new Chart(document.getElementById('lineChart').getContext('2d'),{
     }
   });
 })();
-
 </script>
 </body>
 </html>

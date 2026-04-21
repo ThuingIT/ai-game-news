@@ -1,4 +1,4 @@
-"""generate_html.py v3 — query surge, reviews, owners; pass to template"""
+"""generate_html.py v4 — thêm new_releases panel + buzz insight"""
 import os, sys, re, logging, json
 from pathlib import Path
 from datetime import datetime, timezone
@@ -8,9 +8,9 @@ from supabase import create_client, Client
 logging.basicConfig(level=logging.INFO, format="%(asctime)s [%(levelname)s] %(message)s", datefmt="%H:%M:%S")
 log = logging.getLogger(__name__)
 
-ROOT = Path(__file__).parent.parent
+ROOT      = Path(__file__).parent.parent
 TEMPLATES = ROOT / "templates"
-OUTPUT = ROOT / "docs"
+OUTPUT    = ROOT / "docs"
 OUTPUT.mkdir(exist_ok=True)
 
 SUPABASE_URL = os.environ.get("SUPABASE_URL","")
@@ -43,7 +43,7 @@ def q(table, select="*", limit=50, order=None, filters=None):
         req = sb.table(table).select(select)
         for f in (filters or []):
             col, op, val = f
-            if op == "eq": req = req.eq(col, val)
+            if op == "eq":  req = req.eq(col, val)
             elif op == "gte": req = req.gte(col, val)
         if order:
             req = req.order(order.lstrip("-"), desc=order.startswith("-"))
@@ -80,30 +80,46 @@ def history(ids):
             if aid not in out:
                 out[aid] = {"name": row["name"], "points": []}
             if row.get("concurrent_peak"):
-                out[aid]["points"].append({"date": str(row["snapshot_date"])[:10], "peak": row["concurrent_peak"]})
+                out[aid]["points"].append({
+                    "date": str(row["snapshot_date"])[:10],
+                    "peak": row["concurrent_peak"]
+                })
         return out
     except Exception as e:
         log.error("history: %s", e); return {}
 
 
-def render():
-    log.info("Fetching...")
-    trending_raw = q("v_trending_today", limit=80)
+def get_new_releases(limit: int = 20) -> list[dict]:
+    """Lấy game mới từ bảng new_releases, sort theo launch_score desc."""
+    try:
+        r = sb.table("new_releases")\
+              .select("app_id, name, developer, genres, review_pct, review_count, "
+                      "positive_reviews, negative_reviews, concurrent_peak, "
+                      "owners_text, price_usd, is_free, img_header, img_capsule, "
+                      "steam_url, release_date, days_since_release, launch_score")\
+              .order("launch_score", desc=True)\
+              .limit(limit).execute()
+        return r.data or []
+    except Exception as e:
+        log.error("new_releases: %s", e); return []
 
-    # Dedupe by app_id
+
+def render():
+    log.info("Fetching data...")
+    trending_raw  = q("v_trending_today", limit=80)
+    surge         = q("v_surge_today",       limit=12)
+    deals         = q("v_deals_today",        limit=16)
+    genre_stat    = q("v_genre_stats_today",  limit=10)
+    stats         = q1("v_stats_today")
+    new_releases  = get_new_releases(limit=20)
+
+    # Dedupe trending
     seen, trending = set(), []
     for g in trending_raw:
         aid = g.get("app_id")
         if aid and aid not in seen:
-            seen.add(aid)
-            trending.append(g)
-        if len(trending) >= 24:
-            break
-
-    surge      = q("v_surge_today",      limit=12)
-    deals      = q("v_deals_today",      limit=16)
-    genre_stat = q("v_genre_stats_today", limit=10)
-    stats      = q1("v_stats_today")
+            seen.add(aid); trending.append(g)
+        if len(trending) >= 24: break
 
     top_ids = [g["app_id"] for g in trending[:8] if g.get("app_id")]
     hist    = history(top_ids)
@@ -111,9 +127,11 @@ def render():
     COLORS = ["#5b6af8","#22c984","#f5a623","#f05252","#a78bfa","#38bdf8","#fb923c","#34d399"]
     all_dates = sorted({pt["date"] for info in hist.values() for pt in info["points"]})
     chart_line = [
-        {"label": info["name"][:22],
-         "data":  [{pt["date"]: pt["peak"] for pt in info["points"]}.get(d) for d in all_dates],
-         "color": COLORS[i % len(COLORS)]}
+        {
+            "label": info["name"][:22],
+            "data":  [{pt["date"]: pt["peak"] for pt in info["points"]}.get(d) for d in all_dates],
+            "color": COLORS[i % len(COLORS)],
+        }
         for i, (_, info) in enumerate(hist.items())
     ]
 
@@ -121,10 +139,13 @@ def render():
     ctx = dict(
         trending=trending, surge=surge, deals=deals,
         genre_stat=genre_stat, stats=stats,
+        new_releases=new_releases,
+        total_new=len(new_releases),
         summary=md_to_html(insight("weekly_summary")),
         trend_analysis=md_to_html(insight("trend_analysis")),
         deal_picks=md_to_html(insight("deal_picks")),
         hidden_gems=md_to_html(insight("hidden_gems")),
+        new_releases_buzz=md_to_html(insight("new_releases_buzz")),
         chart_labels=all_dates, chart_line=chart_line,
         has_history=bool(all_dates and chart_line),
         updated_at=now.strftime("%d/%m/%Y %H:%M UTC"),
@@ -152,8 +173,9 @@ def render():
 
 
 def main():
-    log.info("="*55); log.info("generate_html.py v3"); log.info("="*55)
+    log.info("="*55); log.info("generate_html.py v4"); log.info("="*55)
     render(); log.info("Done!")
+
 
 if __name__ == "__main__":
     main()
