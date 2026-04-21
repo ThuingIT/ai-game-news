@@ -1,0 +1,1702 @@
+<!DOCTYPE html>
+<html lang="vi">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Steam Pulse — Trending Games Today</title>
+<meta name="description" content="Dữ liệu Steam trending, deals, và AI insights cập nhật hàng ngày.">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=Bebas+Neue&family=DM+Sans:ital,wght@0,300;0,400;0,500;1,300&family=DM+Mono:wght@400;500&display=swap" rel="stylesheet">
+<script src="https://cdn.jsdelivr.net/npm/chart.js@4.4.0/dist/chart.umd.min.js"></script>
+<style>
+/* ── Reset & Base ─────────────────────────────────────────── */
+*, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+
+:root {
+  --bg:        #0a0a0f;
+  --bg2:       #111118;
+  --bg3:       #18181f;
+  --bg4:       #1e1e28;
+  --border:    rgba(255,255,255,0.07);
+  --border2:   rgba(255,255,255,0.12);
+  --text:      #e8e8f0;
+  --muted:     #6b6b80;
+  --muted2:    #9898b0;
+  --accent:    #5b6af8;
+  --accent2:   #7c89ff;
+  --green:     #22c984;
+  --green2:    #1a9e68;
+  --amber:     #f5a623;
+  --red:       #f05252;
+  --font-head: 'Bebas Neue', sans-serif;
+  --font-body: 'DM Sans', sans-serif;
+  --font-mono: 'DM Mono', monospace;
+  --radius:    10px;
+  --radius-lg: 16px;
+}
+
+html { scroll-behavior: smooth; }
+body {
+  background: var(--bg);
+  color: var(--text);
+  font-family: var(--font-body);
+  font-size: 15px;
+  line-height: 1.6;
+  min-height: 100vh;
+  overflow-x: hidden;
+}
+
+/* ── Noise overlay ────────────────────────────────────────── */
+body::before {
+  content: '';
+  position: fixed; inset: 0;
+  background-image: url("data:image/svg+xml,%3Csvg viewBox='0 0 256 256' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='noise'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.9' numOctaves='4' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23noise)' opacity='0.03'/%3E%3C/svg%3E");
+  pointer-events: none; z-index: 0; opacity: 0.4;
+}
+
+/* ── Grid layout ──────────────────────────────────────────── */
+.page { position: relative; z-index: 1; max-width: 1400px; margin: 0 auto; padding: 0 24px 80px; }
+
+/* ── Header ───────────────────────────────────────────────── */
+.site-header {
+  display: flex; align-items: flex-end; justify-content: space-between;
+  padding: 48px 0 32px;
+  border-bottom: 1px solid var(--border);
+  gap: 24px; flex-wrap: wrap;
+}
+.logo { display: flex; align-items: baseline; gap: 10px; }
+.logo-text {
+  font-family: var(--font-head);
+  font-size: clamp(48px, 8vw, 80px);
+  letter-spacing: 0.02em;
+  line-height: 1;
+  background: linear-gradient(135deg, #fff 30%, var(--accent2));
+  -webkit-background-clip: text; -webkit-text-fill-color: transparent;
+}
+.logo-badge {
+  background: var(--accent);
+  color: #fff; font-family: var(--font-mono);
+  font-size: 10px; font-weight: 500;
+  padding: 3px 8px; border-radius: 4px;
+  letter-spacing: 0.08em; text-transform: uppercase;
+  margin-bottom: 10px;
+}
+.header-meta { text-align: right; }
+.header-meta .label { font-size: 11px; color: var(--muted); letter-spacing: 0.1em; text-transform: uppercase; }
+.header-meta .value { font-family: var(--font-mono); font-size: 13px; color: var(--muted2); margin-top: 2px; }
+
+/* ── Summary banner (AI weekly summary) ──────────────────── */
+.summary-banner {
+  margin: 32px 0;
+  background: linear-gradient(135deg, var(--bg3) 0%, var(--bg4) 100%);
+  border: 1px solid var(--border2);
+  border-left: 3px solid var(--accent);
+  border-radius: var(--radius-lg);
+  padding: 24px 28px;
+  display: flex; gap: 20px; align-items: flex-start;
+}
+.summary-banner .ai-tag {
+  background: var(--accent); color: #fff;
+  font-family: var(--font-mono); font-size: 10px;
+  padding: 3px 8px; border-radius: 4px;
+  white-space: nowrap; margin-top: 3px;
+  letter-spacing: 0.06em;
+}
+.summary-banner .ai-text { color: var(--text); font-size: 15px; line-height: 1.7; font-weight: 300; }
+
+/* ── Stats row ────────────────────────────────────────────── */
+.stats-row {
+  display: grid; grid-template-columns: repeat(auto-fit, minmax(180px, 1fr));
+  gap: 12px; margin-bottom: 40px;
+}
+.stat-card {
+  background: var(--bg2);
+  border: 1px solid var(--border);
+  border-radius: var(--radius);
+  padding: 20px 22px;
+  transition: border-color 0.2s;
+}
+.stat-card:hover { border-color: var(--border2); }
+.stat-card .s-label { font-size: 11px; color: var(--muted); letter-spacing: 0.1em; text-transform: uppercase; margin-bottom: 8px; }
+.stat-card .s-value { font-family: var(--font-head); font-size: 36px; line-height: 1; color: var(--text); }
+.stat-card .s-sub   { font-size: 12px; color: var(--muted2); margin-top: 4px; }
+
+/* ── Section titles ───────────────────────────────────────── */
+.section { margin-bottom: 56px; }
+.section-head {
+  display: flex; align-items: center; justify-content: space-between;
+  margin-bottom: 20px; padding-bottom: 12px;
+  border-bottom: 1px solid var(--border);
+}
+.section-title {
+  font-family: var(--font-head);
+  font-size: 28px; letter-spacing: 0.03em;
+  display: flex; align-items: center; gap: 10px;
+}
+.section-title .dot {
+  width: 8px; height: 8px; border-radius: 50%;
+  background: var(--accent); display: inline-block;
+}
+.section-title .dot.green { background: var(--green); }
+.section-title .dot.amber { background: var(--amber); }
+.section-count { font-family: var(--font-mono); font-size: 12px; color: var(--muted); }
+
+/* ── Trending grid ────────────────────────────────────────── */
+.trending-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(280px, 1fr));
+  gap: 14px;
+}
+
+/* First card spans 2 columns on wide screens */
+@media (min-width: 900px) {
+  .trending-grid .game-card:first-child { grid-column: span 2; }
+}
+
+.game-card {
+  background: var(--bg2);
+  border: 1px solid var(--border);
+  border-radius: var(--radius-lg);
+  overflow: hidden;
+  display: flex; flex-direction: column;
+  transition: transform 0.2s, border-color 0.2s, box-shadow 0.2s;
+  cursor: pointer;
+}
+.game-card:hover {
+  transform: translateY(-3px);
+  border-color: var(--border2);
+  box-shadow: 0 12px 40px rgba(0,0,0,0.5);
+}
+.game-card a { text-decoration: none; color: inherit; display: flex; flex-direction: column; height: 100%; }
+
+.card-img {
+  width: 100%; aspect-ratio: 460/215;
+  object-fit: cover; display: block;
+  background: var(--bg3);
+}
+.game-card:first-child .card-img { aspect-ratio: 16/7; }
+
+.card-body { padding: 14px 16px 16px; flex: 1; display: flex; flex-direction: column; }
+
+.card-rank {
+  font-family: var(--font-mono); font-size: 10px;
+  color: var(--accent2); letter-spacing: 0.08em;
+  margin-bottom: 6px;
+}
+.card-name {
+  font-size: 15px; font-weight: 500;
+  line-height: 1.3; margin-bottom: 8px;
+  display: -webkit-box; -webkit-line-clamp: 2;
+  -webkit-box-orient: vertical; overflow: hidden;
+}
+.game-card:first-child .card-name { font-size: 20px; }
+
+.card-tags {
+  display: flex; flex-wrap: wrap; gap: 4px;
+  margin-bottom: 12px;
+}
+.tag {
+  font-size: 10px; font-family: var(--font-mono);
+  color: var(--muted2); background: var(--bg3);
+  border: 1px solid var(--border);
+  padding: 2px 7px; border-radius: 4px;
+  letter-spacing: 0.04em;
+}
+
+.card-stats { display: flex; gap: 14px; margin-top: auto; flex-wrap: wrap; }
+.cstat { display: flex; flex-direction: column; }
+.cstat .cs-val { font-family: var(--font-mono); font-size: 14px; font-weight: 500; color: var(--text); }
+.cstat .cs-lbl { font-size: 10px; color: var(--muted); letter-spacing: 0.06em; margin-top: 1px; }
+
+.review-bar {
+  height: 3px; background: var(--bg4);
+  border-radius: 2px; margin-top: 12px; overflow: hidden;
+}
+.review-fill { height: 100%; border-radius: 2px; background: var(--green); }
+
+/* ── Deals grid ───────────────────────────────────────────── */
+.deals-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(260px, 1fr));
+  gap: 12px;
+}
+.deal-card {
+  background: var(--bg2);
+  border: 1px solid var(--border);
+  border-radius: var(--radius-lg);
+  padding: 16px;
+  display: flex; gap: 14px; align-items: flex-start;
+  transition: border-color 0.2s, transform 0.2s;
+  cursor: pointer;
+}
+.deal-card:hover { border-color: var(--green2); transform: translateY(-2px); }
+.deal-card a { text-decoration: none; color: inherit; display: flex; gap: 14px; width: 100%; }
+
+.deal-img {
+  width: 80px; height: 37px;
+  object-fit: cover; border-radius: 6px;
+  background: var(--bg3); flex-shrink: 0;
+}
+.deal-info { flex: 1; min-width: 0; }
+.deal-name {
+  font-size: 13px; font-weight: 500;
+  white-space: nowrap; overflow: hidden; text-overflow: ellipsis;
+  margin-bottom: 6px;
+}
+.deal-prices { display: flex; align-items: center; gap: 8px; flex-wrap: wrap; }
+.deal-badge {
+  background: var(--green2);
+  color: #fff; font-family: var(--font-mono);
+  font-size: 12px; font-weight: 500;
+  padding: 2px 7px; border-radius: 4px;
+}
+.deal-original { font-size: 12px; color: var(--muted); text-decoration: line-through; }
+.deal-current  { font-size: 14px; font-weight: 500; color: var(--green); }
+
+/* ── AI Insights panel ────────────────────────────────────── */
+.insights-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(320px, 1fr));
+  gap: 16px;
+}
+.insight-card {
+  background: var(--bg2);
+  border: 1px solid var(--border);
+  border-radius: var(--radius-lg);
+  padding: 22px 24px;
+}
+.insight-card.featured {
+  border-color: rgba(91,106,248,0.3);
+  background: linear-gradient(135deg, var(--bg2), #13131e);
+}
+.insight-header { display: flex; align-items: center; gap: 10px; margin-bottom: 14px; }
+.insight-icon {
+  width: 32px; height: 32px; border-radius: 8px;
+  background: var(--bg3); border: 1px solid var(--border2);
+  display: flex; align-items: center; justify-content: center;
+  font-size: 15px;
+}
+.insight-title { font-weight: 500; font-size: 14px; }
+.insight-subtitle { font-size: 11px; color: var(--muted); margin-top: 1px; font-family: var(--font-mono); }
+.insight-body {
+  font-size: 13px; color: var(--muted2);
+  line-height: 1.75; white-space: pre-wrap;
+}
+
+/* ── Genre chart ──────────────────────────────────────────── */
+.chart-wrap {
+  background: var(--bg2);
+  border: 1px solid var(--border);
+  border-radius: var(--radius-lg);
+  padding: 24px;
+}
+.chart-canvas-wrap { position: relative; height: 280px; }
+
+/* ── Footer ───────────────────────────────────────────────── */
+footer {
+  border-top: 1px solid var(--border);
+  padding: 28px 0 0;
+  display: flex; justify-content: space-between; align-items: center;
+  flex-wrap: wrap; gap: 12px;
+}
+footer .f-brand { font-family: var(--font-head); font-size: 20px; color: var(--muted); }
+footer .f-note  { font-size: 12px; color: var(--muted); font-family: var(--font-mono); }
+
+/* ── Animations ───────────────────────────────────────────── */
+@keyframes fadeUp {
+  from { opacity: 0; transform: translateY(16px); }
+  to   { opacity: 1; transform: translateY(0); }
+}
+.section { animation: fadeUp 0.5s ease both; }
+.section:nth-child(2) { animation-delay: 0.05s; }
+.section:nth-child(3) { animation-delay: 0.10s; }
+.section:nth-child(4) { animation-delay: 0.15s; }
+.section:nth-child(5) { animation-delay: 0.20s; }
+
+/* ── Responsive ───────────────────────────────────────────── */
+@media (max-width: 640px) {
+  .site-header { padding: 32px 0 24px; }
+  .summary-banner { flex-direction: column; gap: 12px; }
+  .deal-card { flex-direction: column; }
+  .deal-img  { width: 100%; height: 50px; }
+}
+</style>
+</head>
+<body>
+<div class="page">
+
+  <!-- ── Header ──────────────────────────────────────────── -->
+  <header class="site-header">
+    <div class="logo">
+      <span class="logo-text">STEAM PULSE</span>
+      <span class="logo-badge">Live</span>
+    </div>
+    <div class="header-meta">
+      <div class="label">Cập nhật lúc</div>
+      <div class="value">21/04/2026 07:14 UTC</div>
+      <div class="value" style="margin-top:4px;font-size:11px;">20 games · 0 deals</div>
+    </div>
+  </header>
+
+  <!-- ── AI Weekly Summary ───────────────────────────────── -->
+  
+  <div class="summary-banner">
+    <span class="ai-tag">AI · Groq</span>
+    <p class="ai-text">Hôm nay, Steam chứng kiến sự thống trị của các tựa game hành động với Counter-Strike 2 dẫn đầu về lượt chơi. Điểm nhấn đáng chú ý là sự áp đảo của thể loại Action khi chiếm 50 vị trí trong top game, trong khi Counter-Strike 2 liên tục xuất hiện trong top với lượt chơi khổng lồ. Không có deal sale đáng chú ý nào diễn ra trong ngày hôm nay, khiến cho người chơi không có nhiều lựa chọn về việc tìm kiếm những tựa game giảm giá hấp dẫn. Nếu bạn đang tìm kiếm một trải nghiệm mới, hãy xem xét việc khám phá các thể loại khác như Adventure hoặc RPG, nơi có nhiều tựa game thú vị đang chờ đợi.</p>
+  </div>
+  
+
+  <!-- ── Stats row ───────────────────────────────────────── -->
+  <div class="stats-row" style="margin-top:32px;">
+    <div class="stat-card">
+      <div class="s-label">Top game hôm nay</div>
+      <div class="s-value" style="font-size:22px;font-family:var(--font-body);font-weight:500;">
+        Counter-Strike 2
+      </div>
+      <div class="s-sub">
+        
+          637,017 players online
+        
+      </div>
+    </div>
+    <div class="stat-card">
+      <div class="s-label">Games trending</div>
+      <div class="s-value">20</div>
+      <div class="s-sub">trong top hôm nay</div>
+    </div>
+    <div class="stat-card">
+      <div class="s-label">Deals chất lượng</div>
+      <div class="s-value" style="color:var(--green);">0</div>
+      <div class="s-sub">review ≥ 70% · sale ≥ 30%</div>
+    </div>
+    
+    <div class="stat-card">
+      <div class="s-label">Genre #1</div>
+      <div class="s-value" style="font-size:22px;font-family:var(--font-body);font-weight:500;">
+        Action
+      </div>
+      <div class="s-sub">5,207,734 players tổng</div>
+    </div>
+    
+  </div>
+
+  <!-- ── Trending ─────────────────────────────────────────── -->
+  
+  <section class="section">
+    <div class="section-head">
+      <h2 class="section-title">
+        <span class="dot"></span> Trending hôm nay
+      </h2>
+      <span class="section-count">20 games</span>
+    </div>
+    <div class="trending-grid">
+      
+      <div class="game-card">
+        <a href="https://store.steampowered.com/app/730" target="_blank" rel="noopener">
+          <img
+            class="card-img"
+            src="https://cdn.akamai.steamstatic.com/steam/apps/730/header.jpg"
+            alt="Counter-Strike 2"
+            loading="eager"
+            onerror="this.style.display='none'"
+          >
+          <div class="card-body">
+            <div class="card-rank">
+              #1
+              
+            </div>
+            <div class="card-name">Counter-Strike 2</div>
+            
+            <div class="card-tags">
+              
+              <span class="tag">Action</span>
+              
+              <span class="tag">Free To Play</span>
+              
+            </div>
+            
+            <div class="card-stats">
+              
+              <div class="cstat">
+                <span class="cs-val">637,017</span>
+                <span class="cs-lbl">PLAYING NOW</span>
+              </div>
+              
+              
+              <div class="cstat">
+                <span class="cs-val" style="color:var(--green)">
+                  87%
+                </span>
+                <span class="cs-lbl">REVIEW</span>
+              </div>
+              
+              
+              <div class="cstat">
+                <span class="cs-val">
+                  Free
+                </span>
+                <span class="cs-lbl">GIÁ</span>
+              </div>
+              
+            </div>
+            
+            <div class="review-bar">
+              <div class="review-fill" style="width:87%"></div>
+            </div>
+            
+          </div>
+        </a>
+      </div>
+      
+      <div class="game-card">
+        <a href="https://store.steampowered.com/app/730" target="_blank" rel="noopener">
+          <img
+            class="card-img"
+            src="https://cdn.akamai.steamstatic.com/steam/apps/730/header.jpg"
+            alt="Counter-Strike 2"
+            loading="eager"
+            onerror="this.style.display='none'"
+          >
+          <div class="card-body">
+            <div class="card-rank">
+              #1
+              
+            </div>
+            <div class="card-name">Counter-Strike 2</div>
+            
+            <div class="card-tags">
+              
+              <span class="tag">Action</span>
+              
+              <span class="tag">Free To Play</span>
+              
+            </div>
+            
+            <div class="card-stats">
+              
+              <div class="cstat">
+                <span class="cs-val">626,716</span>
+                <span class="cs-lbl">PLAYING NOW</span>
+              </div>
+              
+              
+              <div class="cstat">
+                <span class="cs-val" style="color:var(--green)">
+                  87%
+                </span>
+                <span class="cs-lbl">REVIEW</span>
+              </div>
+              
+              
+              <div class="cstat">
+                <span class="cs-val">
+                  Free
+                </span>
+                <span class="cs-lbl">GIÁ</span>
+              </div>
+              
+            </div>
+            
+            <div class="review-bar">
+              <div class="review-fill" style="width:87%"></div>
+            </div>
+            
+          </div>
+        </a>
+      </div>
+      
+      <div class="game-card">
+        <a href="https://store.steampowered.com/app/730" target="_blank" rel="noopener">
+          <img
+            class="card-img"
+            src="https://cdn.akamai.steamstatic.com/steam/apps/730/header.jpg"
+            alt="Counter-Strike 2"
+            loading="eager"
+            onerror="this.style.display='none'"
+          >
+          <div class="card-body">
+            <div class="card-rank">
+              #1
+              
+            </div>
+            <div class="card-name">Counter-Strike 2</div>
+            
+            <div class="card-tags">
+              
+              <span class="tag">Action</span>
+              
+              <span class="tag">Free To Play</span>
+              
+            </div>
+            
+            <div class="card-stats">
+              
+              <div class="cstat">
+                <span class="cs-val">626,716</span>
+                <span class="cs-lbl">PLAYING NOW</span>
+              </div>
+              
+              
+              <div class="cstat">
+                <span class="cs-val" style="color:var(--green)">
+                  87%
+                </span>
+                <span class="cs-lbl">REVIEW</span>
+              </div>
+              
+              
+              <div class="cstat">
+                <span class="cs-val">
+                  Free
+                </span>
+                <span class="cs-lbl">GIÁ</span>
+              </div>
+              
+            </div>
+            
+            <div class="review-bar">
+              <div class="review-fill" style="width:87%"></div>
+            </div>
+            
+          </div>
+        </a>
+      </div>
+      
+      <div class="game-card">
+        <a href="https://store.steampowered.com/app/730" target="_blank" rel="noopener">
+          <img
+            class="card-img"
+            src="https://cdn.akamai.steamstatic.com/steam/apps/730/header.jpg"
+            alt="Counter-Strike 2"
+            loading="eager"
+            onerror="this.style.display='none'"
+          >
+          <div class="card-body">
+            <div class="card-rank">
+              #1
+              
+            </div>
+            <div class="card-name">Counter-Strike 2</div>
+            
+            <div class="card-tags">
+              
+              <span class="tag">Action</span>
+              
+              <span class="tag">Free To Play</span>
+              
+            </div>
+            
+            <div class="card-stats">
+              
+              <div class="cstat">
+                <span class="cs-val">622,513</span>
+                <span class="cs-lbl">PLAYING NOW</span>
+              </div>
+              
+              
+              <div class="cstat">
+                <span class="cs-val" style="color:var(--green)">
+                  87%
+                </span>
+                <span class="cs-lbl">REVIEW</span>
+              </div>
+              
+              
+              <div class="cstat">
+                <span class="cs-val">
+                  Free
+                </span>
+                <span class="cs-lbl">GIÁ</span>
+              </div>
+              
+            </div>
+            
+            <div class="review-bar">
+              <div class="review-fill" style="width:87%"></div>
+            </div>
+            
+          </div>
+        </a>
+      </div>
+      
+      <div class="game-card">
+        <a href="https://store.steampowered.com/app/730" target="_blank" rel="noopener">
+          <img
+            class="card-img"
+            src="https://cdn.akamai.steamstatic.com/steam/apps/730/header.jpg"
+            alt="Counter-Strike 2"
+            loading="lazy"
+            onerror="this.style.display='none'"
+          >
+          <div class="card-body">
+            <div class="card-rank">
+              #1
+              
+            </div>
+            <div class="card-name">Counter-Strike 2</div>
+            
+            <div class="card-tags">
+              
+              <span class="tag">Action</span>
+              
+              <span class="tag">Free To Play</span>
+              
+            </div>
+            
+            <div class="card-stats">
+              
+              <div class="cstat">
+                <span class="cs-val">602,753</span>
+                <span class="cs-lbl">PLAYING NOW</span>
+              </div>
+              
+              
+              <div class="cstat">
+                <span class="cs-val" style="color:var(--green)">
+                  87%
+                </span>
+                <span class="cs-lbl">REVIEW</span>
+              </div>
+              
+              
+              <div class="cstat">
+                <span class="cs-val">
+                  Free
+                </span>
+                <span class="cs-lbl">GIÁ</span>
+              </div>
+              
+            </div>
+            
+            <div class="review-bar">
+              <div class="review-fill" style="width:87%"></div>
+            </div>
+            
+          </div>
+        </a>
+      </div>
+      
+      <div class="game-card">
+        <a href="https://store.steampowered.com/app/578080" target="_blank" rel="noopener">
+          <img
+            class="card-img"
+            src="https://cdn.akamai.steamstatic.com/steam/apps/578080/header.jpg"
+            alt="PUBG: BATTLEGROUNDS"
+            loading="lazy"
+            onerror="this.style.display='none'"
+          >
+          <div class="card-body">
+            <div class="card-rank">
+              #3
+              
+            </div>
+            <div class="card-name">PUBG: BATTLEGROUNDS</div>
+            
+            <div class="card-tags">
+              
+              <span class="tag">Action</span>
+              
+              <span class="tag">Adventure</span>
+              
+              <span class="tag">Massively Multiplayer</span>
+              
+            </div>
+            
+            <div class="card-stats">
+              
+              <div class="cstat">
+                <span class="cs-val">307,451</span>
+                <span class="cs-lbl">PLAYING NOW</span>
+              </div>
+              
+              
+              <div class="cstat">
+                <span class="cs-val" style="color:var(--red)">
+                  59%
+                </span>
+                <span class="cs-lbl">REVIEW</span>
+              </div>
+              
+              
+              <div class="cstat">
+                <span class="cs-val">
+                  Free
+                </span>
+                <span class="cs-lbl">GIÁ</span>
+              </div>
+              
+            </div>
+            
+            <div class="review-bar">
+              <div class="review-fill" style="width:59%"></div>
+            </div>
+            
+          </div>
+        </a>
+      </div>
+      
+      <div class="game-card">
+        <a href="https://store.steampowered.com/app/578080" target="_blank" rel="noopener">
+          <img
+            class="card-img"
+            src="https://cdn.akamai.steamstatic.com/steam/apps/578080/header.jpg"
+            alt="PUBG: BATTLEGROUNDS"
+            loading="lazy"
+            onerror="this.style.display='none'"
+          >
+          <div class="card-body">
+            <div class="card-rank">
+              #3
+              
+            </div>
+            <div class="card-name">PUBG: BATTLEGROUNDS</div>
+            
+            <div class="card-tags">
+              
+              <span class="tag">Action</span>
+              
+              <span class="tag">Adventure</span>
+              
+              <span class="tag">Massively Multiplayer</span>
+              
+            </div>
+            
+            <div class="card-stats">
+              
+              <div class="cstat">
+                <span class="cs-val">297,991</span>
+                <span class="cs-lbl">PLAYING NOW</span>
+              </div>
+              
+              
+              <div class="cstat">
+                <span class="cs-val" style="color:var(--red)">
+                  59%
+                </span>
+                <span class="cs-lbl">REVIEW</span>
+              </div>
+              
+              
+              <div class="cstat">
+                <span class="cs-val">
+                  Free
+                </span>
+                <span class="cs-lbl">GIÁ</span>
+              </div>
+              
+            </div>
+            
+            <div class="review-bar">
+              <div class="review-fill" style="width:59%"></div>
+            </div>
+            
+          </div>
+        </a>
+      </div>
+      
+      <div class="game-card">
+        <a href="https://store.steampowered.com/app/578080" target="_blank" rel="noopener">
+          <img
+            class="card-img"
+            src="https://cdn.akamai.steamstatic.com/steam/apps/578080/header.jpg"
+            alt="PUBG: BATTLEGROUNDS"
+            loading="lazy"
+            onerror="this.style.display='none'"
+          >
+          <div class="card-body">
+            <div class="card-rank">
+              #3
+              
+            </div>
+            <div class="card-name">PUBG: BATTLEGROUNDS</div>
+            
+            <div class="card-tags">
+              
+              <span class="tag">Action</span>
+              
+              <span class="tag">Adventure</span>
+              
+              <span class="tag">Massively Multiplayer</span>
+              
+            </div>
+            
+            <div class="card-stats">
+              
+              <div class="cstat">
+                <span class="cs-val">297,991</span>
+                <span class="cs-lbl">PLAYING NOW</span>
+              </div>
+              
+              
+              <div class="cstat">
+                <span class="cs-val" style="color:var(--red)">
+                  59%
+                </span>
+                <span class="cs-lbl">REVIEW</span>
+              </div>
+              
+              
+              <div class="cstat">
+                <span class="cs-val">
+                  Free
+                </span>
+                <span class="cs-lbl">GIÁ</span>
+              </div>
+              
+            </div>
+            
+            <div class="review-bar">
+              <div class="review-fill" style="width:59%"></div>
+            </div>
+            
+          </div>
+        </a>
+      </div>
+      
+      <div class="game-card">
+        <a href="https://store.steampowered.com/app/578080" target="_blank" rel="noopener">
+          <img
+            class="card-img"
+            src="https://cdn.akamai.steamstatic.com/steam/apps/578080/header.jpg"
+            alt="PUBG: BATTLEGROUNDS"
+            loading="lazy"
+            onerror="this.style.display='none'"
+          >
+          <div class="card-body">
+            <div class="card-rank">
+              #3
+              
+            </div>
+            <div class="card-name">PUBG: BATTLEGROUNDS</div>
+            
+            <div class="card-tags">
+              
+              <span class="tag">Action</span>
+              
+              <span class="tag">Adventure</span>
+              
+              <span class="tag">Massively Multiplayer</span>
+              
+            </div>
+            
+            <div class="card-stats">
+              
+              <div class="cstat">
+                <span class="cs-val">294,674</span>
+                <span class="cs-lbl">PLAYING NOW</span>
+              </div>
+              
+              
+              <div class="cstat">
+                <span class="cs-val" style="color:var(--red)">
+                  59%
+                </span>
+                <span class="cs-lbl">REVIEW</span>
+              </div>
+              
+              
+              <div class="cstat">
+                <span class="cs-val">
+                  Free
+                </span>
+                <span class="cs-lbl">GIÁ</span>
+              </div>
+              
+            </div>
+            
+            <div class="review-bar">
+              <div class="review-fill" style="width:59%"></div>
+            </div>
+            
+          </div>
+        </a>
+      </div>
+      
+      <div class="game-card">
+        <a href="https://store.steampowered.com/app/578080" target="_blank" rel="noopener">
+          <img
+            class="card-img"
+            src="https://cdn.akamai.steamstatic.com/steam/apps/578080/header.jpg"
+            alt="PUBG: BATTLEGROUNDS"
+            loading="lazy"
+            onerror="this.style.display='none'"
+          >
+          <div class="card-body">
+            <div class="card-rank">
+              #3
+              
+            </div>
+            <div class="card-name">PUBG: BATTLEGROUNDS</div>
+            
+            <div class="card-tags">
+              
+              <span class="tag">Action</span>
+              
+              <span class="tag">Adventure</span>
+              
+              <span class="tag">Massively Multiplayer</span>
+              
+            </div>
+            
+            <div class="card-stats">
+              
+              <div class="cstat">
+                <span class="cs-val">273,399</span>
+                <span class="cs-lbl">PLAYING NOW</span>
+              </div>
+              
+              
+              <div class="cstat">
+                <span class="cs-val" style="color:var(--red)">
+                  59%
+                </span>
+                <span class="cs-lbl">REVIEW</span>
+              </div>
+              
+              
+              <div class="cstat">
+                <span class="cs-val">
+                  Free
+                </span>
+                <span class="cs-lbl">GIÁ</span>
+              </div>
+              
+            </div>
+            
+            <div class="review-bar">
+              <div class="review-fill" style="width:59%"></div>
+            </div>
+            
+          </div>
+        </a>
+      </div>
+      
+      <div class="game-card">
+        <a href="https://store.steampowered.com/app/1623730" target="_blank" rel="noopener">
+          <img
+            class="card-img"
+            src="https://cdn.akamai.steamstatic.com/steam/apps/1623730/header.jpg"
+            alt="Palworld"
+            loading="lazy"
+            onerror="this.style.display='none'"
+          >
+          <div class="card-body">
+            <div class="card-rank">
+              #4
+              
+            </div>
+            <div class="card-name">Palworld</div>
+            
+            <div class="card-tags">
+              
+              <span class="tag">Action</span>
+              
+              <span class="tag">Adventure</span>
+              
+              <span class="tag">Indie</span>
+              
+            </div>
+            
+            <div class="card-stats">
+              
+              <div class="cstat">
+                <span class="cs-val">15,069</span>
+                <span class="cs-lbl">PLAYING NOW</span>
+              </div>
+              
+              
+              <div class="cstat">
+                <span class="cs-val" style="color:var(--green)">
+                  94%
+                </span>
+                <span class="cs-lbl">REVIEW</span>
+              </div>
+              
+              
+              <div class="cstat">
+                <span class="cs-val">
+                  $29.99
+                </span>
+                <span class="cs-lbl">GIÁ</span>
+              </div>
+              
+            </div>
+            
+            <div class="review-bar">
+              <div class="review-fill" style="width:94%"></div>
+            </div>
+            
+          </div>
+        </a>
+      </div>
+      
+      <div class="game-card">
+        <a href="https://store.steampowered.com/app/1623730" target="_blank" rel="noopener">
+          <img
+            class="card-img"
+            src="https://cdn.akamai.steamstatic.com/steam/apps/1623730/header.jpg"
+            alt="Palworld"
+            loading="lazy"
+            onerror="this.style.display='none'"
+          >
+          <div class="card-body">
+            <div class="card-rank">
+              #4
+              
+            </div>
+            <div class="card-name">Palworld</div>
+            
+            <div class="card-tags">
+              
+              <span class="tag">Action</span>
+              
+              <span class="tag">Adventure</span>
+              
+              <span class="tag">Indie</span>
+              
+            </div>
+            
+            <div class="card-stats">
+              
+              <div class="cstat">
+                <span class="cs-val">15,037</span>
+                <span class="cs-lbl">PLAYING NOW</span>
+              </div>
+              
+              
+              <div class="cstat">
+                <span class="cs-val" style="color:var(--green)">
+                  94%
+                </span>
+                <span class="cs-lbl">REVIEW</span>
+              </div>
+              
+              
+              <div class="cstat">
+                <span class="cs-val">
+                  $29.99
+                </span>
+                <span class="cs-lbl">GIÁ</span>
+              </div>
+              
+            </div>
+            
+            <div class="review-bar">
+              <div class="review-fill" style="width:94%"></div>
+            </div>
+            
+          </div>
+        </a>
+      </div>
+      
+      <div class="game-card">
+        <a href="https://store.steampowered.com/app/1623730" target="_blank" rel="noopener">
+          <img
+            class="card-img"
+            src="https://cdn.akamai.steamstatic.com/steam/apps/1623730/header.jpg"
+            alt="Palworld"
+            loading="lazy"
+            onerror="this.style.display='none'"
+          >
+          <div class="card-body">
+            <div class="card-rank">
+              #4
+              
+            </div>
+            <div class="card-name">Palworld</div>
+            
+            <div class="card-tags">
+              
+              <span class="tag">Action</span>
+              
+              <span class="tag">Adventure</span>
+              
+              <span class="tag">Indie</span>
+              
+            </div>
+            
+            <div class="card-stats">
+              
+              <div class="cstat">
+                <span class="cs-val">15,033</span>
+                <span class="cs-lbl">PLAYING NOW</span>
+              </div>
+              
+              
+              <div class="cstat">
+                <span class="cs-val" style="color:var(--green)">
+                  94%
+                </span>
+                <span class="cs-lbl">REVIEW</span>
+              </div>
+              
+              
+              <div class="cstat">
+                <span class="cs-val">
+                  $29.99
+                </span>
+                <span class="cs-lbl">GIÁ</span>
+              </div>
+              
+            </div>
+            
+            <div class="review-bar">
+              <div class="review-fill" style="width:94%"></div>
+            </div>
+            
+          </div>
+        </a>
+      </div>
+      
+      <div class="game-card">
+        <a href="https://store.steampowered.com/app/1623730" target="_blank" rel="noopener">
+          <img
+            class="card-img"
+            src="https://cdn.akamai.steamstatic.com/steam/apps/1623730/header.jpg"
+            alt="Palworld"
+            loading="lazy"
+            onerror="this.style.display='none'"
+          >
+          <div class="card-body">
+            <div class="card-rank">
+              #4
+              
+            </div>
+            <div class="card-name">Palworld</div>
+            
+            <div class="card-tags">
+              
+              <span class="tag">Action</span>
+              
+              <span class="tag">Adventure</span>
+              
+              <span class="tag">Indie</span>
+              
+            </div>
+            
+            <div class="card-stats">
+              
+              <div class="cstat">
+                <span class="cs-val">15,033</span>
+                <span class="cs-lbl">PLAYING NOW</span>
+              </div>
+              
+              
+              <div class="cstat">
+                <span class="cs-val" style="color:var(--green)">
+                  94%
+                </span>
+                <span class="cs-lbl">REVIEW</span>
+              </div>
+              
+              
+              <div class="cstat">
+                <span class="cs-val">
+                  $29.99
+                </span>
+                <span class="cs-lbl">GIÁ</span>
+              </div>
+              
+            </div>
+            
+            <div class="review-bar">
+              <div class="review-fill" style="width:94%"></div>
+            </div>
+            
+          </div>
+        </a>
+      </div>
+      
+      <div class="game-card">
+        <a href="https://store.steampowered.com/app/1623730" target="_blank" rel="noopener">
+          <img
+            class="card-img"
+            src="https://cdn.akamai.steamstatic.com/steam/apps/1623730/header.jpg"
+            alt="Palworld"
+            loading="lazy"
+            onerror="this.style.display='none'"
+          >
+          <div class="card-body">
+            <div class="card-rank">
+              #4
+              
+            </div>
+            <div class="card-name">Palworld</div>
+            
+            <div class="card-tags">
+              
+              <span class="tag">Action</span>
+              
+              <span class="tag">Adventure</span>
+              
+              <span class="tag">Indie</span>
+              
+            </div>
+            
+            <div class="card-stats">
+              
+              <div class="cstat">
+                <span class="cs-val">15,006</span>
+                <span class="cs-lbl">PLAYING NOW</span>
+              </div>
+              
+              
+              <div class="cstat">
+                <span class="cs-val" style="color:var(--green)">
+                  94%
+                </span>
+                <span class="cs-lbl">REVIEW</span>
+              </div>
+              
+              
+              <div class="cstat">
+                <span class="cs-val">
+                  $29.99
+                </span>
+                <span class="cs-lbl">GIÁ</span>
+              </div>
+              
+            </div>
+            
+            <div class="review-bar">
+              <div class="review-fill" style="width:94%"></div>
+            </div>
+            
+          </div>
+        </a>
+      </div>
+      
+      <div class="game-card">
+        <a href="https://store.steampowered.com/app/1938090" target="_blank" rel="noopener">
+          <img
+            class="card-img"
+            src="https://cdn.akamai.steamstatic.com/steam/apps/1938090/header.jpg"
+            alt="Call of Duty®"
+            loading="lazy"
+            onerror="this.style.display='none'"
+          >
+          <div class="card-body">
+            <div class="card-rank">
+              #6
+              
+            </div>
+            <div class="card-name">Call of Duty®</div>
+            
+            <div class="card-tags">
+              
+              <span class="tag">Action</span>
+              
+            </div>
+            
+            <div class="card-stats">
+              
+              <div class="cstat">
+                <span class="cs-val">16,972</span>
+                <span class="cs-lbl">PLAYING NOW</span>
+              </div>
+              
+              
+              <div class="cstat">
+                <span class="cs-val" style="color:var(--red)">
+                  59%
+                </span>
+                <span class="cs-lbl">REVIEW</span>
+              </div>
+              
+              
+              <div class="cstat">
+                <span class="cs-val">
+                  Free
+                </span>
+                <span class="cs-lbl">GIÁ</span>
+              </div>
+              
+            </div>
+            
+            <div class="review-bar">
+              <div class="review-fill" style="width:59%"></div>
+            </div>
+            
+          </div>
+        </a>
+      </div>
+      
+      <div class="game-card">
+        <a href="https://store.steampowered.com/app/1938090" target="_blank" rel="noopener">
+          <img
+            class="card-img"
+            src="https://cdn.akamai.steamstatic.com/steam/apps/1938090/header.jpg"
+            alt="Call of Duty®"
+            loading="lazy"
+            onerror="this.style.display='none'"
+          >
+          <div class="card-body">
+            <div class="card-rank">
+              #6
+              
+            </div>
+            <div class="card-name">Call of Duty®</div>
+            
+            <div class="card-tags">
+              
+              <span class="tag">Action</span>
+              
+            </div>
+            
+            <div class="card-stats">
+              
+              <div class="cstat">
+                <span class="cs-val">15,965</span>
+                <span class="cs-lbl">PLAYING NOW</span>
+              </div>
+              
+              
+              <div class="cstat">
+                <span class="cs-val" style="color:var(--red)">
+                  59%
+                </span>
+                <span class="cs-lbl">REVIEW</span>
+              </div>
+              
+              
+              <div class="cstat">
+                <span class="cs-val">
+                  Free
+                </span>
+                <span class="cs-lbl">GIÁ</span>
+              </div>
+              
+            </div>
+            
+            <div class="review-bar">
+              <div class="review-fill" style="width:59%"></div>
+            </div>
+            
+          </div>
+        </a>
+      </div>
+      
+      <div class="game-card">
+        <a href="https://store.steampowered.com/app/1938090" target="_blank" rel="noopener">
+          <img
+            class="card-img"
+            src="https://cdn.akamai.steamstatic.com/steam/apps/1938090/header.jpg"
+            alt="Call of Duty®"
+            loading="lazy"
+            onerror="this.style.display='none'"
+          >
+          <div class="card-body">
+            <div class="card-rank">
+              #6
+              
+            </div>
+            <div class="card-name">Call of Duty®</div>
+            
+            <div class="card-tags">
+              
+              <span class="tag">Action</span>
+              
+            </div>
+            
+            <div class="card-stats">
+              
+              <div class="cstat">
+                <span class="cs-val">15,800</span>
+                <span class="cs-lbl">PLAYING NOW</span>
+              </div>
+              
+              
+              <div class="cstat">
+                <span class="cs-val" style="color:var(--red)">
+                  59%
+                </span>
+                <span class="cs-lbl">REVIEW</span>
+              </div>
+              
+              
+              <div class="cstat">
+                <span class="cs-val">
+                  Free
+                </span>
+                <span class="cs-lbl">GIÁ</span>
+              </div>
+              
+            </div>
+            
+            <div class="review-bar">
+              <div class="review-fill" style="width:59%"></div>
+            </div>
+            
+          </div>
+        </a>
+      </div>
+      
+      <div class="game-card">
+        <a href="https://store.steampowered.com/app/1938090" target="_blank" rel="noopener">
+          <img
+            class="card-img"
+            src="https://cdn.akamai.steamstatic.com/steam/apps/1938090/header.jpg"
+            alt="Call of Duty®"
+            loading="lazy"
+            onerror="this.style.display='none'"
+          >
+          <div class="card-body">
+            <div class="card-rank">
+              #6
+              
+            </div>
+            <div class="card-name">Call of Duty®</div>
+            
+            <div class="card-tags">
+              
+              <span class="tag">Action</span>
+              
+            </div>
+            
+            <div class="card-stats">
+              
+              <div class="cstat">
+                <span class="cs-val">15,800</span>
+                <span class="cs-lbl">PLAYING NOW</span>
+              </div>
+              
+              
+              <div class="cstat">
+                <span class="cs-val" style="color:var(--red)">
+                  59%
+                </span>
+                <span class="cs-lbl">REVIEW</span>
+              </div>
+              
+              
+              <div class="cstat">
+                <span class="cs-val">
+                  Free
+                </span>
+                <span class="cs-lbl">GIÁ</span>
+              </div>
+              
+            </div>
+            
+            <div class="review-bar">
+              <div class="review-fill" style="width:59%"></div>
+            </div>
+            
+          </div>
+        </a>
+      </div>
+      
+      <div class="game-card">
+        <a href="https://store.steampowered.com/app/1938090" target="_blank" rel="noopener">
+          <img
+            class="card-img"
+            src="https://cdn.akamai.steamstatic.com/steam/apps/1938090/header.jpg"
+            alt="Call of Duty®"
+            loading="lazy"
+            onerror="this.style.display='none'"
+          >
+          <div class="card-body">
+            <div class="card-rank">
+              #6
+              
+            </div>
+            <div class="card-name">Call of Duty®</div>
+            
+            <div class="card-tags">
+              
+              <span class="tag">Action</span>
+              
+            </div>
+            
+            <div class="card-stats">
+              
+              <div class="cstat">
+                <span class="cs-val">15,408</span>
+                <span class="cs-lbl">PLAYING NOW</span>
+              </div>
+              
+              
+              <div class="cstat">
+                <span class="cs-val" style="color:var(--red)">
+                  59%
+                </span>
+                <span class="cs-lbl">REVIEW</span>
+              </div>
+              
+              
+              <div class="cstat">
+                <span class="cs-val">
+                  Free
+                </span>
+                <span class="cs-lbl">GIÁ</span>
+              </div>
+              
+            </div>
+            
+            <div class="review-bar">
+              <div class="review-fill" style="width:59%"></div>
+            </div>
+            
+          </div>
+        </a>
+      </div>
+      
+    </div>
+  </section>
+  
+
+  <!-- ── Deals ────────────────────────────────────────────── -->
+  
+
+  <!-- ── AI Insights ──────────────────────────────────────── -->
+  
+  <section class="section">
+    <div class="section-head">
+      <h2 class="section-title">
+        <span class="dot amber"></span> AI Insights
+      </h2>
+      <span class="section-count">Phân tích bởi Groq · Llama 3.3 70B</span>
+    </div>
+    <div class="insights-grid">
+
+      
+      <div class="insight-card featured">
+        <div class="insight-header">
+          <div class="insight-icon">📈</div>
+          <div>
+            <div class="insight-title">Xu hướng tuần này</div>
+            <div class="insight-subtitle">trend_analysis · AI</div>
+          </div>
+        </div>
+        <div class="insight-body">1. **Xu hướng nổi bật**: Genre Action đang chiếm ưu thế trong danh sách game đang trending trên Steam, với các tựa game như Counter-Strike 2, PUBG: BATTLEGROUNDS, và Call of Duty®. Điều này có thể là do sự phổ biến và tính cạnh tranh của các game thuộc thể loại này, cũng như việc chúng thường được cập nhật với nội dung mới để giữ chân người chơi.
+
+2. **Điểm thú vị**: Một điểm thú vị trong dữ liệu là sự hiện diện của Palworld, một game thuộc thể loại Action, Adventure, Indie, RPG, và đang trong giai đoạn Early Access, với số lượng người chơi trực tuyến tương đối thấp so với các game khác trong top 10, nhưng lại có đánh giá rất cao với 94%. Điều này cho thấy cộng đồng game thủ đang rất quan tâm và đánh giá cao các game mới và độc đáo, ngay cả khi chúng chưa phải là những tựa game có số lượng người chơi lớn nhất.
+
+3. **Dự báo ngắn**: Dựa trên xu hướng này, tuần tới có thể kỳ vọng rằng các game thuộc thể loại Action sẽ tiếp tục chiếm ưu thế trong danh sách game đang trending trên Steam. Ngoài ra, có thể sẽ có sự xuất hiện của các game mới và độc đáo như Palworld, với sự quan tâm và đánh giá cao từ cộng đồng game thủ, và các game cũ nhưng được cập nhật với nội dung mới sẽ tiếp tục giữ chân người chơi và thu hút người mới.</div>
+      </div>
+      
+
+      
+
+      
+      <div class="insight-card">
+        <div class="insight-header">
+          <div class="insight-icon">💎</div>
+          <div>
+            <div class="insight-title">Hidden gems</div>
+            <div class="insight-subtitle">hidden_gems · AI</div>
+          </div>
+        </div>
+        <div class="insight-body">Tôi vừa khám phá được một số game thật sự chất lượng mà không phải ai cũng biết đến. Tôi muốn giới thiệu cho bạn 3 &#34;hidden gem&#34; đáng để khám phá:
+
+1. **Warframe** - Action, RPG, Free To Play
+Tôi biết, Warframe không phải là game hoàn toàn mới, nhưng nó vẫn xứng đáng được chú ý hơn. Game này có hệ thống chiến đấu cực kỳ phong phú, với nhiều loại vũ khí và kỹ năng khác nhau. Bạn sẽ được trải nghiệm một thế giới khoa học viễn tưởng đầy màu sắc và thú vị. Phù hợp với những game thủ yêu thích hành động, chiến đấu và khám phá. Nếu bạn thích chơi game miễn phí nhưng vẫn muốn có trải nghiệm chất lượng cao, thì Warframe là lựa chọn tuyệt vời.
+
+2. **Terraria** - Action, Adventure, Indie, RPG
+Terraria là một game indie cổ điển, nhưng nó vẫn giữ được sự hấp dẫn và thú vị. Game này cho phép bạn xây dựng và khám phá thế giới 2D, với hệ thống chiến đấu và thu thập tài nguyên. Terraria có một cộng đồng game thủ rất đông đảo và tích cực, với nhiều mod và nội dung tùy chỉnh. Phù hợp với những game thủ yêu thích xây dựng, khám phá và chiến đấu. Nếu bạn thích chơi game indie với phong cách retro, thì Terraria là lựa chọn tuyệt vời.
+
+3. **Brawlhalla** - Action, Indie, Free To Play
+Brawlhalla là một game chiến đấu miễn phí, với phong cách giống như Super Smash Bros. Game này có hệ thống chiến đấu nhanh chóng và thú vị, với nhiều nhân vật và kỹ năng khác nhau. Bạn sẽ được trải nghiệm một thế giới đầy màu sắc và thú vị, với nhiều chế độ chơi khác nhau. Phù hợp với những game thủ yêu thích chiến đấu và cạnh tranh. Nếu bạn thích chơi game miễn phí nhưng vẫn muốn có trải nghiệm chất lượng cao, thì Brawlhalla là lựa chọn tuyệt vời.
+
+Tất cả 3 game này đều có review tốt và cộng đồng game thủ tích cực, nhưng chúng không quá viral như một số game khác. Tôi nghĩ rằng bạn sẽ thích chúng, và chúng xứng đáng được chú ý hơn. Hãy thử chơi và trải nghiệm!</div>
+      </div>
+      
+
+    </div>
+  </section>
+  
+
+  <!-- ── Genre chart ──────────────────────────────────────── -->
+  
+  <section class="section">
+    <div class="section-head">
+      <h2 class="section-title">
+        <span class="dot"></span> Genre trending
+      </h2>
+      <span class="section-count">Tổng players theo thể loại</span>
+    </div>
+    <div class="chart-wrap">
+      <div class="chart-canvas-wrap">
+        <canvas id="genreChart"></canvas>
+      </div>
+    </div>
+  </section>
+  
+
+  <!-- ── Footer ───────────────────────────────────────────── -->
+  <footer>
+    <span class="f-brand">STEAM PULSE</span>
+    <span class="f-note">
+      Data: Steam API · SteamSpy · AI: Groq Llama 3.3 70B ·
+      Cập nhật: 21/04/2026 07:14 UTC
+    </span>
+  </footer>
+
+</div><!-- .page -->
+
+<!-- ── Chart.js ─────────────────────────────────────────────── -->
+
+<script>
+(function() {
+  const labels = ["Action", "Free To Play", "Adventure", "Massively Multiplayer", "RPG", "Indie", "Early Access"];
+  const values = [5207734, 4866249, 1700006, 1471506, 425018, 181631, 75178];
+  const max    = Math.max(...values);
+
+  const ctx = document.getElementById('genreChart').getContext('2d');
+  new Chart(ctx, {
+    type: 'bar',
+    data: {
+      labels,
+      datasets: [{
+        data: values,
+        backgroundColor: values.map(v => {
+          const ratio = v / max;
+          const r = Math.round(91  + ratio * (124 - 91));
+          const g = Math.round(106 + ratio * (137 - 106));
+          const b = Math.round(248 + ratio * (255 - 248));
+          return `rgba(${r},${g},${b},${0.5 + ratio * 0.4})`;
+        }),
+        borderColor: 'rgba(91,106,248,0.5)',
+        borderWidth: 1,
+        borderRadius: 6,
+      }]
+    },
+    options: {
+      responsive: true,
+      maintainAspectRatio: false,
+      plugins: {
+        legend: { display: false },
+        tooltip: {
+          backgroundColor: '#18181f',
+          borderColor: 'rgba(255,255,255,0.1)',
+          borderWidth: 1,
+          titleColor: '#e8e8f0',
+          bodyColor: '#9898b0',
+          padding: 12,
+          callbacks: {
+            label: ctx => ' ' + ctx.parsed.y.toLocaleString() + ' players'
+          }
+        }
+      },
+      scales: {
+        x: {
+          grid: { color: 'rgba(255,255,255,0.05)' },
+          ticks: { color: '#6b6b80', font: { family: 'DM Mono', size: 11 } }
+        },
+        y: {
+          grid: { color: 'rgba(255,255,255,0.05)' },
+          ticks: {
+            color: '#6b6b80',
+            font: { family: 'DM Mono', size: 11 },
+            callback: v => v >= 1000 ? (v/1000).toFixed(0)+'k' : v
+          }
+        }
+      }
+    }
+  });
+})();
+</script>
+
+
+</body>
+</html>
