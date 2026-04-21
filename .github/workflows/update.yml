@@ -1,0 +1,53 @@
+name: Update Steam Tracker
+
+on:
+  schedule:
+    # 6:00 AM ICT (UTC+7) = 23:00 UTC ngày hôm trước
+    - cron: '0 23 * * *'
+  # Cho phép chạy thủ công từ GitHub UI để test
+  workflow_dispatch:
+
+jobs:
+  update:
+    runs-on: ubuntu-latest
+    timeout-minutes: 20
+
+    steps:
+      - name: Checkout repo
+        uses: actions/checkout@v4
+
+      - name: Setup Python 3.12
+        uses: actions/setup-python@v5
+        with:
+          python-version: '3.12'
+          cache: 'pip'
+
+      - name: Install dependencies
+        run: pip install -r requirements.txt
+
+      - name: Step 1 — Fetch Steam data → Supabase
+        run: python scripts/fetch_data.py
+        env:
+          SUPABASE_URL: ${{ secrets.SUPABASE_URL }}
+          SUPABASE_KEY: ${{ secrets.SUPABASE_KEY }}
+          STEAM_API_KEY: ${{ secrets.STEAM_API_KEY }}
+
+      - name: Step 2 — Generate Groq AI insights
+        run: python scripts/groq_insights.py
+        env:
+          SUPABASE_URL: ${{ secrets.SUPABASE_URL }}
+          SUPABASE_KEY: ${{ secrets.SUPABASE_KEY }}
+          GROQ_API_KEY: ${{ secrets.GROQ_API_KEY }}
+
+      - name: Step 3 — Generate static HTML
+        run: python scripts/generate_html.py
+        env:
+          SUPABASE_URL: ${{ secrets.SUPABASE_URL }}
+          SUPABASE_KEY: ${{ secrets.SUPABASE_KEY }}
+
+      - name: Deploy to GitHub Pages
+        uses: peaceiris/actions-gh-pages@v4
+        with:
+          github_token: ${{ secrets.GITHUB_TOKEN }}
+          publish_dir: ./docs
+          commit_message: "chore: update Steam data ${{ github.run_id }}"
