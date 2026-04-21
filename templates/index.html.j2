@@ -2,645 +2,458 @@
 <html lang="vi">
 <head>
 <meta charset="UTF-8">
-<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<meta name="viewport" content="width=device-width,initial-scale=1.0">
 <title>Steam Pulse — Trending Games Today</title>
-<meta name="description" content="Dữ liệu Steam trending, deals, và AI insights cập nhật hàng ngày.">
 <link rel="preconnect" href="https://fonts.googleapis.com">
-<link href="https://fonts.googleapis.com/css2?family=Bebas+Neue&family=DM+Sans:ital,wght@0,300;0,400;0,500;1,300&family=DM+Mono:wght@400;500&display=swap" rel="stylesheet">
+<link href="https://fonts.googleapis.com/css2?family=Bebas+Neue&family=DM+Sans:wght@300;400;500&family=DM+Mono:wght@400;500&display=swap" rel="stylesheet">
 <script src="https://cdn.jsdelivr.net/npm/chart.js@4.4.0/dist/chart.umd.min.js"></script>
 <style>
-/* ── Reset & Base ─────────────────────────────────────────── */
-*, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+*,*::before,*::after{box-sizing:border-box;margin:0;padding:0}
+:root{
+  --bg:#09090e;--bg2:#111119;--bg3:#17171f;--bg4:#1d1d27;
+  --border:rgba(255,255,255,0.07);--border2:rgba(255,255,255,0.13);
+  --text:#e6e6f0;--muted:#62627a;--muted2:#9494ac;
+  --accent:#5b6af8;--accent2:#7c8aff;
+  --green:#22c984;--green-dim:#166644;
+  --amber:#f5a623;--red:#f05252;
+  --fh:'Bebas Neue',sans-serif;
+  --fb:'DM Sans',sans-serif;
+  --fm:'DM Mono',monospace;
+  --r:10px;--rl:16px;
+}
+html{scroll-behavior:smooth}
+body{background:var(--bg);color:var(--text);font-family:var(--fb);font-size:15px;line-height:1.65;overflow-x:hidden}
+body::before{content:'';position:fixed;inset:0;opacity:.35;pointer-events:none;z-index:0;
+  background-image:url("data:image/svg+xml,%3Csvg viewBox='0 0 200 200' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.85' numOctaves='4' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23n)' opacity='.05'/%3E%3C/svg%3E")}
+.wrap{position:relative;z-index:1;max-width:1380px;margin:0 auto;padding:0 22px 80px}
 
-:root {
-  --bg:        #0a0a0f;
-  --bg2:       #111118;
-  --bg3:       #18181f;
-  --bg4:       #1e1e28;
-  --border:    rgba(255,255,255,0.07);
-  --border2:   rgba(255,255,255,0.12);
-  --text:      #e8e8f0;
-  --muted:     #6b6b80;
-  --muted2:    #9898b0;
-  --accent:    #5b6af8;
-  --accent2:   #7c89ff;
-  --green:     #22c984;
-  --green2:    #1a9e68;
-  --amber:     #f5a623;
-  --red:       #f05252;
-  --font-head: 'Bebas Neue', sans-serif;
-  --font-body: 'DM Sans', sans-serif;
-  --font-mono: 'DM Mono', monospace;
-  --radius:    10px;
-  --radius-lg: 16px;
-}
+/* HEADER */
+.hd{display:flex;align-items:flex-end;justify-content:space-between;padding:44px 0 28px;border-bottom:1px solid var(--border);flex-wrap:wrap;gap:16px}
+.logo{display:flex;align-items:baseline;gap:10px}
+.logo-t{font-family:var(--fh);font-size:clamp(44px,7vw,76px);line-height:1;letter-spacing:.02em;
+  background:linear-gradient(130deg,#fff 25%,var(--accent2));-webkit-background-clip:text;-webkit-text-fill-color:transparent}
+.live-badge{background:var(--accent);color:#fff;font-family:var(--fm);font-size:10px;
+  padding:3px 8px;border-radius:4px;letter-spacing:.08em;margin-bottom:8px}
+.hd-meta{text-align:right}
+.hd-meta .lbl{font-size:11px;color:var(--muted);letter-spacing:.1em;text-transform:uppercase}
+.hd-meta .val{font-family:var(--fm);font-size:13px;color:var(--muted2);margin-top:2px}
 
-html { scroll-behavior: smooth; }
-body {
-  background: var(--bg);
-  color: var(--text);
-  font-family: var(--font-body);
-  font-size: 15px;
-  line-height: 1.6;
-  min-height: 100vh;
-  overflow-x: hidden;
-}
+/* SUMMARY BANNER */
+.banner{margin:28px 0;background:var(--bg3);border:1px solid var(--border2);border-left:3px solid var(--accent);
+  border-radius:var(--rl);padding:22px 26px;display:flex;gap:16px;align-items:flex-start}
+.ai-tag{background:var(--accent);color:#fff;font-family:var(--fm);font-size:10px;padding:3px 8px;
+  border-radius:4px;white-space:nowrap;margin-top:3px;letter-spacing:.06em;flex-shrink:0}
+.banner-text{color:var(--text);font-size:14px;line-height:1.75;font-weight:300}
+.banner-text p{margin-bottom:.6em}.banner-text p:last-child{margin-bottom:0}
+.banner-text strong{font-weight:500;color:#fff}
 
-/* ── Noise overlay ────────────────────────────────────────── */
-body::before {
-  content: '';
-  position: fixed; inset: 0;
-  background-image: url("data:image/svg+xml,%3Csvg viewBox='0 0 256 256' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='noise'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.9' numOctaves='4' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23noise)' opacity='0.03'/%3E%3C/svg%3E");
-  pointer-events: none; z-index: 0; opacity: 0.4;
-}
+/* STATS ROW */
+.stats{display:grid;grid-template-columns:repeat(auto-fit,minmax(170px,1fr));gap:10px;margin:24px 0 40px}
+.sc{background:var(--bg2);border:1px solid var(--border);border-radius:var(--r);padding:18px 20px;transition:border-color .2s}
+.sc:hover{border-color:var(--border2)}
+.sc .lbl{font-size:10px;color:var(--muted);letter-spacing:.1em;text-transform:uppercase;margin-bottom:7px}
+.sc .val{font-family:var(--fh);font-size:34px;line-height:1;color:var(--text)}
+.sc .val.lg{font-size:18px;font-family:var(--fb);font-weight:500}
+.sc .sub{font-size:11px;color:var(--muted2);margin-top:4px}
+.sc .val.green{color:var(--green)}
+.sc .val.accent{color:var(--accent2)}
 
-/* ── Grid layout ──────────────────────────────────────────── */
-.page { position: relative; z-index: 1; max-width: 1400px; margin: 0 auto; padding: 0 24px 80px; }
+/* SECTION */
+.sec{margin-bottom:52px}
+.sec-hd{display:flex;align-items:center;justify-content:space-between;margin-bottom:18px;padding-bottom:10px;border-bottom:1px solid var(--border)}
+.sec-title{font-family:var(--fh);font-size:26px;letter-spacing:.03em;display:flex;align-items:center;gap:9px}
+.dot{width:7px;height:7px;border-radius:50%;background:var(--accent);flex-shrink:0;display:inline-block}
+.dot.g{background:var(--green)}.dot.a{background:var(--amber)}
+.sec-count{font-family:var(--fm);font-size:11px;color:var(--muted)}
 
-/* ── Header ───────────────────────────────────────────────── */
-.site-header {
-  display: flex; align-items: flex-end; justify-content: space-between;
-  padding: 48px 0 32px;
-  border-bottom: 1px solid var(--border);
-  gap: 24px; flex-wrap: wrap;
-}
-.logo { display: flex; align-items: baseline; gap: 10px; }
-.logo-text {
-  font-family: var(--font-head);
-  font-size: clamp(48px, 8vw, 80px);
-  letter-spacing: 0.02em;
-  line-height: 1;
-  background: linear-gradient(135deg, #fff 30%, var(--accent2));
-  -webkit-background-clip: text; -webkit-text-fill-color: transparent;
-}
-.logo-badge {
-  background: var(--accent);
-  color: #fff; font-family: var(--font-mono);
-  font-size: 10px; font-weight: 500;
-  padding: 3px 8px; border-radius: 4px;
-  letter-spacing: 0.08em; text-transform: uppercase;
-  margin-bottom: 10px;
-}
-.header-meta { text-align: right; }
-.header-meta .label { font-size: 11px; color: var(--muted); letter-spacing: 0.1em; text-transform: uppercase; }
-.header-meta .value { font-family: var(--font-mono); font-size: 13px; color: var(--muted2); margin-top: 2px; }
+/* TRENDING GRID */
+.t-grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(260px,1fr));gap:12px}
+@media(min-width:860px){.t-grid .gc:nth-child(1){grid-column:span 2}}
 
-/* ── Summary banner (AI weekly summary) ──────────────────── */
-.summary-banner {
-  margin: 32px 0;
-  background: linear-gradient(135deg, var(--bg3) 0%, var(--bg4) 100%);
-  border: 1px solid var(--border2);
-  border-left: 3px solid var(--accent);
-  border-radius: var(--radius-lg);
-  padding: 24px 28px;
-  display: flex; gap: 20px; align-items: flex-start;
-}
-.summary-banner .ai-tag {
-  background: var(--accent); color: #fff;
-  font-family: var(--font-mono); font-size: 10px;
-  padding: 3px 8px; border-radius: 4px;
-  white-space: nowrap; margin-top: 3px;
-  letter-spacing: 0.06em;
-}
-.summary-banner .ai-text { color: var(--text); font-size: 15px; line-height: 1.7; font-weight: 300; }
+.gc{background:var(--bg2);border:1px solid var(--border);border-radius:var(--rl);overflow:hidden;
+  display:flex;flex-direction:column;transition:transform .2s,border-color .2s,box-shadow .2s;cursor:pointer}
+.gc:hover{transform:translateY(-3px);border-color:var(--border2);box-shadow:0 10px 36px rgba(0,0,0,.5)}
+.gc a{text-decoration:none;color:inherit;display:flex;flex-direction:column;height:100%}
+.gc-img{width:100%;aspect-ratio:460/215;object-fit:cover;display:block;background:var(--bg3)}
+.gc:nth-child(1) .gc-img{aspect-ratio:16/6}
+.gc-body{padding:13px 15px 15px;flex:1;display:flex;flex-direction:column}
+.gc-rank{font-family:var(--fm);font-size:10px;color:var(--accent2);letter-spacing:.07em;margin-bottom:5px}
+.gc-name{font-size:14px;font-weight:500;line-height:1.3;margin-bottom:8px;
+  display:-webkit-box;-webkit-line-clamp:2;-webkit-box-orient:vertical;overflow:hidden}
+.gc:nth-child(1) .gc-name{font-size:18px}
+.tags{display:flex;flex-wrap:wrap;gap:4px;margin-bottom:10px}
+.tag{font-size:9px;font-family:var(--fm);color:var(--muted2);background:var(--bg3);
+  border:1px solid var(--border);padding:2px 6px;border-radius:3px;letter-spacing:.04em}
+.gc-stats{display:flex;gap:12px;margin-top:auto;flex-wrap:wrap}
+.cs .v{font-family:var(--fm);font-size:13px;font-weight:500;color:var(--text)}
+.cs .l{font-size:9px;color:var(--muted);letter-spacing:.06em;margin-top:1px}
+.cs .v.green{color:var(--green)}.cs .v.amber{color:var(--amber)}.cs .v.red{color:var(--red)}
+.rbar{height:2px;background:var(--bg4);border-radius:2px;margin-top:10px;overflow:hidden}
+.rfill{height:100%;border-radius:2px;background:var(--green)}
 
-/* ── Stats row ────────────────────────────────────────────── */
-.stats-row {
-  display: grid; grid-template-columns: repeat(auto-fit, minmax(180px, 1fr));
-  gap: 12px; margin-bottom: 40px;
-}
-.stat-card {
-  background: var(--bg2);
-  border: 1px solid var(--border);
-  border-radius: var(--radius);
-  padding: 20px 22px;
-  transition: border-color 0.2s;
-}
-.stat-card:hover { border-color: var(--border2); }
-.stat-card .s-label { font-size: 11px; color: var(--muted); letter-spacing: 0.1em; text-transform: uppercase; margin-bottom: 8px; }
-.stat-card .s-value { font-family: var(--font-head); font-size: 36px; line-height: 1; color: var(--text); }
-.stat-card .s-sub   { font-size: 12px; color: var(--muted2); margin-top: 4px; }
+/* DEALS GRID */
+.d-grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(240px,1fr));gap:10px}
+.dc{background:var(--bg2);border:1px solid var(--border);border-radius:var(--rl);
+  padding:14px;transition:border-color .2s,transform .2s;cursor:pointer}
+.dc:hover{border-color:var(--green-dim);transform:translateY(-2px)}
+.dc a{text-decoration:none;color:inherit;display:flex;gap:12px;align-items:flex-start}
+.d-img{width:72px;height:34px;object-fit:cover;border-radius:5px;background:var(--bg3);flex-shrink:0}
+.d-info{flex:1;min-width:0}
+.d-name{font-size:12px;font-weight:500;white-space:nowrap;overflow:hidden;text-overflow:ellipsis;margin-bottom:5px}
+.d-prices{display:flex;align-items:center;gap:7px;flex-wrap:wrap}
+.d-badge{background:var(--green-dim);color:var(--green);font-family:var(--fm);
+  font-size:11px;font-weight:500;padding:1px 6px;border-radius:3px}
+.d-orig{font-size:11px;color:var(--muted);text-decoration:line-through}
+.d-cur{font-size:13px;font-weight:500;color:var(--green)}
+.d-rev{margin-left:auto;font-family:var(--fm);font-size:11px;color:var(--green);white-space:nowrap;padding-top:1px}
 
-/* ── Section titles ───────────────────────────────────────── */
-.section { margin-bottom: 56px; }
-.section-head {
-  display: flex; align-items: center; justify-content: space-between;
-  margin-bottom: 20px; padding-bottom: 12px;
-  border-bottom: 1px solid var(--border);
-}
-.section-title {
-  font-family: var(--font-head);
-  font-size: 28px; letter-spacing: 0.03em;
-  display: flex; align-items: center; gap: 10px;
-}
-.section-title .dot {
-  width: 8px; height: 8px; border-radius: 50%;
-  background: var(--accent); display: inline-block;
-}
-.section-title .dot.green { background: var(--green); }
-.section-title .dot.amber { background: var(--amber); }
-.section-count { font-family: var(--font-mono); font-size: 12px; color: var(--muted); }
+/* INSIGHTS */
+.i-grid{display:grid;grid-template-columns:repeat(auto-fit,minmax(300px,1fr));gap:14px}
+.ic{background:var(--bg2);border:1px solid var(--border);border-radius:var(--rl);padding:20px 22px}
+.ic.feat{border-color:rgba(91,106,248,.25);background:linear-gradient(135deg,var(--bg2),#121220)}
+.ic-hd{display:flex;align-items:center;gap:10px;margin-bottom:13px}
+.ic-icon{width:30px;height:30px;border-radius:7px;background:var(--bg3);border:1px solid var(--border2);
+  display:flex;align-items:center;justify-content:center;font-size:14px;flex-shrink:0}
+.ic-title{font-weight:500;font-size:13px}
+.ic-sub{font-size:10px;color:var(--muted);margin-top:1px;font-family:var(--fm)}
+.ic-body{font-size:13px;color:var(--muted2);line-height:1.75}
+.ic-body p{margin-bottom:.7em}.ic-body p:last-child{margin-bottom:0}
+.ic-body strong{color:var(--text);font-weight:500}
+.ic-body ol,.ic-body ul{padding-left:1.3em;margin:.4em 0}
+.ic-body li{margin-bottom:.5em}
 
-/* ── Trending grid ────────────────────────────────────────── */
-.trending-grid {
-  display: grid;
-  grid-template-columns: repeat(auto-fill, minmax(280px, 1fr));
-  gap: 14px;
-}
+/* CHARTS */
+.chart-box{background:var(--bg2);border:1px solid var(--border);border-radius:var(--rl);padding:22px}
+.chart-box + .chart-box{margin-top:14px}
+.chart-title{font-family:var(--fm);font-size:11px;color:var(--muted);letter-spacing:.08em;
+  text-transform:uppercase;margin-bottom:16px}
+.chart-h{position:relative;height:260px}
 
-/* First card spans 2 columns on wide screens */
-@media (min-width: 900px) {
-  .trending-grid .game-card:first-child { grid-column: span 2; }
-}
+/* 2-col chart layout */
+.chart-row{display:grid;grid-template-columns:1fr 1fr;gap:14px}
+@media(max-width:720px){.chart-row{grid-template-columns:1fr}}
 
-.game-card {
-  background: var(--bg2);
-  border: 1px solid var(--border);
-  border-radius: var(--radius-lg);
-  overflow: hidden;
-  display: flex; flex-direction: column;
-  transition: transform 0.2s, border-color 0.2s, box-shadow 0.2s;
-  cursor: pointer;
-}
-.game-card:hover {
-  transform: translateY(-3px);
-  border-color: var(--border2);
-  box-shadow: 0 12px 40px rgba(0,0,0,0.5);
-}
-.game-card a { text-decoration: none; color: inherit; display: flex; flex-direction: column; height: 100%; }
+/* FOOTER */
+footer{border-top:1px solid var(--border);padding:24px 0 0;
+  display:flex;justify-content:space-between;align-items:center;flex-wrap:wrap;gap:10px}
+.f-brand{font-family:var(--fh);font-size:18px;color:var(--muted)}
+.f-note{font-size:11px;color:var(--muted);font-family:var(--fm)}
 
-.card-img {
-  width: 100%; aspect-ratio: 460/215;
-  object-fit: cover; display: block;
-  background: var(--bg3);
-}
-.game-card:first-child .card-img { aspect-ratio: 16/7; }
+/* ANIMS */
+@keyframes fu{from{opacity:0;transform:translateY(14px)}to{opacity:1;transform:translateY(0)}}
+.sec{animation:fu .45s ease both}
+.sec:nth-child(2){animation-delay:.05s}.sec:nth-child(3){animation-delay:.1s}
+.sec:nth-child(4){animation-delay:.15s}.sec:nth-child(5){animation-delay:.2s}
+.sec:nth-child(6){animation-delay:.25s}
 
-.card-body { padding: 14px 16px 16px; flex: 1; display: flex; flex-direction: column; }
-
-.card-rank {
-  font-family: var(--font-mono); font-size: 10px;
-  color: var(--accent2); letter-spacing: 0.08em;
-  margin-bottom: 6px;
-}
-.card-name {
-  font-size: 15px; font-weight: 500;
-  line-height: 1.3; margin-bottom: 8px;
-  display: -webkit-box; -webkit-line-clamp: 2;
-  -webkit-box-orient: vertical; overflow: hidden;
-}
-.game-card:first-child .card-name { font-size: 20px; }
-
-.card-tags {
-  display: flex; flex-wrap: wrap; gap: 4px;
-  margin-bottom: 12px;
-}
-.tag {
-  font-size: 10px; font-family: var(--font-mono);
-  color: var(--muted2); background: var(--bg3);
-  border: 1px solid var(--border);
-  padding: 2px 7px; border-radius: 4px;
-  letter-spacing: 0.04em;
-}
-
-.card-stats { display: flex; gap: 14px; margin-top: auto; flex-wrap: wrap; }
-.cstat { display: flex; flex-direction: column; }
-.cstat .cs-val { font-family: var(--font-mono); font-size: 14px; font-weight: 500; color: var(--text); }
-.cstat .cs-lbl { font-size: 10px; color: var(--muted); letter-spacing: 0.06em; margin-top: 1px; }
-
-.review-bar {
-  height: 3px; background: var(--bg4);
-  border-radius: 2px; margin-top: 12px; overflow: hidden;
-}
-.review-fill { height: 100%; border-radius: 2px; background: var(--green); }
-
-/* ── Deals grid ───────────────────────────────────────────── */
-.deals-grid {
-  display: grid;
-  grid-template-columns: repeat(auto-fill, minmax(260px, 1fr));
-  gap: 12px;
-}
-.deal-card {
-  background: var(--bg2);
-  border: 1px solid var(--border);
-  border-radius: var(--radius-lg);
-  padding: 16px;
-  display: flex; gap: 14px; align-items: flex-start;
-  transition: border-color 0.2s, transform 0.2s;
-  cursor: pointer;
-}
-.deal-card:hover { border-color: var(--green2); transform: translateY(-2px); }
-.deal-card a { text-decoration: none; color: inherit; display: flex; gap: 14px; width: 100%; }
-
-.deal-img {
-  width: 80px; height: 37px;
-  object-fit: cover; border-radius: 6px;
-  background: var(--bg3); flex-shrink: 0;
-}
-.deal-info { flex: 1; min-width: 0; }
-.deal-name {
-  font-size: 13px; font-weight: 500;
-  white-space: nowrap; overflow: hidden; text-overflow: ellipsis;
-  margin-bottom: 6px;
-}
-.deal-prices { display: flex; align-items: center; gap: 8px; flex-wrap: wrap; }
-.deal-badge {
-  background: var(--green2);
-  color: #fff; font-family: var(--font-mono);
-  font-size: 12px; font-weight: 500;
-  padding: 2px 7px; border-radius: 4px;
-}
-.deal-original { font-size: 12px; color: var(--muted); text-decoration: line-through; }
-.deal-current  { font-size: 14px; font-weight: 500; color: var(--green); }
-
-/* ── AI Insights panel ────────────────────────────────────── */
-.insights-grid {
-  display: grid;
-  grid-template-columns: repeat(auto-fit, minmax(320px, 1fr));
-  gap: 16px;
-}
-.insight-card {
-  background: var(--bg2);
-  border: 1px solid var(--border);
-  border-radius: var(--radius-lg);
-  padding: 22px 24px;
-}
-.insight-card.featured {
-  border-color: rgba(91,106,248,0.3);
-  background: linear-gradient(135deg, var(--bg2), #13131e);
-}
-.insight-header { display: flex; align-items: center; gap: 10px; margin-bottom: 14px; }
-.insight-icon {
-  width: 32px; height: 32px; border-radius: 8px;
-  background: var(--bg3); border: 1px solid var(--border2);
-  display: flex; align-items: center; justify-content: center;
-  font-size: 15px;
-}
-.insight-title { font-weight: 500; font-size: 14px; }
-.insight-subtitle { font-size: 11px; color: var(--muted); margin-top: 1px; font-family: var(--font-mono); }
-.insight-body {
-  font-size: 13px; color: var(--muted2);
-  line-height: 1.75; white-space: pre-wrap;
-}
-
-/* ── Genre chart ──────────────────────────────────────────── */
-.chart-wrap {
-  background: var(--bg2);
-  border: 1px solid var(--border);
-  border-radius: var(--radius-lg);
-  padding: 24px;
-}
-.chart-canvas-wrap { position: relative; height: 280px; }
-
-/* ── Footer ───────────────────────────────────────────────── */
-footer {
-  border-top: 1px solid var(--border);
-  padding: 28px 0 0;
-  display: flex; justify-content: space-between; align-items: center;
-  flex-wrap: wrap; gap: 12px;
-}
-footer .f-brand { font-family: var(--font-head); font-size: 20px; color: var(--muted); }
-footer .f-note  { font-size: 12px; color: var(--muted); font-family: var(--font-mono); }
-
-/* ── Animations ───────────────────────────────────────────── */
-@keyframes fadeUp {
-  from { opacity: 0; transform: translateY(16px); }
-  to   { opacity: 1; transform: translateY(0); }
-}
-.section { animation: fadeUp 0.5s ease both; }
-.section:nth-child(2) { animation-delay: 0.05s; }
-.section:nth-child(3) { animation-delay: 0.10s; }
-.section:nth-child(4) { animation-delay: 0.15s; }
-.section:nth-child(5) { animation-delay: 0.20s; }
-
-/* ── Responsive ───────────────────────────────────────────── */
-@media (max-width: 640px) {
-  .site-header { padding: 32px 0 24px; }
-  .summary-banner { flex-direction: column; gap: 12px; }
-  .deal-card { flex-direction: column; }
-  .deal-img  { width: 100%; height: 50px; }
+@media(max-width:600px){
+  .banner{flex-direction:column;gap:10px}
+  .dc a{flex-direction:column}
+  .d-img{width:100%;height:44px}
 }
 </style>
 </head>
 <body>
-<div class="page">
+<div class="wrap">
 
-  <!-- ── Header ──────────────────────────────────────────── -->
-  <header class="site-header">
-    <div class="logo">
-      <span class="logo-text">STEAM PULSE</span>
-      <span class="logo-badge">Live</span>
-    </div>
-    <div class="header-meta">
-      <div class="label">Cập nhật lúc</div>
-      <div class="value">{{ updated_at }}</div>
-      <div class="value" style="margin-top:4px;font-size:11px;">{{ total_games }} games · {{ total_deals }} deals</div>
-    </div>
-  </header>
+<!-- HEADER -->
+<header class="hd">
+  <div class="logo">
+    <span class="logo-t">STEAM PULSE</span>
+    <span class="live-badge">LIVE</span>
+  </div>
+  <div class="hd-meta">
+    <div class="lbl">Cập nhật lúc</div>
+    <div class="val">{{ updated_at }}</div>
+    <div class="val" style="font-size:11px;margin-top:3px">{{ total_games }} games · {{ total_deals }} deals hôm nay</div>
+  </div>
+</header>
 
-  <!-- ── AI Weekly Summary ───────────────────────────────── -->
-  {% if summary %}
-  <div class="summary-banner">
-    <span class="ai-tag">AI · Groq</span>
-    <p class="ai-text">{{ summary }}</p>
+<!-- AI SUMMARY BANNER -->
+{% if summary %}
+<div class="banner">
+  <span class="ai-tag">AI · GROQ</span>
+  <div class="banner-text">{{ summary | safe }}</div>
+</div>
+{% endif %}
+
+<!-- STATS ROW -->
+<div class="stats">
+  <div class="sc">
+    <div class="lbl">Top game</div>
+    <div class="val lg">{% if top_game %}{{ top_game.name | truncate(26,true,'…') }}{% else %}—{% endif %}</div>
+    <div class="sub">{% if top_game and top_game.concurrent_peak %}{{ top_game.concurrent_peak | commas }} players online{% endif %}</div>
+  </div>
+  <div class="sc">
+    <div class="lbl">Tổng games</div>
+    <div class="val accent">{{ total_games }}</div>
+    <div class="sub">trong top hôm nay</div>
+  </div>
+  <div class="sc">
+    <div class="lbl">Deals chất lượng</div>
+    <div class="val green">{{ total_deals }}</div>
+    <div class="sub">sale ≥ 20% · review ≥ 65%</div>
+  </div>
+  {% if stats.total_players %}
+  <div class="sc">
+    <div class="lbl">Tổng players</div>
+    <div class="val">{{ stats.total_players | abbr }}</div>
+    <div class="sub">đang online</div>
   </div>
   {% endif %}
+  {% if stats.avg_review_pct %}
+  <div class="sc">
+    <div class="lbl">Review TB</div>
+    <div class="val" style="font-size:28px">{{ stats.avg_review_pct | int }}%</div>
+    <div class="sub">trung bình top games</div>
+  </div>
+  {% endif %}
+  {% if genre_stats %}
+  <div class="sc">
+    <div class="lbl">Genre #1</div>
+    <div class="val lg">{{ genre_stats[0].genre }}</div>
+    <div class="sub">{{ genre_stats[0].total_players | abbr }} players</div>
+  </div>
+  {% endif %}
+</div>
 
-  <!-- ── Stats row ───────────────────────────────────────── -->
-  <div class="stats-row" style="margin-top:32px;">
-    <div class="stat-card">
-      <div class="s-label">Top game hôm nay</div>
-      <div class="s-value" style="font-size:22px;font-family:var(--font-body);font-weight:500;">
-        {% if top_game %}{{ top_game.name | truncate(28, true, '…') }}{% else %}—{% endif %}
-      </div>
-      <div class="s-sub">
-        {% if top_game and top_game.concurrent_peak %}
-          {{ top_game.concurrent_peak | commas }} players online
-        {% endif %}
-      </div>
+<!-- TRENDING -->
+{% if trending %}
+<section class="sec">
+  <div class="sec-hd">
+    <h2 class="sec-title"><span class="dot"></span>Trending hôm nay</h2>
+    <span class="sec-count">{{ trending | length }} games · deduplicated</span>
+  </div>
+  <div class="t-grid">
+    {% for g in trending %}
+    <div class="gc">
+      <a href="{{ g.steam_url }}" target="_blank" rel="noopener">
+        <img class="gc-img"
+          src="{{ g.img_header }}"
+          alt="{{ g.name }}"
+          loading="{{ 'eager' if loop.index <= 4 else 'lazy' }}"
+          onerror="this.style.display='none'">
+        <div class="gc-body">
+          <div class="gc-rank">
+            #{{ g.rank_trending or loop.index }}
+            {% if g.discount_pct and g.discount_pct > 0 %} · <span style="color:var(--green)">-{{ g.discount_pct }}%</span>{% endif %}
+            {% if g.is_free %} · <span style="color:var(--amber)">FREE</span>{% endif %}
+          </div>
+          <div class="gc-name">{{ g.name }}</div>
+          {% if g.genres %}
+          <div class="tags">{% for t in g.genres[:3] %}<span class="tag">{{ t }}</span>{% endfor %}</div>
+          {% endif %}
+          <div class="gc-stats">
+            {% if g.concurrent_peak %}
+            <div class="cs">
+              <div class="v">{{ g.concurrent_peak | commas }}</div>
+              <div class="l">PLAYING NOW</div>
+            </div>
+            {% endif %}
+            {% if g.review_pct %}
+            <div class="cs">
+              <div class="v {% if g.review_pct >= 80 %}green{% elif g.review_pct >= 60 %}amber{% else %}red{% endif %}">
+                {{ g.review_pct }}%
+              </div>
+              <div class="l">REVIEW</div>
+            </div>
+            {% endif %}
+            {% if g.is_free %}
+            <div class="cs">
+              <div class="v amber">Free</div>
+              <div class="l">GIÁ</div>
+            </div>
+            {% elif g.price_current is not none %}
+            <div class="cs">
+              <div class="v">{{ g.price_current | usd }}</div>
+              <div class="l">GIÁ</div>
+            </div>
+            {% endif %}
+            {% if g.owners_estimate %}
+            <div class="cs">
+              <div class="v">{{ g.owners_estimate | abbr }}</div>
+              <div class="l">OWNERS</div>
+            </div>
+            {% endif %}
+          </div>
+          {% if g.review_pct %}
+          <div class="rbar"><div class="rfill" style="width:{{ g.review_pct }}%"></div></div>
+          {% endif %}
+        </div>
+      </a>
     </div>
-    <div class="stat-card">
-      <div class="s-label">Games trending</div>
-      <div class="s-value">{{ total_games }}</div>
-      <div class="s-sub">trong top hôm nay</div>
+    {% endfor %}
+  </div>
+</section>
+{% endif %}
+
+<!-- CHARTS: LINE HISTORY + BAR GENRE side by side -->
+<section class="sec">
+  <div class="sec-hd">
+    <h2 class="sec-title"><span class="dot a"></span>Thống kê & Biểu đồ</h2>
+    <span class="sec-count">Dữ liệu {{ chart_labels | length }} ngày gần nhất</span>
+  </div>
+  <div class="chart-row">
+    {% if has_history %}
+    <div class="chart-box">
+      <div class="chart-title">Lịch sử players (top games)</div>
+      <div class="chart-h"><canvas id="lineChart"></canvas></div>
     </div>
-    <div class="stat-card">
-      <div class="s-label">Deals chất lượng</div>
-      <div class="s-value" style="color:var(--green);">{{ total_deals }}</div>
-      <div class="s-sub">review ≥ 70% · sale ≥ 30%</div>
-    </div>
+    {% endif %}
     {% if genre_stats %}
-    <div class="stat-card">
-      <div class="s-label">Genre #1</div>
-      <div class="s-value" style="font-size:22px;font-family:var(--font-body);font-weight:500;">
-        {{ genre_stats[0].genre if genre_stats else '—' }}
-      </div>
-      <div class="s-sub">{{ genre_stats[0].players | commas if genre_stats else '' }} players tổng</div>
+    <div class="chart-box">
+      <div class="chart-title">Genre · tổng players hôm nay</div>
+      <div class="chart-h"><canvas id="barChart"></canvas></div>
     </div>
     {% endif %}
   </div>
+</section>
 
-  <!-- ── Trending ─────────────────────────────────────────── -->
-  {% if trending %}
-  <section class="section">
-    <div class="section-head">
-      <h2 class="section-title">
-        <span class="dot"></span> Trending hôm nay
-      </h2>
-      <span class="section-count">{{ trending | length }} games</span>
-    </div>
-    <div class="trending-grid">
-      {% for game in trending %}
-      <div class="game-card">
-        <a href="{{ game.steam_url }}" target="_blank" rel="noopener">
-          <img
-            class="card-img"
-            src="{{ game.img_header }}"
-            alt="{{ game.name }}"
-            loading="{{ 'eager' if loop.index <= 4 else 'lazy' }}"
-            onerror="this.style.display='none'"
-          >
-          <div class="card-body">
-            <div class="card-rank">
-              #{{ game.rank_trending or loop.index }}
-              {% if game.discount_pct and game.discount_pct > 0 %}
-              · <span style="color:var(--green)">-{{ game.discount_pct }}%</span>
-              {% endif %}
-            </div>
-            <div class="card-name">{{ game.name }}</div>
-            {% if game.genres %}
-            <div class="card-tags">
-              {% for g in game.genres[:3] %}
-              <span class="tag">{{ g }}</span>
-              {% endfor %}
-            </div>
-            {% endif %}
-            <div class="card-stats">
-              {% if game.concurrent_peak %}
-              <div class="cstat">
-                <span class="cs-val">{{ game.concurrent_peak | commas }}</span>
-                <span class="cs-lbl">PLAYING NOW</span>
-              </div>
-              {% endif %}
-              {% if game.review_pct %}
-              <div class="cstat">
-                <span class="cs-val" style="color:{% if game.review_pct >= 80 %}var(--green){% elif game.review_pct >= 60 %}var(--amber){% else %}var(--red){% endif %}">
-                  {{ game.review_pct }}%
-                </span>
-                <span class="cs-lbl">REVIEW</span>
-              </div>
-              {% endif %}
-              {% if game.price_current is not none %}
-              <div class="cstat">
-                <span class="cs-val">
-                  {% if game.is_free %}Free{% else %}{{ game.price_current | usd }}{% endif %}
-                </span>
-                <span class="cs-lbl">GIÁ</span>
-              </div>
-              {% endif %}
-            </div>
-            {% if game.review_pct %}
-            <div class="review-bar">
-              <div class="review-fill" style="width:{{ game.review_pct }}%"></div>
-            </div>
-            {% endif %}
-          </div>
-        </a>
-      </div>
-      {% endfor %}
-    </div>
-  </section>
-  {% endif %}
-
-  <!-- ── Deals ────────────────────────────────────────────── -->
-  {% if deals %}
-  <section class="section">
-    <div class="section-head">
-      <h2 class="section-title">
-        <span class="dot green"></span> Deals đáng mua
-      </h2>
-      <span class="section-count">Sale ≥ 30% · Review ≥ 70%</span>
-    </div>
-    <div class="deals-grid">
-      {% for deal in deals %}
-      <div class="deal-card">
-        <a href="{{ deal.steam_url }}" target="_blank" rel="noopener">
-          <img
-            class="deal-img"
-            src="{{ deal.img_capsule or deal.img_header }}"
-            alt="{{ deal.name }}"
-            loading="lazy"
-            onerror="this.style.display='none'"
-          >
-          <div class="deal-info">
-            <div class="deal-name">{{ deal.name }}</div>
-            <div class="deal-prices">
-              <span class="deal-badge">-{{ deal.discount_pct }}%</span>
-              {% if deal.price_usd %}
-              <span class="deal-original">{{ deal.price_usd | usd }}</span>
-              {% endif %}
-              <span class="deal-current">
-                {% if deal.is_free %}Free{% else %}{{ deal.price_current | usd }}{% endif %}
-              </span>
-            </div>
-          </div>
-          {% if deal.review_pct %}
-          <div style="margin-left:auto;font-family:var(--font-mono);font-size:12px;color:var(--green);white-space:nowrap;padding-top:2px;">
-            {{ deal.review_pct }}%
-          </div>
-          {% endif %}
-        </a>
-      </div>
-      {% endfor %}
-    </div>
-  </section>
-  {% endif %}
-
-  <!-- ── AI Insights ──────────────────────────────────────── -->
-  {% if trend_analysis or deal_picks or hidden_gems %}
-  <section class="section">
-    <div class="section-head">
-      <h2 class="section-title">
-        <span class="dot amber"></span> AI Insights
-      </h2>
-      <span class="section-count">Phân tích bởi Groq · Llama 3.3 70B</span>
-    </div>
-    <div class="insights-grid">
-
-      {% if trend_analysis %}
-      <div class="insight-card featured">
-        <div class="insight-header">
-          <div class="insight-icon">📈</div>
-          <div>
-            <div class="insight-title">Xu hướng tuần này</div>
-            <div class="insight-subtitle">trend_analysis · AI</div>
+<!-- DEALS -->
+{% if deals %}
+<section class="sec">
+  <div class="sec-hd">
+    <h2 class="sec-title"><span class="dot g"></span>Deals đáng mua</h2>
+    <span class="sec-count">Sale ≥ 20% · Review ≥ 65%</span>
+  </div>
+  <div class="d-grid">
+    {% for d in deals %}
+    <div class="dc">
+      <a href="{{ d.steam_url }}" target="_blank" rel="noopener">
+        <img class="d-img"
+          src="{{ d.img_capsule or d.img_header }}"
+          alt="{{ d.name }}"
+          loading="lazy"
+          onerror="this.style.display='none'">
+        <div class="d-info">
+          <div class="d-name">{{ d.name }}</div>
+          <div class="d-prices">
+            <span class="d-badge">-{{ d.discount_pct }}%</span>
+            {% if d.price_usd %}<span class="d-orig">{{ d.price_usd | usd }}</span>{% endif %}
+            <span class="d-cur">{% if d.is_free %}Free{% else %}{{ d.price_current | usd }}{% endif %}</span>
           </div>
         </div>
-        <div class="insight-body">{{ trend_analysis }}</div>
-      </div>
-      {% endif %}
-
-      {% if deal_picks %}
-      <div class="insight-card">
-        <div class="insight-header">
-          <div class="insight-icon">🎯</div>
-          <div>
-            <div class="insight-title">Top picks đáng mua</div>
-            <div class="insight-subtitle">deal_picks · AI</div>
-          </div>
-        </div>
-        <div class="insight-body">{{ deal_picks }}</div>
-      </div>
-      {% endif %}
-
-      {% if hidden_gems %}
-      <div class="insight-card">
-        <div class="insight-header">
-          <div class="insight-icon">💎</div>
-          <div>
-            <div class="insight-title">Hidden gems</div>
-            <div class="insight-subtitle">hidden_gems · AI</div>
-          </div>
-        </div>
-        <div class="insight-body">{{ hidden_gems }}</div>
-      </div>
-      {% endif %}
-
+        {% if d.review_pct %}<div class="d-rev">{{ d.review_pct }}%</div>{% endif %}
+      </a>
     </div>
-  </section>
-  {% endif %}
+    {% endfor %}
+  </div>
+</section>
+{% endif %}
 
-  <!-- ── Genre chart ──────────────────────────────────────── -->
-  {% if genre_stats %}
-  <section class="section">
-    <div class="section-head">
-      <h2 class="section-title">
-        <span class="dot"></span> Genre trending
-      </h2>
-      <span class="section-count">Tổng players theo thể loại</span>
-    </div>
-    <div class="chart-wrap">
-      <div class="chart-canvas-wrap">
-        <canvas id="genreChart"></canvas>
+<!-- AI INSIGHTS -->
+{% if trend_analysis or deal_picks or hidden_gems %}
+<section class="sec">
+  <div class="sec-hd">
+    <h2 class="sec-title"><span class="dot a"></span>AI Insights</h2>
+    <span class="sec-count">Groq · Llama 3.3 70B</span>
+  </div>
+  <div class="i-grid">
+    {% if trend_analysis %}
+    <div class="ic feat">
+      <div class="ic-hd">
+        <div class="ic-icon">📈</div>
+        <div><div class="ic-title">Xu hướng tuần này</div><div class="ic-sub">trend_analysis</div></div>
       </div>
+      <div class="ic-body">{{ trend_analysis | safe }}</div>
     </div>
-  </section>
-  {% endif %}
+    {% endif %}
+    {% if deal_picks %}
+    <div class="ic">
+      <div class="ic-hd">
+        <div class="ic-icon">🎯</div>
+        <div><div class="ic-title">Top picks đáng mua</div><div class="ic-sub">deal_picks</div></div>
+      </div>
+      <div class="ic-body">{{ deal_picks | safe }}</div>
+    </div>
+    {% endif %}
+    {% if hidden_gems %}
+    <div class="ic">
+      <div class="ic-hd">
+        <div class="ic-icon">💎</div>
+        <div><div class="ic-title">Hidden gems</div><div class="ic-sub">hidden_gems</div></div>
+      </div>
+      <div class="ic-body">{{ hidden_gems | safe }}</div>
+    </div>
+    {% endif %}
+  </div>
+</section>
+{% endif %}
 
-  <!-- ── Footer ───────────────────────────────────────────── -->
-  <footer>
-    <span class="f-brand">STEAM PULSE</span>
-    <span class="f-note">
-      Data: Steam API · SteamSpy · AI: Groq Llama 3.3 70B ·
-      Cập nhật: {{ updated_at }}
-    </span>
-  </footer>
+<!-- FOOTER -->
+<footer>
+  <span class="f-brand">STEAM PULSE</span>
+  <span class="f-note">Steam API · SteamSpy · Groq Llama 3.3 70B · {{ updated_at }}</span>
+</footer>
 
-</div><!-- .page -->
+</div><!-- .wrap -->
 
-<!-- ── Chart.js ─────────────────────────────────────────────── -->
-{% if genre_stats %}
+<!-- CHARTS JS -->
 <script>
-(function() {
-  const labels = {{ genre_stats | map(attribute='genre') | list | tojson }};
-  const values = {{ genre_stats | map(attribute='players') | list | tojson }};
-  const max    = Math.max(...values);
+const CHART_DEFAULTS = {
+  responsive:true, maintainAspectRatio:false,
+  plugins:{legend:{display:true,labels:{color:'#6b6b80',font:{family:'DM Mono',size:10},boxWidth:10,padding:12}}},
+  scales:{
+    x:{grid:{color:'rgba(255,255,255,0.04)'},ticks:{color:'#55556a',font:{family:'DM Mono',size:10},maxRotation:30}},
+    y:{grid:{color:'rgba(255,255,255,0.04)'},ticks:{color:'#55556a',font:{family:'DM Mono',size:10},
+       callback:v=>v>=1000000?(v/1000000).toFixed(1)+'M':v>=1000?(v/1000).toFixed(0)+'K':v}}
+  }
+};
+const TOOLTIP = {
+  backgroundColor:'#17171f',borderColor:'rgba(255,255,255,0.1)',borderWidth:1,
+  titleColor:'#e6e6f0',bodyColor:'#9494ac',padding:12,
+};
 
-  const ctx = document.getElementById('genreChart').getContext('2d');
-  new Chart(ctx, {
-    type: 'bar',
-    data: {
-      labels,
-      datasets: [{
-        data: values,
-        backgroundColor: values.map(v => {
-          const ratio = v / max;
-          const r = Math.round(91  + ratio * (124 - 91));
-          const g = Math.round(106 + ratio * (137 - 106));
-          const b = Math.round(248 + ratio * (255 - 248));
-          return `rgba(${r},${g},${b},${0.5 + ratio * 0.4})`;
-        }),
-        borderColor: 'rgba(91,106,248,0.5)',
-        borderWidth: 1,
-        borderRadius: 6,
-      }]
-    },
-    options: {
-      responsive: true,
-      maintainAspectRatio: false,
-      plugins: {
-        legend: { display: false },
-        tooltip: {
-          backgroundColor: '#18181f',
-          borderColor: 'rgba(255,255,255,0.1)',
-          borderWidth: 1,
-          titleColor: '#e8e8f0',
-          bodyColor: '#9898b0',
-          padding: 12,
-          callbacks: {
-            label: ctx => ' ' + ctx.parsed.y.toLocaleString() + ' players'
-          }
-        }
-      },
-      scales: {
-        x: {
-          grid: { color: 'rgba(255,255,255,0.05)' },
-          ticks: { color: '#6b6b80', font: { family: 'DM Mono', size: 11 } }
-        },
-        y: {
-          grid: { color: 'rgba(255,255,255,0.05)' },
-          ticks: {
-            color: '#6b6b80',
-            font: { family: 'DM Mono', size: 11 },
-            callback: v => v >= 1000 ? (v/1000).toFixed(0)+'k' : v
-          }
-        }
+{% if has_history %}
+(function(){
+  const labels = {{ chart_labels | tojson }};
+  const datasets = {{ chart_datasets | tojson }}.map(d => ({
+    label: d.label,
+    data: d.data,
+    borderColor: d.color,
+    backgroundColor: d.color + '18',
+    borderWidth: 2,
+    pointRadius: 3,
+    pointHoverRadius: 5,
+    tension: 0.35,
+    spanGaps: true,
+    fill: false,
+  }));
+  new Chart(document.getElementById('lineChart').getContext('2d'), {
+    type:'line',
+    data:{labels, datasets},
+    options:{...CHART_DEFAULTS, plugins:{...CHART_DEFAULTS.plugins,
+      tooltip:{...TOOLTIP, callbacks:{label:c=>` ${c.dataset.label}: ${(c.parsed.y||0).toLocaleString()}`}}}}
+  });
+})();
+{% endif %}
+
+{% if genre_stats %}
+(function(){
+  const labels = {{ genre_stats | map(attribute='genre') | list | tojson }};
+  const values = {{ genre_stats | map(attribute='total_players') | list | tojson }};
+  const mx = Math.max(...values);
+  new Chart(document.getElementById('barChart').getContext('2d'), {
+    type:'bar',
+    data:{labels, datasets:[{
+      data: values,
+      backgroundColor: values.map(v=>{
+        const r=v/mx;
+        return `rgba(91,106,248,${.3+r*.55})`;
+      }),
+      borderColor:'rgba(91,106,248,.4)',
+      borderWidth:1, borderRadius:5,
+    }]},
+    options:{
+      ...CHART_DEFAULTS,
+      plugins:{
+        legend:{display:false},
+        tooltip:{...TOOLTIP, callbacks:{label:c=>` ${c.parsed.y.toLocaleString()} players`}}
       }
     }
   });
 })();
-</script>
 {% endif %}
-
+</script>
 </body>
 </html>
