@@ -45,3 +45,14 @@ CREATE POLICY "public read new_releases" ON new_releases FOR SELECT USING (true)
 -- ── Dọn dẹp game cũ hơn 21 ngày ra khỏi new_releases ─────────
 -- (Chạy thủ công hoặc đặt trong cron nếu cần)
 -- DELETE FROM new_releases WHERE days_since_release > 21;
+
+
+-- ============================================================
+-- STEAM TRACKER — SQL v4 Fix
+-- Thêm cột release_date và days_since_release vào bảng games
+-- Chạy trong Supabase SQL Editor
+-- ============================================================
+ 
+ALTER TABLE games
+  ADD COLUMN IF NOT EXISTS release_date        DATE,
+  ADD COLUMN IF NOT EXISTS days_since_release  INTEGER;
