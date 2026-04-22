@@ -17,6 +17,7 @@
   --amber:#f5a623;--amber-dim:rgba(245,166,35,.15);
   --red:#f05252;--red-dim:rgba(240,82,82,.15);
   --surge:#ff6b35;--surge-dim:rgba(255,107,53,.15);
+  --new:#a855f7;--new-dim:rgba(168,85,247,.15);--new-bright:#c084fc;
   --fh:'Bebas Neue',sans-serif;--fb:'DM Sans',sans-serif;--fm:'DM Mono',monospace;
   --r:10px;--rl:16px;
 }
@@ -52,7 +53,7 @@ body::before{content:'';position:fixed;inset:0;opacity:.3;pointer-events:none;z-
 .sc .v{font-family:var(--fh);font-size:32px;line-height:1}
 .sc .v.sm{font-size:16px;font-family:var(--fb);font-weight:500}
 .sc .s{font-size:11px;color:var(--muted2);margin-top:4px}
-.sc .v.green{color:var(--green)}.sc .v.surge{color:var(--surge)}.sc .v.accent{color:var(--accent2)}
+.sc .v.green{color:var(--green)}.sc .v.surge{color:var(--surge)}.sc .v.accent{color:var(--accent2)}.sc .v.new-c{color:var(--new-bright)}
 
 /* TABS */
 .tabs{display:flex;gap:4px;margin-bottom:20px;background:var(--bg2);border:1px solid var(--border);
@@ -64,6 +65,7 @@ body::before{content:'';position:fixed;inset:0;opacity:.3;pointer-events:none;z-
 .tab .cnt{background:rgba(255,255,255,.2);border-radius:3px;padding:1px 5px;margin-left:5px;font-size:9px}
 .tab.surge-tab.active{background:var(--surge)}
 .tab.deal-tab.active{background:var(--green-dim);color:var(--green);border:1px solid rgba(34,201,132,.3)}
+.tab.new-tab.active{background:var(--new-dim);color:var(--new-bright);border:1px solid rgba(168,85,247,.4)}
 .tab.insight-tab.active{background:var(--amber-dim);color:var(--amber);border:1px solid rgba(245,166,35,.3)}
 
 .panel{display:none}.panel.active{display:block}
@@ -72,7 +74,7 @@ body::before{content:'';position:fixed;inset:0;opacity:.3;pointer-events:none;z-
 .sh{display:flex;align-items:center;justify-content:space-between;margin-bottom:16px;padding-bottom:10px;border-bottom:1px solid var(--border)}
 .st{font-family:var(--fh);font-size:24px;letter-spacing:.03em;display:flex;align-items:center;gap:8px}
 .dot{width:7px;height:7px;border-radius:50%;background:var(--accent);display:inline-block}
-.dot.g{background:var(--green)}.dot.a{background:var(--amber)}.dot.s{background:var(--surge)}
+.dot.g{background:var(--green)}.dot.a{background:var(--amber)}.dot.s{background:var(--surge)}.dot.n{background:var(--new)}
 .sc2{font-family:var(--fm);font-size:11px;color:var(--muted)}
 
 /* GAME CARD */
@@ -85,8 +87,6 @@ body::before{content:'';position:fixed;inset:0;opacity:.3;pointer-events:none;z-
 .gc-img{width:100%;aspect-ratio:460/215;object-fit:cover;display:block;background:var(--bg3)}
 .gc:nth-child(1) .gc-img{aspect-ratio:16/6}
 .gc-body{padding:12px 14px 14px;flex:1;display:flex;flex-direction:column}
-
-/* rank row */
 .gc-top{display:flex;align-items:center;justify-content:space-between;margin-bottom:5px}
 .gc-rank{font-family:var(--fm);font-size:10px;color:var(--accent2);letter-spacing:.07em}
 .gc-badges{display:flex;gap:4px;align-items:center}
@@ -96,32 +96,23 @@ body::before{content:'';position:fixed;inset:0;opacity:.3;pointer-events:none;z-
 .pill.surge{background:var(--surge-dim);color:var(--surge)}
 .pill.drop{background:var(--red-dim);color:var(--red)}
 .pill.change{background:var(--bg3);color:var(--muted2);border:1px solid var(--border)}
-
 .gc-name{font-size:14px;font-weight:500;line-height:1.3;margin-bottom:7px;
   display:-webkit-box;-webkit-line-clamp:2;-webkit-box-orient:vertical;overflow:hidden}
 .gc:nth-child(1) .gc-name{font-size:17px}
 .tags{display:flex;flex-wrap:wrap;gap:3px;margin-bottom:9px}
 .tag{font-size:9px;font-family:var(--fm);color:var(--muted2);background:var(--bg3);
   border:1px solid var(--border);padding:2px 6px;border-radius:3px}
-
-/* stats row in card */
 .gs{display:flex;gap:11px;margin-top:auto;flex-wrap:wrap}
 .cs .v{font-family:var(--fm);font-size:12px;font-weight:500;color:var(--text)}
 .cs .l{font-size:9px;color:var(--muted);letter-spacing:.05em;margin-top:1px}
 .cs .v.g{color:var(--green)}.cs .v.a{color:var(--amber)}.cs .v.r{color:var(--red)}
-
-/* review bar: positive + negative */
 .rev-bar{height:3px;background:var(--bg4);border-radius:2px;margin-top:10px;overflow:hidden;display:flex}
 .rev-pos{height:100%;background:var(--green)}
 .rev-neg{height:100%;background:var(--red)}
-
-/* review counts under bar */
 .rev-counts{display:flex;justify-content:space-between;margin-top:4px}
 .rev-counts span{font-family:var(--fm);font-size:9px;color:var(--muted)}
 .rev-counts .pos{color:var(--green);opacity:.7}
 .rev-counts .neg{color:var(--red);opacity:.7}
-
-/* owners row */
 .owners-row{font-family:var(--fm);font-size:10px;color:var(--muted);margin-top:5px}
 .owners-row span{color:var(--muted2)}
 
@@ -158,6 +149,95 @@ body::before{content:'';position:fixed;inset:0;opacity:.3;pointer-events:none;z-
 .d-rev-badge.ok{background:var(--amber-dim);color:var(--amber)}
 .d-owners{font-family:var(--fm);font-size:10px;color:var(--muted)}
 
+/* ══════════════════════════════════════════════════
+   NEW RELEASES PANEL
+══════════════════════════════════════════════════ */
+.nr-header-strip{
+  background:linear-gradient(135deg,rgba(168,85,247,.10),rgba(91,106,248,.06));
+  border:1px solid rgba(168,85,247,.2);border-radius:var(--rl);
+  padding:18px 22px;margin-bottom:20px;
+  display:flex;align-items:center;justify-content:space-between;flex-wrap:wrap;gap:12px;
+}
+.nr-title{font-family:var(--fh);font-size:20px;letter-spacing:.05em;color:var(--new-bright);display:flex;align-items:center;gap:8px}
+.nr-sub{font-size:12px;color:var(--muted);font-family:var(--fm);margin-top:4px}
+.nr-stats{display:flex;gap:20px;flex-wrap:wrap}
+.nrs .v{font-family:var(--fh);font-size:24px;color:var(--new-bright)}
+.nrs .l{font-size:9px;color:var(--muted);font-family:var(--fm);letter-spacing:.07em;text-transform:uppercase;margin-top:2px}
+
+/* Featured card */
+.nr-grid{display:grid;grid-template-columns:1fr 1fr;gap:12px;margin-bottom:16px}
+@media(max-width:860px){.nr-grid{grid-template-columns:1fr}}
+.nr-feat{
+  background:var(--bg2);border:1px solid rgba(168,85,247,.25);border-radius:var(--rl);
+  overflow:hidden;cursor:pointer;transition:transform .2s,border-color .2s,box-shadow .2s;position:relative;
+}
+.nr-feat::before{content:'';position:absolute;inset:0;
+  background:linear-gradient(135deg,rgba(168,85,247,.06),transparent 60%);pointer-events:none;z-index:0}
+.nr-feat:hover{transform:translateY(-3px);border-color:rgba(168,85,247,.5);box-shadow:0 12px 36px rgba(168,85,247,.15)}
+.nr-feat a{text-decoration:none;color:inherit;display:flex;flex-direction:column;height:100%;position:relative;z-index:1}
+.nr-feat .feat-img{width:100%;aspect-ratio:16/7;object-fit:cover;display:block;background:var(--bg3)}
+.nr-feat .feat-body{padding:16px 18px 18px;flex:1;display:flex;flex-direction:column;gap:10px}
+.nr-feat .feat-top{display:flex;align-items:center;justify-content:space-between}
+.feat-rank{font-family:var(--fm);font-size:10px;color:var(--new-bright);letter-spacing:.1em;
+  background:var(--new-dim);border:1px solid rgba(168,85,247,.3);padding:2px 8px;border-radius:3px}
+.feat-days{font-family:var(--fm);font-size:10px;color:var(--muted)}
+.feat-name{font-size:18px;font-weight:500;line-height:1.3}
+.feat-dev{font-size:11px;color:var(--muted2);margin-top:2px}
+
+/* Launch score meter */
+.score-meter .sm-label{display:flex;justify-content:space-between;align-items:center;margin-bottom:5px}
+.score-meter .sm-label .t{font-family:var(--fm);font-size:10px;color:var(--muted);letter-spacing:.07em;text-transform:uppercase}
+.score-meter .sm-label .v{font-family:var(--fh);font-size:20px;color:var(--new-bright)}
+.score-meter .bar-bg{height:5px;background:var(--bg4);border-radius:3px;overflow:hidden}
+.score-meter .bar-fill{height:100%;border-radius:3px;background:linear-gradient(90deg,var(--new),var(--new-bright));transition:width .8s ease}
+
+.feat-stats{display:flex;gap:14px;flex-wrap:wrap}
+.feat-stat .v{font-family:var(--fm);font-size:13px;font-weight:500}
+.feat-stat .v.g{color:var(--green)}.feat-stat .v.n{color:var(--new-bright)}.feat-stat .v.a{color:var(--amber)}
+.feat-stat .l{font-size:9px;color:var(--muted);letter-spacing:.05em;margin-top:1px}
+
+/* List cards */
+.nr-list{display:flex;flex-direction:column;gap:8px}
+.nrc{background:var(--bg2);border:1px solid var(--border);border-radius:var(--r);cursor:pointer;
+  transition:border-color .2s,transform .2s,background .2s}
+.nrc:hover{border-color:rgba(168,85,247,.3);transform:translateX(3px);background:var(--bg3)}
+.nrc a{text-decoration:none;color:inherit;display:flex;gap:12px;align-items:center;padding:12px 14px;width:100%}
+.nrc-img{width:72px;height:34px;object-fit:cover;border-radius:5px;background:var(--bg3);flex-shrink:0}
+.nrc-main{flex:1;min-width:0}
+.nrc-top{display:flex;align-items:center;gap:7px;margin-bottom:3px;flex-wrap:wrap}
+.nrc-rank{font-family:var(--fm);font-size:9px;color:var(--new-bright);letter-spacing:.07em}
+.nrc-name{font-size:13px;font-weight:500;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
+.nrc-meta{display:flex;gap:6px;align-items:center;flex-wrap:wrap;margin-top:3px}
+.nrc-tag{font-size:9px;font-family:var(--fm);color:var(--muted2);background:var(--bg3);
+  border:1px solid var(--border);padding:1px 5px;border-radius:3px}
+.nrc-right{text-align:right;flex-shrink:0;display:flex;flex-direction:column;align-items:flex-end;gap:4px}
+.nrc-score{font-family:var(--fh);font-size:20px;color:var(--new-bright)}
+.nrc-score-l{font-size:8px;color:var(--muted);font-family:var(--fm);letter-spacing:.06em}
+.nrc-bar{width:48px;height:3px;background:var(--bg4);border-radius:2px;overflow:hidden}
+.nrc-bar-fill{height:100%;background:linear-gradient(90deg,var(--new),var(--new-bright));border-radius:2px;transition:width .7s ease}
+
+/* Badges */
+.days-badge{font-family:var(--fm);font-size:9px;padding:1px 6px;border-radius:3px;
+  background:var(--new-dim);color:var(--new-bright);border:1px solid rgba(168,85,247,.25);white-space:nowrap}
+.days-badge.fresh{background:rgba(34,201,132,.15);color:var(--green);border-color:rgba(34,201,132,.3)}
+.vel-badge{font-family:var(--fm);font-size:9px;padding:1px 6px;border-radius:3px;
+  background:var(--bg3);color:var(--muted2);border:1px solid var(--border)}
+.vel-badge.hot{background:var(--surge-dim);color:var(--surge);border-color:rgba(255,107,53,.3)}
+
+/* Buzz card */
+.buzz-card{background:linear-gradient(135deg,rgba(168,85,247,.08),rgba(91,106,248,.04));
+  border:1px solid rgba(168,85,247,.2);border-radius:var(--rl);padding:18px 20px;margin-top:4px}
+.buzz-hd{display:flex;align-items:center;gap:9px;margin-bottom:12px}
+.buzz-icon{width:28px;height:28px;border-radius:6px;background:var(--new-dim);
+  border:1px solid rgba(168,85,247,.3);display:flex;align-items:center;justify-content:center;font-size:13px;flex-shrink:0}
+.buzz-title{font-weight:500;font-size:13px;color:var(--new-bright)}
+.buzz-sub{font-size:10px;color:var(--muted);margin-top:1px;font-family:var(--fm)}
+.buzz-body{font-size:13px;color:var(--muted2);line-height:1.78}
+.buzz-body p{margin-bottom:.65em}.buzz-body p:last-child{margin-bottom:0}
+.buzz-body strong{color:var(--text);font-weight:500}
+.buzz-body ol,.buzz-body ul{padding-left:1.2em;margin:.4em 0}
+.buzz-body li{margin-bottom:.45em}
+
 /* INSIGHT PANEL */
 .ig{display:grid;grid-template-columns:repeat(auto-fit,minmax(290px,1fr));gap:13px}
 .ic{background:var(--bg2);border:1px solid var(--border);border-radius:var(--rl);padding:18px 20px}
@@ -185,7 +265,6 @@ footer{border-top:1px solid var(--border);padding:22px 0 0;display:flex;justify-
 .f-brand{font-family:var(--fh);font-size:17px;color:var(--muted)}
 .f-note{font-size:10px;color:var(--muted);font-family:var(--fm)}
 
-/* ANIM */
 @keyframes fu{from{opacity:0;transform:translateY(12px)}to{opacity:1;transform:translateY(0)}}
 .panel.active{animation:fu .35s ease both}
 
@@ -194,6 +273,8 @@ footer{border-top:1px solid var(--border);padding:22px 0 0;display:flex;justify-
   .dc a{flex-direction:column}
   .d-img{width:100%;height:42px}
   .sgc-body{padding:10px 12px 12px}
+  .nr-grid{grid-template-columns:1fr}
+  .nr-header-strip{flex-direction:column;align-items:flex-start}
 }
 </style>
 </head>
@@ -208,7 +289,7 @@ footer{border-top:1px solid var(--border);padding:22px 0 0;display:flex;justify-
   </div>
   <div class="hd-r">
     <div class="l">Cập nhật lúc</div>
-    <div class="v">22/04/2026 06:09 UTC</div>
+    <div class="v">22/04/2026 06:28 UTC</div>
     <div class="v" style="font-size:10px;margin-top:2px">24 games · 1 deals · 0 đột biến</div>
   </div>
 </header>
@@ -217,7 +298,7 @@ footer{border-top:1px solid var(--border);padding:22px 0 0;display:flex;justify-
 
 <div class="banner">
   <span class="ai-tag">AI · GROQ</span>
-  <div><p>Hôm nay, cộng đồng game thủ trên Steam tiếp tục sôi động với hơn 650.000 người chơi Counter-Strike 2, dẫn đầu trên bảng xếp hạng về lượt chơi. Điểm nhấn nổi bật thuộc về thể loại Action khi chiếm ưu thế với 41 game trong top, thể hiện sự yêu thích của game thủ đối với những trải nghiệm đầy tốc độ và hành động. Một thông tin đáng chú ý là Cyberpunk 2077 đang được giảm giá tới 65%, tạo cơ hội cho những người yêu thích RPG và thế giới mở có thể trải nghiệm một trong những tựa game được đánh giá cao nhất gần đây. Nếu bạn đang tìm kiếm một tựa game mới để khám phá, hãy cân nhắc việc tận dụng ưu đãi này và bước vào thế giới đầy màu sắc của Cyberpunk 2077.</p></div>
+  <div><p>Hôm nay, thế giới game trên Steam đang sôi động với hàng nghìn người chơi tham gia vào các tựa game hấp dẫn, dẫn đầu là Counter-Strike 2 với hơn 669.000 người chơi. Điểm nhấn nổi bật trong ngày hôm nay là sự thống trị của thể loại Action với 41 game trong top, cho thấy sự yêu thích không ngừng của cộng đồng game thủ đối với những trải nghiệm đầy phấn khích. Nếu bạn đang tìm kiếm một tựa game mới để trải nghiệm, hãy chú ý đến Cyberpunk 2077, đang được giảm giá 65% trong thời gian này. Với những mức giá hấp dẫn và sự đa dạng của các thể loại game, đây là thời điểm tuyệt vời để bạn khám phá và tận hưởng thế giới game trên Steam!</p></div>
 </div>
 
 
@@ -226,7 +307,7 @@ footer{border-top:1px solid var(--border);padding:22px 0 0;display:flex;justify-
   <div class="sc">
     <div class="l">Top game</div>
     <div class="v sm">Counter-Strike 2</div>
-    <div class="s">650,729 players</div>
+    <div class="s">669,727 players</div>
   </div>
   <div class="sc">
     <div class="l">Games trending</div>
@@ -243,6 +324,7 @@ footer{border-top:1px solid var(--border);padding:22px 0 0;display:flex;justify-
     <div class="v surge">0</div>
     <div class="s">tăng >10% so hôm qua</div>
   </div>
+  
   
   <div class="sc">
     <div class="l">Tổng players</div>
@@ -277,6 +359,9 @@ footer{border-top:1px solid var(--border);padding:22px 0 0;display:flex;justify-
   <button class="tab deal-tab" data-panel="p-deals">
     Deals <span class="cnt">1</span>
   </button>
+  <button class="tab new-tab" data-panel="p-new">
+    ✦ Game Mới <span class="cnt">0</span>
+  </button>
   <button class="tab" data-panel="p-charts">Charts</button>
   <button class="tab insight-tab" data-panel="p-insights">AI Insights</button>
 </div>
@@ -308,7 +393,7 @@ footer{border-top:1px solid var(--border);padding:22px 0 0;display:flex;justify-
           <div class="tags"><span class="tag">Action</span><span class="tag">Free To Play</span></div>
           
           <div class="gs">
-            <div class="cs"><div class="v">650,729</div><div class="l">PLAYING NOW</div></div>
+            <div class="cs"><div class="v">669,727</div><div class="l">PLAYING NOW</div></div>
             
             <div class="cs">
               <div class="v g">87%</div>
@@ -319,8 +404,6 @@ footer{border-top:1px solid var(--border);padding:22px 0 0;display:flex;justify-
             
             <div class="cs"><div class="v">150.0M</div><div class="l">OWNERS</div></div>
           </div>
-          
-          
           
           <div class="rev-bar">
             <div class="rev-pos" style="width:87%"></div>
@@ -360,7 +443,7 @@ footer{border-top:1px solid var(--border);padding:22px 0 0;display:flex;justify-
           <div class="tags"><span class="tag">Action</span><span class="tag">Adventure</span><span class="tag">Free To Play</span></div>
           
           <div class="gs">
-            <div class="cs"><div class="v">82,862</div><div class="l">PLAYING NOW</div></div>
+            <div class="cs"><div class="v">84,921</div><div class="l">PLAYING NOW</div></div>
             
             <div class="cs">
               <div class="v a">67%</div>
@@ -371,8 +454,6 @@ footer{border-top:1px solid var(--border);padding:22px 0 0;display:flex;justify-
             
             <div class="cs"><div class="v">150.0M</div><div class="l">OWNERS</div></div>
           </div>
-          
-          
           
           <div class="rev-bar">
             <div class="rev-pos" style="width:67%"></div>
@@ -412,7 +493,7 @@ footer{border-top:1px solid var(--border);padding:22px 0 0;display:flex;justify-
           <div class="tags"><span class="tag">Action</span><span class="tag">Adventure</span><span class="tag">Massively Multiplayer</span></div>
           
           <div class="gs">
-            <div class="cs"><div class="v">311,241</div><div class="l">PLAYING NOW</div></div>
+            <div class="cs"><div class="v">328,029</div><div class="l">PLAYING NOW</div></div>
             
             <div class="cs">
               <div class="v r">59%</div>
@@ -423,8 +504,6 @@ footer{border-top:1px solid var(--border);padding:22px 0 0;display:flex;justify-
             
             <div class="cs"><div class="v">150.0M</div><div class="l">OWNERS</div></div>
           </div>
-          
-          
           
           <div class="rev-bar">
             <div class="rev-pos" style="width:59%"></div>
@@ -464,7 +543,7 @@ footer{border-top:1px solid var(--border);padding:22px 0 0;display:flex;justify-
           <div class="tags"><span class="tag">Action</span><span class="tag">Adventure</span><span class="tag">Indie</span></div>
           
           <div class="gs">
-            <div class="cs"><div class="v">14,499</div><div class="l">PLAYING NOW</div></div>
+            <div class="cs"><div class="v">14,375</div><div class="l">PLAYING NOW</div></div>
             
             <div class="cs">
               <div class="v g">94%</div>
@@ -474,8 +553,6 @@ footer{border-top:1px solid var(--border);padding:22px 0 0;display:flex;justify-
             <div class="cs"><div class="v">$29.99</div><div class="l">GIÁ</div></div>
             <div class="cs"><div class="v">75.0M</div><div class="l">OWNERS</div></div>
           </div>
-          
-          
           
           <div class="rev-bar">
             <div class="rev-pos" style="width:94%"></div>
@@ -515,7 +592,7 @@ footer{border-top:1px solid var(--border);padding:22px 0 0;display:flex;justify-
           <div class="tags"><span class="tag">Action</span><span class="tag">Free To Play</span></div>
           
           <div class="gs">
-            <div class="cs"><div class="v">39,845</div><div class="l">PLAYING NOW</div></div>
+            <div class="cs"><div class="v">43,565</div><div class="l">PLAYING NOW</div></div>
             
             <div class="cs">
               <div class="v g">90%</div>
@@ -526,8 +603,6 @@ footer{border-top:1px solid var(--border);padding:22px 0 0;display:flex;justify-
             
             <div class="cs"><div class="v">75.0M</div><div class="l">OWNERS</div></div>
           </div>
-          
-          
           
           <div class="rev-bar">
             <div class="rev-pos" style="width:90%"></div>
@@ -567,7 +642,7 @@ footer{border-top:1px solid var(--border);padding:22px 0 0;display:flex;justify-
           <div class="tags"><span class="tag">Action</span></div>
           
           <div class="gs">
-            <div class="cs"><div class="v">17,230</div><div class="l">PLAYING NOW</div></div>
+            <div class="cs"><div class="v">16,469</div><div class="l">PLAYING NOW</div></div>
             
             <div class="cs">
               <div class="v r">59%</div>
@@ -577,8 +652,6 @@ footer{border-top:1px solid var(--border);padding:22px 0 0;display:flex;justify-
             <div class="cs"><div class="v">Free</div><div class="l">GIÁ</div></div>
             <div class="cs"><div class="v">75.0M</div><div class="l">OWNERS</div></div>
           </div>
-          
-          
           
           <div class="rev-bar">
             <div class="rev-pos" style="width:59%"></div>
@@ -618,7 +691,7 @@ footer{border-top:1px solid var(--border);padding:22px 0 0;display:flex;justify-
           <div class="tags"><span class="tag">Action</span><span class="tag">Adventure</span><span class="tag">Massively Multiplayer</span></div>
           
           <div class="gs">
-            <div class="cs"><div class="v">370</div><div class="l">PLAYING NOW</div></div>
+            <div class="cs"><div class="v">365</div><div class="l">PLAYING NOW</div></div>
             
             <div class="cs">
               <div class="v a">69%</div>
@@ -628,8 +701,6 @@ footer{border-top:1px solid var(--border);padding:22px 0 0;display:flex;justify-
             <div class="cs"><div class="v">Free</div><div class="l">GIÁ</div></div>
             <div class="cs"><div class="v">75.0M</div><div class="l">OWNERS</div></div>
           </div>
-          
-          
           
           <div class="rev-bar">
             <div class="rev-pos" style="width:69%"></div>
@@ -669,7 +740,7 @@ footer{border-top:1px solid var(--border);padding:22px 0 0;display:flex;justify-
           <div class="tags"><span class="tag">Action</span><span class="tag">Adventure</span><span class="tag">RPG</span></div>
           
           <div class="gs">
-            <div class="cs"><div class="v">5,844</div><div class="l">PLAYING NOW</div></div>
+            <div class="cs"><div class="v">5,909</div><div class="l">PLAYING NOW</div></div>
             
             <div class="cs">
               <div class="v g">97%</div>
@@ -679,8 +750,6 @@ footer{border-top:1px solid var(--border);padding:22px 0 0;display:flex;justify-
             <div class="cs"><div class="v">$59.99</div><div class="l">GIÁ</div></div>
             <div class="cs"><div class="v">75.0M</div><div class="l">OWNERS</div></div>
           </div>
-          
-          
           
           <div class="rev-bar">
             <div class="rev-pos" style="width:97%"></div>
@@ -720,7 +789,7 @@ footer{border-top:1px solid var(--border);padding:22px 0 0;display:flex;justify-
           <div class="tags"><span class="tag">Action</span><span class="tag">Adventure</span></div>
           
           <div class="gs">
-            <div class="cs"><div class="v">31,168</div><div class="l">PLAYING NOW</div></div>
+            <div class="cs"><div class="v">32,788</div><div class="l">PLAYING NOW</div></div>
             
             <div class="cs">
               <div class="v g">87%</div>
@@ -730,8 +799,6 @@ footer{border-top:1px solid var(--border);padding:22px 0 0;display:flex;justify-
             <div class="cs"><div class="v">Free</div><div class="l">GIÁ</div></div>
             <div class="cs"><div class="v">75.0M</div><div class="l">OWNERS</div></div>
           </div>
-          
-          
           
           <div class="rev-bar">
             <div class="rev-pos" style="width:87%"></div>
@@ -771,7 +838,7 @@ footer{border-top:1px solid var(--border);padding:22px 0 0;display:flex;justify-
           <div class="tags"><span class="tag">Action</span></div>
           
           <div class="gs">
-            <div class="cs"><div class="v">14,476</div><div class="l">PLAYING NOW</div></div>
+            <div class="cs"><div class="v">13,438</div><div class="l">PLAYING NOW</div></div>
             
             <div class="cs">
               <div class="v g">98%</div>
@@ -781,8 +848,6 @@ footer{border-top:1px solid var(--border);padding:22px 0 0;display:flex;justify-
             <div class="cs"><div class="v">$9.99</div><div class="l">GIÁ</div></div>
             <div class="cs"><div class="v">75.0M</div><div class="l">OWNERS</div></div>
           </div>
-          
-          
           
           <div class="rev-bar">
             <div class="rev-pos" style="width:98%"></div>
@@ -822,7 +887,7 @@ footer{border-top:1px solid var(--border);padding:22px 0 0;display:flex;justify-
           <div class="tags"><span class="tag">Action</span><span class="tag">Adventure</span><span class="tag">Casual</span></div>
           
           <div class="gs">
-            <div class="cs"><div class="v">8,082</div><div class="l">PLAYING NOW</div></div>
+            <div class="cs"><div class="v">8,110</div><div class="l">PLAYING NOW</div></div>
             
             <div class="cs">
               <div class="v g">91%</div>
@@ -833,8 +898,6 @@ footer{border-top:1px solid var(--border);padding:22px 0 0;display:flex;justify-
             
             <div class="cs"><div class="v">75.0M</div><div class="l">OWNERS</div></div>
           </div>
-          
-          
           
           <div class="rev-bar">
             <div class="rev-pos" style="width:91%"></div>
@@ -874,7 +937,7 @@ footer{border-top:1px solid var(--border);padding:22px 0 0;display:flex;justify-
           <div class="tags"><span class="tag">Action</span><span class="tag">Adventure</span><span class="tag">Massively Multiplayer</span></div>
           
           <div class="gs">
-            <div class="cs"><div class="v">3,925</div><div class="l">PLAYING NOW</div></div>
+            <div class="cs"><div class="v">3,571</div><div class="l">PLAYING NOW</div></div>
             
             <div class="cs">
               <div class="v a">71%</div>
@@ -885,8 +948,6 @@ footer{border-top:1px solid var(--border);padding:22px 0 0;display:flex;justify-
             
             <div class="cs"><div class="v">75.0M</div><div class="l">OWNERS</div></div>
           </div>
-          
-          
           
           <div class="rev-bar">
             <div class="rev-pos" style="width:71%"></div>
@@ -926,7 +987,7 @@ footer{border-top:1px solid var(--border);padding:22px 0 0;display:flex;justify-
           <div class="tags"><span class="tag">Action</span><span class="tag">Massively Multiplayer</span><span class="tag">Simulation</span></div>
           
           <div class="gs">
-            <div class="cs"><div class="v">30,125</div><div class="l">PLAYING NOW</div></div>
+            <div class="cs"><div class="v">30,629</div><div class="l">PLAYING NOW</div></div>
             
             <div class="cs">
               <div class="v a">64%</div>
@@ -937,8 +998,6 @@ footer{border-top:1px solid var(--border);padding:22px 0 0;display:flex;justify-
             
             <div class="cs"><div class="v">35.0M</div><div class="l">OWNERS</div></div>
           </div>
-          
-          
           
           <div class="rev-bar">
             <div class="rev-pos" style="width:64%"></div>
@@ -978,7 +1037,7 @@ footer{border-top:1px solid var(--border);padding:22px 0 0;display:flex;justify-
           <div class="tags"><span class="tag">Action</span><span class="tag">Adventure</span><span class="tag">RPG</span></div>
           
           <div class="gs">
-            <div class="cs"><div class="v">9,235</div><div class="l">PLAYING NOW</div></div>
+            <div class="cs"><div class="v">9,070</div><div class="l">PLAYING NOW</div></div>
             
             <div class="cs">
               <div class="v r">58%</div>
@@ -988,8 +1047,6 @@ footer{border-top:1px solid var(--border);padding:22px 0 0;display:flex;justify-
             <div class="cs"><div class="v">$69.99</div><div class="l">GIÁ</div></div>
             <div class="cs"><div class="v">35.0M</div><div class="l">OWNERS</div></div>
           </div>
-          
-          
           
           <div class="rev-bar">
             <div class="rev-pos" style="width:58%"></div>
@@ -1029,7 +1086,7 @@ footer{border-top:1px solid var(--border);padding:22px 0 0;display:flex;justify-
           <div class="tags"><span class="tag">Action</span></div>
           
           <div class="gs">
-            <div class="cs"><div class="v">22,321</div><div class="l">PLAYING NOW</div></div>
+            <div class="cs"><div class="v">21,222</div><div class="l">PLAYING NOW</div></div>
             
             <div class="cs">
               <div class="v a">76%</div>
@@ -1039,8 +1096,6 @@ footer{border-top:1px solid var(--border);padding:22px 0 0;display:flex;justify-
             <div class="cs"><div class="v">$39.99</div><div class="l">GIÁ</div></div>
             <div class="cs"><div class="v">35.0M</div><div class="l">OWNERS</div></div>
           </div>
-          
-          
           
           <div class="rev-bar">
             <div class="rev-pos" style="width:76%"></div>
@@ -1080,7 +1135,7 @@ footer{border-top:1px solid var(--border);padding:22px 0 0;display:flex;justify-
           <div class="tags"><span class="tag">Action</span><span class="tag">RPG</span><span class="tag">Free To Play</span></div>
           
           <div class="gs">
-            <div class="cs"><div class="v">44,418</div><div class="l">PLAYING NOW</div></div>
+            <div class="cs"><div class="v">43,554</div><div class="l">PLAYING NOW</div></div>
             
             <div class="cs">
               <div class="v g">87%</div>
@@ -1091,8 +1146,6 @@ footer{border-top:1px solid var(--border);padding:22px 0 0;display:flex;justify-
             
             <div class="cs"><div class="v">35.0M</div><div class="l">OWNERS</div></div>
           </div>
-          
-          
           
           <div class="rev-bar">
             <div class="rev-pos" style="width:87%"></div>
@@ -1132,7 +1185,7 @@ footer{border-top:1px solid var(--border);padding:22px 0 0;display:flex;justify-
           <div class="tags"><span class="tag">Action</span><span class="tag">RPG</span></div>
           
           <div class="gs">
-            <div class="cs"><div class="v">18,881</div><div class="l">PLAYING NOW</div></div>
+            <div class="cs"><div class="v">18,493</div><div class="l">PLAYING NOW</div></div>
             
             <div class="cs">
               <div class="v g">93%</div>
@@ -1142,8 +1195,6 @@ footer{border-top:1px solid var(--border);padding:22px 0 0;display:flex;justify-
             <div class="cs"><div class="v">$59.99</div><div class="l">GIÁ</div></div>
             <div class="cs"><div class="v">35.0M</div><div class="l">OWNERS</div></div>
           </div>
-          
-          
           
           <div class="rev-bar">
             <div class="rev-pos" style="width:93%"></div>
@@ -1183,7 +1234,7 @@ footer{border-top:1px solid var(--border);padding:22px 0 0;display:flex;justify-
           <div class="tags"><span class="tag">Action</span><span class="tag">Adventure</span><span class="tag">Indie</span></div>
           
           <div class="gs">
-            <div class="cs"><div class="v">16,339</div><div class="l">PLAYING NOW</div></div>
+            <div class="cs"><div class="v">16,058</div><div class="l">PLAYING NOW</div></div>
             
             <div class="cs">
               <div class="v g">97%</div>
@@ -1193,8 +1244,6 @@ footer{border-top:1px solid var(--border);padding:22px 0 0;display:flex;justify-
             <div class="cs"><div class="v">$9.99</div><div class="l">GIÁ</div></div>
             <div class="cs"><div class="v">35.0M</div><div class="l">OWNERS</div></div>
           </div>
-          
-          
           
           <div class="rev-bar">
             <div class="rev-pos" style="width:97%"></div>
@@ -1234,7 +1283,7 @@ footer{border-top:1px solid var(--border);padding:22px 0 0;display:flex;justify-
           <div class="tags"><span class="tag">Action</span><span class="tag">Adventure</span><span class="tag">Massively Multiplayer</span></div>
           
           <div class="gs">
-            <div class="cs"><div class="v">3,928</div><div class="l">PLAYING NOW</div></div>
+            <div class="cs"><div class="v">3,955</div><div class="l">PLAYING NOW</div></div>
             
             <div class="cs">
               <div class="v a">70%</div>
@@ -1244,8 +1293,6 @@ footer{border-top:1px solid var(--border);padding:22px 0 0;display:flex;justify-
             <div class="cs"><div class="v">$29.99</div><div class="l">GIÁ</div></div>
             <div class="cs"><div class="v">35.0M</div><div class="l">OWNERS</div></div>
           </div>
-          
-          
           
           <div class="rev-bar">
             <div class="rev-pos" style="width:70%"></div>
@@ -1285,7 +1332,7 @@ footer{border-top:1px solid var(--border);padding:22px 0 0;display:flex;justify-
           <div class="tags"><span class="tag">Casual</span><span class="tag">Indie</span><span class="tag">Animation &amp; Modeling</span></div>
           
           <div class="gs">
-            <div class="cs"><div class="v">66,100</div><div class="l">PLAYING NOW</div></div>
+            <div class="cs"><div class="v">66,927</div><div class="l">PLAYING NOW</div></div>
             
             <div class="cs">
               <div class="v g">98%</div>
@@ -1295,8 +1342,6 @@ footer{border-top:1px solid var(--border);padding:22px 0 0;display:flex;justify-
             <div class="cs"><div class="v">$4.99</div><div class="l">GIÁ</div></div>
             <div class="cs"><div class="v">35.0M</div><div class="l">OWNERS</div></div>
           </div>
-          
-          
           
           <div class="rev-bar">
             <div class="rev-pos" style="width:98%"></div>
@@ -1336,7 +1381,7 @@ footer{border-top:1px solid var(--border);padding:22px 0 0;display:flex;justify-
           <div class="tags"><span class="tag">Adventure</span><span class="tag">RPG</span><span class="tag">Strategy</span></div>
           
           <div class="gs">
-            <div class="cs"><div class="v">23,427</div><div class="l">PLAYING NOW</div></div>
+            <div class="cs"><div class="v">22,421</div><div class="l">PLAYING NOW</div></div>
             
             <div class="cs">
               <div class="v g">97%</div>
@@ -1346,8 +1391,6 @@ footer{border-top:1px solid var(--border);padding:22px 0 0;display:flex;justify-
             <div class="cs"><div class="v">$59.99</div><div class="l">GIÁ</div></div>
             <div class="cs"><div class="v">35.0M</div><div class="l">OWNERS</div></div>
           </div>
-          
-          
           
           <div class="rev-bar">
             <div class="rev-pos" style="width:97%"></div>
@@ -1387,7 +1430,7 @@ footer{border-top:1px solid var(--border);padding:22px 0 0;display:flex;justify-
           <div class="tags"><span class="tag">Action</span><span class="tag">Indie</span><span class="tag">Free To Play</span></div>
           
           <div class="gs">
-            <div class="cs"><div class="v">5,765</div><div class="l">PLAYING NOW</div></div>
+            <div class="cs"><div class="v">5,426</div><div class="l">PLAYING NOW</div></div>
             
             <div class="cs">
               <div class="v g">81%</div>
@@ -1398,8 +1441,6 @@ footer{border-top:1px solid var(--border);padding:22px 0 0;display:flex;justify-
             
             <div class="cs"><div class="v">35.0M</div><div class="l">OWNERS</div></div>
           </div>
-          
-          
           
           <div class="rev-bar">
             <div class="rev-pos" style="width:81%"></div>
@@ -1439,7 +1480,7 @@ footer{border-top:1px solid var(--border);padding:22px 0 0;display:flex;justify-
           <div class="tags"><span class="tag">Casual</span><span class="tag">Indie</span><span class="tag">Simulation</span></div>
           
           <div class="gs">
-            <div class="cs"><div class="v">10,591</div><div class="l">PLAYING NOW</div></div>
+            <div class="cs"><div class="v">10,521</div><div class="l">PLAYING NOW</div></div>
             
             <div class="cs">
               <div class="v g">97%</div>
@@ -1449,8 +1490,6 @@ footer{border-top:1px solid var(--border);padding:22px 0 0;display:flex;justify-
             <div class="cs"><div class="v">$9.99</div><div class="l">GIÁ</div></div>
             <div class="cs"><div class="v">35.0M</div><div class="l">OWNERS</div></div>
           </div>
-          
-          
           
           <div class="rev-bar">
             <div class="rev-pos" style="width:97%"></div>
@@ -1490,7 +1529,7 @@ footer{border-top:1px solid var(--border);padding:22px 0 0;display:flex;justify-
           <div class="tags"><span class="tag">Action</span><span class="tag">Adventure</span><span class="tag">Free To Play</span></div>
           
           <div class="gs">
-            <div class="cs"><div class="v">5,385</div><div class="l">PLAYING NOW</div></div>
+            <div class="cs"><div class="v">5,151</div><div class="l">PLAYING NOW</div></div>
             
             <div class="cs">
               <div class="v g">80%</div>
@@ -1501,8 +1540,6 @@ footer{border-top:1px solid var(--border);padding:22px 0 0;display:flex;justify-
             
             <div class="cs"><div class="v">35.0M</div><div class="l">OWNERS</div></div>
           </div>
-          
-          
           
           <div class="rev-bar">
             <div class="rev-pos" style="width:80%"></div>
@@ -1559,9 +1596,7 @@ footer{border-top:1px solid var(--border);padding:22px 0 0;display:flex;justify-
             <span class="d-cur">$20.99</span>
           </div>
           <div class="d-rev-row">
-            
             <span class="d-rev-badge good">84%</span>
-            
             <span class="d-owners">~20M–50M owners</span>
           </div>
           
@@ -1579,6 +1614,25 @@ footer{border-top:1px solid var(--border);padding:22px 0 0;display:flex;justify-
       </a>
     </div>
     
+  </div>
+  
+</div>
+
+<!-- ═══════════════════════════════════════════════════
+     PANEL: GAME MỚI
+═══════════════════════════════════════════════════ -->
+<div class="panel" id="p-new">
+  <div class="sh">
+    <h2 class="st"><span class="dot n"></span>Game mới nổi bật</h2>
+    <span class="sc2">Ra trong 14 ngày · review ≥70% · ≥100 reviews · ≥500 players</span>
+  </div>
+
+  
+  <!-- Empty state -->
+  <div style="padding:60px 20px;text-align:center;background:var(--bg2);border:1px dashed rgba(168,85,247,.2);border-radius:var(--rl)">
+    <div style="font-size:32px;margin-bottom:12px;opacity:.4">🎮</div>
+    <div style="font-family:var(--fh);font-size:18px;color:var(--new-bright);margin-bottom:8px">Chưa có game mới đủ tiêu chuẩn</div>
+    <div style="font-family:var(--fm);font-size:11px;color:var(--muted)">Review ≥70% · ≥100 reviews · ≥500 players · ra trong 14 ngày<br>Pipeline sẽ tự động cập nhật khi có game thỏa điều kiện</div>
   </div>
   
 </div>
@@ -1618,9 +1672,7 @@ footer{border-top:1px solid var(--border);padding:22px 0 0;display:flex;justify-
       <div class="ic-hd"><div class="ic-icon">📈</div>
         <div><div class="ic-title">Xu hướng tuần này</div><div class="ic-sub">trend_analysis</div></div>
       </div>
-      <div class="ic-body"><p>Tôi sẵn sàng phân tích dữ liệu về các game đang trending trên Steam. Dưới đây là 3 điểm chính mà tôi muốn đề cập:</p><p><ol><li><strong>Xu hướng nổi bật</strong>: Nhìn vào danh sách, có thể thấy rằng các game thuộc thể loại Action đang chiếm ưu thế, với nhiều tựa game như Counter-Strike 2, Apex Legends, PUBG: BATTLEGROUNDS, và Team Fortress 2 có số lượng người chơi trực tuyến cao. Điều này cho thấy rằng người chơi đang ưa chuộng các game hành động, phiêu lưu và cạnh tranh.</li></ol>
-<ol><li><strong>Điểm thú vị</strong>: Một điểm thú vị là sự xuất hiện của các game indie như Palworld, Unturned, và Garry's Mod trong danh sách, với số lượng người chơi trực tuyến đáng kể và đánh giá cao. Điều này cho thấy rằng người chơi đang quan tâm đến các game độc lập và sáng tạo, không chỉ là các tựa game lớn từ các nhà phát triển nổi tiếng.</li></ol>
-<ol><li><strong>Dự báo ngắn</strong>: Tuần tới, có thể kỳ vọng rằng các game như Counter-Strike 2 và Apex Legends sẽ tiếp tục dẫn đầu danh sách, trong khi các game mới như Black Myth: Wukong và Baldur's Gate 3 có thể sẽ tăng trưởng về số lượng người chơi trực tuyến. Ngoài ra, các game indie như Palworld và Garry's Mod có thể sẽ tiếp tục nhận được sự quan tâm từ người chơi, và có thể sẽ có thêm các tựa game mới xuất hiện trong danh sách.</li></ol></p></div>
+      <div class="ic-body"><p>Tôi sẵn sàng chia sẻ phân tích của mình về thị trường game trên Steam hôm nay.</p><p><ol><li><strong>Xu hướng nổi bật</strong>: Nhìn vào danh sách, có thể thấy rằng các game thuộc thể loại Action và Free To Play đang chiếm ưu thế. Các game như Counter-Strike 2, Apex Legends, và PUBG: BATTLEGROUNDS đang thu hút hàng trăm nghìn người chơi trực tuyến. Điều này cho thấy người chơi đang tìm kiếm các trải nghiệm hành động nhanh chóng và miễn phí.</li><li><strong>Điểm thú vị</strong>: Một điều thú vị là sự xuất hiện của các game thuộc thể loại Indie và Early Access như Palworld và Path of Exile 2. Những game này đã nhận được đánh giá cao từ người chơi, mặc dù chúng vẫn đang trong quá trình phát triển. Điều này cho thấy người chơi đang sẵn sàng thử nghiệm các game mới và độc đáo.</li><li><strong>Dự báo ngắn</strong>: Tuần tới, có thể kỳ vọng rằng các game như Counter-Strike 2 và Apex Legends sẽ tiếp tục duy trì vị trí dẫn đầu. Ngoài ra, các game mới như Black Myth: Wukong và Baldur's Gate 3 có thể sẽ tiếp tục tăng trưởng về số lượng người chơi trực tuyến. Tuy nhiên, cũng có thể sẽ có một số game mới xuất hiện và gây bất ngờ cho thị trường game trên Steam.</li></ol></p></div>
     </div>
     
     
@@ -1628,8 +1680,8 @@ footer{border-top:1px solid var(--border);padding:22px 0 0;display:flex;justify-
       <div class="ic-hd"><div class="ic-icon">🎯</div>
         <div><div class="ic-title">Top picks đáng mua</div><div class="ic-sub">deal_picks</div></div>
       </div>
-      <div class="ic-body"><p>Tôi có thể giúp bạn chọn game đáng mua, nhưng hiện tại chỉ có thông tin về một game đang sale. Dựa trên thông tin đó, tôi sẽ chọn game đó và thêm một số gợi ý khác dựa trên kinh nghiệm chung về các game chất lượng với giá hợp lý. Tuy nhiên, hãy lưu ý rằng danh sách này có thể không đầy đủ vì chỉ có thông tin về một game cụ thể.</p><p><ol><li><strong>Cyberpunk 2077</strong> — Đây là một trò chơi RPG được đánh giá cao với 84% trên Steam, và với giá giảm 65% xuống còn $20.99, nó trở thành một lựa chọn rất hấp dẫn. Giá trị của game này đến từ cốt truyện phong phú, thế giới mở rộng lớn và đồ họa ấn tượng.</li><li><strong>The Witcher 3: Wild Hunt</strong> — Mặc dù không được đề cập trong danh sách sale, nhưng đây là một game RPG huyền thoại với giá trị cao và thường được giảm giá trong các đợt sale. Với hơn 50 giờ chơi và một thế giới mở rộng lớn, nó là một lựa chọn tuyệt vời cho những người yêu thích RPG.</li><li><strong>Dishonored 2</strong> — Một game hành động phiêu lưu với cơ chế stealth và phép thuật độc đáo, thường nhận được đánh giá cao và có thể tìm thấy với giá hợp lý trong các đợt sale.</li><li><strong>Portal 2</strong> — Một game giải đố kinh điển với cốt truyện hấp dẫn và gameplay thông minh, thường được bán với giá rất hợp lý và nhận được đánh giá cao từ cộng đồng.</li><li><strong>Divinity: Original Sin 2</strong> — Một game RPG với thế giới mở rộng lớn, cốt truyện phức tạp và hệ thống chiến đấu sâu sắc, thường được giảm giá và là một lựa chọn tuyệt vời cho những người yêu thích RPG.</li></ol>
-Hãy nhớ kiểm tra đánh giá và thông tin về từng game để đảm bảo chúng phù hợp với sở thích chơi game của bạn.</p></div>
+      <div class="ic-body"><p>Dựa trên thông tin bạn cung cấp, có vẻ như chỉ có một game đang được giảm giá trên Steam. Tuy nhiên, tôi sẽ cung cấp cho bạn một số gợi ý về các game đáng mua khác trên Steam với review >= 70% và giá hợp lý:</p><p><ol><li><strong>Cyberpunk 2077</strong> — Đây là một game RPG tuyệt vời với giá giảm 65% xuống còn $20.99, cung cấp trải nghiệm gameplay phong phú và thế giới mở rộng lớn. Với review 84% từ 844,921 đánh giá, đây là một lựa chọn tuyệt vời cho những người yêu thích thể loại RPG.</li><li><strong>The Witcher 3: Wild Hunt</strong> — Là một trong những game RPG hay nhất mọi thời đại, với giá gốc khoảng $40 và thường xuyên được giảm giá. Game có review 96% trên Steam và cung cấp một câu chuyện hấp dẫn, gameplay sâu sắc.</li><li><strong>Portal 2</strong> — Một game giải đố kinh điển với giá gốc khoảng $10, thường xuyên được giảm giá thêm. Game có review 98% trên Steam và cung cấp một trải nghiệm giải đố thú vị, hấp dẫn.</li><li><strong>Dishonored 2</strong> — Một game hành động phiêu lưu với giá gốc khoảng $20, thường xuyên được giảm giá. Game có review 96% trên Steam và cung cấp một thế giới mở rộng lớn, gameplay đa dạng.</li><li><strong>Divinity: Original Sin 2</strong> — Một game RPG sâu sắc với giá gốc khoảng $45, thường xuyên được giảm giá. Game có review 98% trên Steam và cung cấp một thế giới mở rộng lớn, gameplay phức tạp.</li></ol>
+Lưu ý rằng giá và review có thể thay đổi theo thời gian, vì vậy bạn nên kiểm tra lại trước khi mua.</p></div>
     </div>
     
     
@@ -1637,11 +1689,12 @@ Hãy nhớ kiểm tra đánh giá và thông tin về từng game để đảm b
       <div class="ic-hd"><div class="ic-icon">💎</div>
         <div><div class="ic-title">Hidden gems</div><div class="ic-sub">hidden_gems</div></div>
       </div>
-      <div class="ic-body"><p>Tôi biết bạn đang tìm kiếm những game "hidden gem" thật sự chất lượng nhưng chưa được nhiều người biết đến. Tôi có 3 gợi ý tuyệt vời cho bạn:</p><p><ol><li><strong>The Forest</strong> (Action, Adventure, Indie, Simulation)</li></ol>Tại sao xứng đáng được chú ý hơn? The Forest là một game sinh tồn tuyệt vời với đồ họa đẹp mắt và gameplay hấp dẫn. Bạn sẽ phải xây dựng nhà, tìm kiếm thức ăn và bảo vệ bản thân khỏi những kẻ thù nguy hiểm trong một hòn đảo hoang sơ. Game có một câu chuyện thú vị và nhiều yếu tố khám phá để bạn tận hưởng.
-Phù hợp với ai? Nếu bạn thích game sinh tồn như Minecraft hoặc Rust, thì The Forest là một lựa chọn tuyệt vời. Ngoài ra, nếu bạn đang tìm kiếm một game có gameplay sâu sắc và đồ họa đẹp mắt, thì The Forest cũng là một lựa chọn không tồi.</p><p><ol><li><strong>Last Epoch</strong> (Action, Adventure, Indie, RPG)</li></ol>Tại sao xứng đáng được chú ý hơn? Last Epoch là một game hành động RPG với gameplay nhanh chóng và hệ thống nhân vật sâu sắc. Bạn sẽ phải chiến đấu chống lại những kẻ thù nguy hiểm và khám phá một thế giới rộng lớn với nhiều bí mật để khám phá.
-Phù hợp với ai? Nếu bạn thích game hành động RPG như Diablo hoặc Path of Exile, thì Last Epoch là một lựa chọn tuyệt vời. Ngoài ra, nếu bạn đang tìm kiếm một game có gameplay nhanh chóng và hệ thống nhân vật phong phú, thì Last Epoch cũng là một lựa chọn không tồi.</p><p><ol><li><strong>Garry's Mod</strong> (Casual, Indie, Simulation)</li></ol>Tại sao xứng đáng được chú ý hơn? Garry's Mod là một game mô phỏng với gameplay linh hoạt và hệ thống tạo map phong phú. Bạn sẽ phải xây dựng và tạo ra những thứ mới mẻ trong một thế giới mở rộng lớn.
-Phù hợp với ai? Nếu bạn thích game mô phỏng như Minecraft hoặc Roblox, thì Garry's Mod là một lựa chọn tuyệt vời. Ngoài ra, nếu bạn đang tìm kiếm một game có gameplay linh hoạt và hệ thống tạo map phong phú, thì Garry's Mod cũng là một lựa chọn không tồi.</p><p>Tóm lại, cả 3 game này đều xứng đáng được chú ý hơn vì chúng có gameplay chất lượng, đồ họa đẹp mắt và hệ thống nhân vật sâu sắc. Nếu bạn đang tìm kiếm những game "hidden gem" mới mẻ và thú vị, thì hãy thử chơi chúng ngay hôm nay!</p></div>
+      <div class="ic-body"><p>Tôi vừa tìm thấy một số "hidden gem" trong thế giới game mà tôi nghĩ bạn nên biết! Dưới đây là 3 game indie ít nổi nhưng cực chất mà bạn không nên bỏ qua:</p><p><strong>1. The Forest (Action, Adventure, Indie, Simulation)</strong>
+Tôi biết bạn thích game sinh tồn và khám phá, nên The Forest là một lựa chọn tuyệt vời. Game có đồ họa đẹp, gameplay thú vị và một thế giới mở rộng lớn để khám phá. Bạn sẽ phải xây dựng nhà, tìm kiếm thức ăn và bảo vệ bản thân khỏi các nguy hiểm trong rừng. Với review 96%, The Forest xứng đáng được chú ý hơn vì sự độc đáo và độ khó vừa phải của nó. Phù hợp với ai thích game sinh tồn và khám phá.</p><p><strong>2. Garry's Mod (Casual, Indie, Simulation)</strong>
+Nếu bạn thích game sandbox và muốn thể hiện sự sáng tạo của mình, thì Garry's Mod là game dành cho bạn! Game này cho phép bạn tạo ra các mô hình 3D, xây dựng máy móc và thậm chí tạo ra các mini-game của riêng bạn. Với review 97%, Garry's Mod xứng đáng được chú ý hơn vì sự linh hoạt và độ sâu của nó. Phù hợp với ai thích game sandbox và muốn thể hiện sự sáng tạo.</p><p><strong>3. Last Epoch (Action, Adventure, Indie, RPG)</strong>
+Nếu bạn thích game RPG và muốn tìm một game mới để chơi, thì Last Epoch là một lựa chọn tuyệt vời. Game này có một thế giới mở rộng lớn, hệ thống chiến đấu thú vị và một cốt truyện hấp dẫn. Với review 80%, Last Epoch xứng đáng được chú ý hơn vì sự độc đáo và độ sâu của nó. Phù hợp với ai thích game RPG và muốn tìm một game mới để chơi.</p><p>Tóm lại, 3 game này đều là những "hidden gem" mà bạn nên khám phá. Chúng đều có review tốt, gameplay thú vị và phù hợp với nhiều loại người chơi khác nhau. Hãy thử chơi và xem bạn thích game nào nhất!</p></div>
     </div>
+    
     
   </div>
 </div>
@@ -1649,7 +1702,7 @@ Phù hợp với ai? Nếu bạn thích game mô phỏng như Minecraft hoặc R
 <!-- FOOTER -->
 <footer>
   <span class="f-brand">STEAM PULSE</span>
-  <span class="f-note">Steam API · SteamSpy · Groq Llama 3.3 70B · 22/04/2026 06:09 UTC</span>
+  <span class="f-note">Steam API · SteamSpy · Groq Llama 3.3 70B · 22/04/2026 06:28 UTC</span>
 </footer>
 </div>
 
@@ -1662,6 +1715,16 @@ document.querySelectorAll('.tab').forEach(btn => {
     btn.classList.add('active');
     document.getElementById(btn.dataset.panel).classList.add('active');
   });
+});
+
+// ── Animate launch score bars ──────────────────────────────
+window.addEventListener('load', () => {
+  setTimeout(() => {
+    document.querySelectorAll('[data-target]').forEach(el => {
+      el.style.transition = 'width .8s ease';
+      el.style.width = el.dataset.target;
+    });
+  }, 300);
 });
 
 // ── Chart defaults ─────────────────────────────────────────
@@ -1682,30 +1745,28 @@ new Chart(document.getElementById('lineChart').getContext('2d'),{
   type:'line',
   data:{
     labels:["2026-04-22"],
-    datasets:[{"color": "#5b6af8", "data": [39845], "label": "Team Fortress 2"}, {"color": "#22c984", "data": [650729], "label": "Counter-Strike 2"}, {"color": "#f5a623", "data": [311241], "label": "PUBG: BATTLEGROUNDS"}, {"color": "#f05252", "data": [370], "label": "New World: Aeternum"}, {"color": "#a78bfa", "data": [82862], "label": "Apex Legends\u2122"}, {"color": "#38bdf8", "data": [14499], "label": "Palworld"}, {"color": "#fb923c", "data": [17230], "label": "Call of Duty\u00ae"}, {"color": "#34d399", "data": [5844], "label": "Black Myth: Wukong"}].map(d=>({
+    datasets:[{"color": "#5b6af8", "data": [43565], "label": "Team Fortress 2"}, {"color": "#22c984", "data": [669727], "label": "Counter-Strike 2"}, {"color": "#f5a623", "data": [328029], "label": "PUBG: BATTLEGROUNDS"}, {"color": "#f05252", "data": [365], "label": "New World: Aeternum"}, {"color": "#a78bfa", "data": [84921], "label": "Apex Legends\u2122"}, {"color": "#38bdf8", "data": [14375], "label": "Palworld"}, {"color": "#fb923c", "data": [16469], "label": "Call of Duty\u00ae"}, {"color": "#34d399", "data": [5909], "label": "Black Myth: Wukong"}].map(d=>({
       label:d.label, data:d.data,
       borderColor:d.color, backgroundColor:d.color+'14',
       borderWidth:2, pointRadius:3, pointHoverRadius:5,
       tension:.35, spanGaps:true, fill:false,
     }))
   },
-  options:{...CD, plugins:{...CD.plugins,
-    tooltip:{...TIP,callbacks:{label:c=>` ${c.dataset.label}: ${(c.parsed.y||0).toLocaleString()}`}}}}
+  options:{...CD,plugins:{...CD.plugins,tooltip:{...TIP,callbacks:{label:c=>` ${c.dataset.label}: ${(c.parsed.y||0).toLocaleString()}`}}}}
 });
 
 
 
 (()=>{
   const labels=["Action", "Free To Play", "Adventure", "Massively Multiplayer", "RPG", "Indie", "Simulation", "Casual", "Early Access", "Animation \u0026 Modeling"];
-  const vals=[1564629, 1308874, 669886, 505275, 324952, 277286, 155566, 125809, 71115, 66100];
+  const vals=[1604144, 1350079, 689242, 527054, 322854, 278438, 158977, 125555, 69405, 66927];
   const mx=Math.max(...vals);
   new Chart(document.getElementById('barChart').getContext('2d'),{
     type:'bar',
     data:{labels,datasets:[{data:vals,
       backgroundColor:vals.map(v=>`rgba(91,106,248,${.28+v/mx*.55})`),
       borderColor:'rgba(91,106,248,.35)',borderWidth:1,borderRadius:5}]},
-    options:{...CD,plugins:{legend:{display:false},
-      tooltip:{...TIP,callbacks:{label:c=>` ${c.parsed.y.toLocaleString()} players`}}}}
+    options:{...CD,plugins:{legend:{display:false},tooltip:{...TIP,callbacks:{label:c=>` ${c.parsed.y.toLocaleString()} players`}}}}
   });
 })();
 
