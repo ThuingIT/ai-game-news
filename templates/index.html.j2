@@ -17,6 +17,7 @@
   --amber:#f5a623;--amber-dim:rgba(245,166,35,.15);
   --red:#f05252;--red-dim:rgba(240,82,82,.15);
   --surge:#ff6b35;--surge-dim:rgba(255,107,53,.15);
+  --new:#a855f7;--new-dim:rgba(168,85,247,.15);--new-bright:#c084fc;
   --fh:'Bebas Neue',sans-serif;--fb:'DM Sans',sans-serif;--fm:'DM Mono',monospace;
   --r:10px;--rl:16px;
 }
@@ -52,7 +53,7 @@ body::before{content:'';position:fixed;inset:0;opacity:.3;pointer-events:none;z-
 .sc .v{font-family:var(--fh);font-size:32px;line-height:1}
 .sc .v.sm{font-size:16px;font-family:var(--fb);font-weight:500}
 .sc .s{font-size:11px;color:var(--muted2);margin-top:4px}
-.sc .v.green{color:var(--green)}.sc .v.surge{color:var(--surge)}.sc .v.accent{color:var(--accent2)}
+.sc .v.green{color:var(--green)}.sc .v.surge{color:var(--surge)}.sc .v.accent{color:var(--accent2)}.sc .v.new-c{color:var(--new-bright)}
 
 /* TABS */
 .tabs{display:flex;gap:4px;margin-bottom:20px;background:var(--bg2);border:1px solid var(--border);
@@ -64,6 +65,7 @@ body::before{content:'';position:fixed;inset:0;opacity:.3;pointer-events:none;z-
 .tab .cnt{background:rgba(255,255,255,.2);border-radius:3px;padding:1px 5px;margin-left:5px;font-size:9px}
 .tab.surge-tab.active{background:var(--surge)}
 .tab.deal-tab.active{background:var(--green-dim);color:var(--green);border:1px solid rgba(34,201,132,.3)}
+.tab.new-tab.active{background:var(--new-dim);color:var(--new-bright);border:1px solid rgba(168,85,247,.4)}
 .tab.insight-tab.active{background:var(--amber-dim);color:var(--amber);border:1px solid rgba(245,166,35,.3)}
 
 .panel{display:none}.panel.active{display:block}
@@ -72,7 +74,7 @@ body::before{content:'';position:fixed;inset:0;opacity:.3;pointer-events:none;z-
 .sh{display:flex;align-items:center;justify-content:space-between;margin-bottom:16px;padding-bottom:10px;border-bottom:1px solid var(--border)}
 .st{font-family:var(--fh);font-size:24px;letter-spacing:.03em;display:flex;align-items:center;gap:8px}
 .dot{width:7px;height:7px;border-radius:50%;background:var(--accent);display:inline-block}
-.dot.g{background:var(--green)}.dot.a{background:var(--amber)}.dot.s{background:var(--surge)}
+.dot.g{background:var(--green)}.dot.a{background:var(--amber)}.dot.s{background:var(--surge)}.dot.n{background:var(--new)}
 .sc2{font-family:var(--fm);font-size:11px;color:var(--muted)}
 
 /* GAME CARD */
@@ -85,8 +87,6 @@ body::before{content:'';position:fixed;inset:0;opacity:.3;pointer-events:none;z-
 .gc-img{width:100%;aspect-ratio:460/215;object-fit:cover;display:block;background:var(--bg3)}
 .gc:nth-child(1) .gc-img{aspect-ratio:16/6}
 .gc-body{padding:12px 14px 14px;flex:1;display:flex;flex-direction:column}
-
-/* rank row */
 .gc-top{display:flex;align-items:center;justify-content:space-between;margin-bottom:5px}
 .gc-rank{font-family:var(--fm);font-size:10px;color:var(--accent2);letter-spacing:.07em}
 .gc-badges{display:flex;gap:4px;align-items:center}
@@ -96,32 +96,23 @@ body::before{content:'';position:fixed;inset:0;opacity:.3;pointer-events:none;z-
 .pill.surge{background:var(--surge-dim);color:var(--surge)}
 .pill.drop{background:var(--red-dim);color:var(--red)}
 .pill.change{background:var(--bg3);color:var(--muted2);border:1px solid var(--border)}
-
 .gc-name{font-size:14px;font-weight:500;line-height:1.3;margin-bottom:7px;
   display:-webkit-box;-webkit-line-clamp:2;-webkit-box-orient:vertical;overflow:hidden}
 .gc:nth-child(1) .gc-name{font-size:17px}
 .tags{display:flex;flex-wrap:wrap;gap:3px;margin-bottom:9px}
 .tag{font-size:9px;font-family:var(--fm);color:var(--muted2);background:var(--bg3);
   border:1px solid var(--border);padding:2px 6px;border-radius:3px}
-
-/* stats row in card */
 .gs{display:flex;gap:11px;margin-top:auto;flex-wrap:wrap}
 .cs .v{font-family:var(--fm);font-size:12px;font-weight:500;color:var(--text)}
 .cs .l{font-size:9px;color:var(--muted);letter-spacing:.05em;margin-top:1px}
 .cs .v.g{color:var(--green)}.cs .v.a{color:var(--amber)}.cs .v.r{color:var(--red)}
-
-/* review bar: positive + negative */
 .rev-bar{height:3px;background:var(--bg4);border-radius:2px;margin-top:10px;overflow:hidden;display:flex}
 .rev-pos{height:100%;background:var(--green)}
 .rev-neg{height:100%;background:var(--red)}
-
-/* review counts under bar */
 .rev-counts{display:flex;justify-content:space-between;margin-top:4px}
 .rev-counts span{font-family:var(--fm);font-size:9px;color:var(--muted)}
 .rev-counts .pos{color:var(--green);opacity:.7}
 .rev-counts .neg{color:var(--red);opacity:.7}
-
-/* owners row */
 .owners-row{font-family:var(--fm);font-size:10px;color:var(--muted);margin-top:5px}
 .owners-row span{color:var(--muted2)}
 
@@ -158,6 +149,95 @@ body::before{content:'';position:fixed;inset:0;opacity:.3;pointer-events:none;z-
 .d-rev-badge.ok{background:var(--amber-dim);color:var(--amber)}
 .d-owners{font-family:var(--fm);font-size:10px;color:var(--muted)}
 
+/* ══════════════════════════════════════════════════
+   NEW RELEASES PANEL
+══════════════════════════════════════════════════ */
+.nr-header-strip{
+  background:linear-gradient(135deg,rgba(168,85,247,.10),rgba(91,106,248,.06));
+  border:1px solid rgba(168,85,247,.2);border-radius:var(--rl);
+  padding:18px 22px;margin-bottom:20px;
+  display:flex;align-items:center;justify-content:space-between;flex-wrap:wrap;gap:12px;
+}
+.nr-title{font-family:var(--fh);font-size:20px;letter-spacing:.05em;color:var(--new-bright);display:flex;align-items:center;gap:8px}
+.nr-sub{font-size:12px;color:var(--muted);font-family:var(--fm);margin-top:4px}
+.nr-stats{display:flex;gap:20px;flex-wrap:wrap}
+.nrs .v{font-family:var(--fh);font-size:24px;color:var(--new-bright)}
+.nrs .l{font-size:9px;color:var(--muted);font-family:var(--fm);letter-spacing:.07em;text-transform:uppercase;margin-top:2px}
+
+/* Featured card */
+.nr-grid{display:grid;grid-template-columns:1fr 1fr;gap:12px;margin-bottom:16px}
+@media(max-width:860px){.nr-grid{grid-template-columns:1fr}}
+.nr-feat{
+  background:var(--bg2);border:1px solid rgba(168,85,247,.25);border-radius:var(--rl);
+  overflow:hidden;cursor:pointer;transition:transform .2s,border-color .2s,box-shadow .2s;position:relative;
+}
+.nr-feat::before{content:'';position:absolute;inset:0;
+  background:linear-gradient(135deg,rgba(168,85,247,.06),transparent 60%);pointer-events:none;z-index:0}
+.nr-feat:hover{transform:translateY(-3px);border-color:rgba(168,85,247,.5);box-shadow:0 12px 36px rgba(168,85,247,.15)}
+.nr-feat a{text-decoration:none;color:inherit;display:flex;flex-direction:column;height:100%;position:relative;z-index:1}
+.nr-feat .feat-img{width:100%;aspect-ratio:16/7;object-fit:cover;display:block;background:var(--bg3)}
+.nr-feat .feat-body{padding:16px 18px 18px;flex:1;display:flex;flex-direction:column;gap:10px}
+.nr-feat .feat-top{display:flex;align-items:center;justify-content:space-between}
+.feat-rank{font-family:var(--fm);font-size:10px;color:var(--new-bright);letter-spacing:.1em;
+  background:var(--new-dim);border:1px solid rgba(168,85,247,.3);padding:2px 8px;border-radius:3px}
+.feat-days{font-family:var(--fm);font-size:10px;color:var(--muted)}
+.feat-name{font-size:18px;font-weight:500;line-height:1.3}
+.feat-dev{font-size:11px;color:var(--muted2);margin-top:2px}
+
+/* Launch score meter */
+.score-meter .sm-label{display:flex;justify-content:space-between;align-items:center;margin-bottom:5px}
+.score-meter .sm-label .t{font-family:var(--fm);font-size:10px;color:var(--muted);letter-spacing:.07em;text-transform:uppercase}
+.score-meter .sm-label .v{font-family:var(--fh);font-size:20px;color:var(--new-bright)}
+.score-meter .bar-bg{height:5px;background:var(--bg4);border-radius:3px;overflow:hidden}
+.score-meter .bar-fill{height:100%;border-radius:3px;background:linear-gradient(90deg,var(--new),var(--new-bright));transition:width .8s ease}
+
+.feat-stats{display:flex;gap:14px;flex-wrap:wrap}
+.feat-stat .v{font-family:var(--fm);font-size:13px;font-weight:500}
+.feat-stat .v.g{color:var(--green)}.feat-stat .v.n{color:var(--new-bright)}.feat-stat .v.a{color:var(--amber)}
+.feat-stat .l{font-size:9px;color:var(--muted);letter-spacing:.05em;margin-top:1px}
+
+/* List cards */
+.nr-list{display:flex;flex-direction:column;gap:8px}
+.nrc{background:var(--bg2);border:1px solid var(--border);border-radius:var(--r);cursor:pointer;
+  transition:border-color .2s,transform .2s,background .2s}
+.nrc:hover{border-color:rgba(168,85,247,.3);transform:translateX(3px);background:var(--bg3)}
+.nrc a{text-decoration:none;color:inherit;display:flex;gap:12px;align-items:center;padding:12px 14px;width:100%}
+.nrc-img{width:72px;height:34px;object-fit:cover;border-radius:5px;background:var(--bg3);flex-shrink:0}
+.nrc-main{flex:1;min-width:0}
+.nrc-top{display:flex;align-items:center;gap:7px;margin-bottom:3px;flex-wrap:wrap}
+.nrc-rank{font-family:var(--fm);font-size:9px;color:var(--new-bright);letter-spacing:.07em}
+.nrc-name{font-size:13px;font-weight:500;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
+.nrc-meta{display:flex;gap:6px;align-items:center;flex-wrap:wrap;margin-top:3px}
+.nrc-tag{font-size:9px;font-family:var(--fm);color:var(--muted2);background:var(--bg3);
+  border:1px solid var(--border);padding:1px 5px;border-radius:3px}
+.nrc-right{text-align:right;flex-shrink:0;display:flex;flex-direction:column;align-items:flex-end;gap:4px}
+.nrc-score{font-family:var(--fh);font-size:20px;color:var(--new-bright)}
+.nrc-score-l{font-size:8px;color:var(--muted);font-family:var(--fm);letter-spacing:.06em}
+.nrc-bar{width:48px;height:3px;background:var(--bg4);border-radius:2px;overflow:hidden}
+.nrc-bar-fill{height:100%;background:linear-gradient(90deg,var(--new),var(--new-bright));border-radius:2px;transition:width .7s ease}
+
+/* Badges */
+.days-badge{font-family:var(--fm);font-size:9px;padding:1px 6px;border-radius:3px;
+  background:var(--new-dim);color:var(--new-bright);border:1px solid rgba(168,85,247,.25);white-space:nowrap}
+.days-badge.fresh{background:rgba(34,201,132,.15);color:var(--green);border-color:rgba(34,201,132,.3)}
+.vel-badge{font-family:var(--fm);font-size:9px;padding:1px 6px;border-radius:3px;
+  background:var(--bg3);color:var(--muted2);border:1px solid var(--border)}
+.vel-badge.hot{background:var(--surge-dim);color:var(--surge);border-color:rgba(255,107,53,.3)}
+
+/* Buzz card */
+.buzz-card{background:linear-gradient(135deg,rgba(168,85,247,.08),rgba(91,106,248,.04));
+  border:1px solid rgba(168,85,247,.2);border-radius:var(--rl);padding:18px 20px;margin-top:4px}
+.buzz-hd{display:flex;align-items:center;gap:9px;margin-bottom:12px}
+.buzz-icon{width:28px;height:28px;border-radius:6px;background:var(--new-dim);
+  border:1px solid rgba(168,85,247,.3);display:flex;align-items:center;justify-content:center;font-size:13px;flex-shrink:0}
+.buzz-title{font-weight:500;font-size:13px;color:var(--new-bright)}
+.buzz-sub{font-size:10px;color:var(--muted);margin-top:1px;font-family:var(--fm)}
+.buzz-body{font-size:13px;color:var(--muted2);line-height:1.78}
+.buzz-body p{margin-bottom:.65em}.buzz-body p:last-child{margin-bottom:0}
+.buzz-body strong{color:var(--text);font-weight:500}
+.buzz-body ol,.buzz-body ul{padding-left:1.2em;margin:.4em 0}
+.buzz-body li{margin-bottom:.45em}
+
 /* INSIGHT PANEL */
 .ig{display:grid;grid-template-columns:repeat(auto-fit,minmax(290px,1fr));gap:13px}
 .ic{background:var(--bg2);border:1px solid var(--border);border-radius:var(--rl);padding:18px 20px}
@@ -185,7 +265,6 @@ footer{border-top:1px solid var(--border);padding:22px 0 0;display:flex;justify-
 .f-brand{font-family:var(--fh);font-size:17px;color:var(--muted)}
 .f-note{font-size:10px;color:var(--muted);font-family:var(--fm)}
 
-/* ANIM */
 @keyframes fu{from{opacity:0;transform:translateY(12px)}to{opacity:1;transform:translateY(0)}}
 .panel.active{animation:fu .35s ease both}
 
@@ -194,6 +273,8 @@ footer{border-top:1px solid var(--border);padding:22px 0 0;display:flex;justify-
   .dc a{flex-direction:column}
   .d-img{width:100%;height:42px}
   .sgc-body{padding:10px 12px 12px}
+  .nr-grid{grid-template-columns:1fr}
+  .nr-header-strip{flex-direction:column;align-items:flex-start}
 }
 </style>
 </head>
@@ -209,7 +290,7 @@ footer{border-top:1px solid var(--border);padding:22px 0 0;display:flex;justify-
   <div class="hd-r">
     <div class="l">Cập nhật lúc</div>
     <div class="v">{{ updated_at }}</div>
-    <div class="v" style="font-size:10px;margin-top:2px">{{ total_games }} games · {{ total_deals }} deals · {{ total_surge }} đột biến</div>
+    <div class="v" style="font-size:10px;margin-top:2px">{{ total_games }} games · {{ total_deals }} deals · {{ total_surge }} đột biến{% if total_new %} · {{ total_new }} game mới{% endif %}</div>
   </div>
 </header>
 
@@ -243,6 +324,13 @@ footer{border-top:1px solid var(--border);padding:22px 0 0;display:flex;justify-
     <div class="v surge">{{ total_surge }}</div>
     <div class="s">tăng >10% so hôm qua</div>
   </div>
+  {% if total_new %}
+  <div class="sc">
+    <div class="l">Game mới nổi</div>
+    <div class="v new-c">{{ total_new }}</div>
+    <div class="s">ra trong 14 ngày · đã lọc</div>
+  </div>
+  {% endif %}
   {% if stats.total_players %}
   <div class="sc">
     <div class="l">Tổng players</div>
@@ -276,6 +364,9 @@ footer{border-top:1px solid var(--border);padding:22px 0 0;display:flex;justify-
   </button>
   <button class="tab deal-tab" data-panel="p-deals">
     Deals <span class="cnt">{{ total_deals }}</span>
+  </button>
+  <button class="tab new-tab" data-panel="p-new">
+    ✦ Game Mới <span class="cnt">{{ total_new }}</span>
   </button>
   <button class="tab" data-panel="p-charts">Charts</button>
   <button class="tab insight-tab" data-panel="p-insights">AI Insights</button>
@@ -324,11 +415,9 @@ footer{border-top:1px solid var(--border);padding:22px 0 0;display:flex;justify-
             {% if g.owners_estimate %}<div class="cs"><div class="v">{{ g.owners_estimate | abbr }}</div><div class="l">OWNERS</div></div>{% endif %}
           </div>
           {% if g.review_pct and g.review_count %}
-          {% set pos_w = g.review_pct %}
-          {% set neg_w = 100 - g.review_pct %}
           <div class="rev-bar">
-            <div class="rev-pos" style="width:{{ pos_w }}%"></div>
-            <div class="rev-neg" style="width:{{ neg_w }}%"></div>
+            <div class="rev-pos" style="width:{{ g.review_pct }}%"></div>
+            <div class="rev-neg" style="width:{{ 100 - g.review_pct }}%"></div>
           </div>
           {% if g.positive_reviews and g.negative_reviews %}
           <div class="rev-counts">
@@ -362,20 +451,14 @@ footer{border-top:1px solid var(--border);padding:22px 0 0;display:flex;justify-
         <img class="sgc-img" src="{{ g.img_header }}" alt="{{ g.name }}" loading="lazy" onerror="this.style.display='none'">
         <div class="sgc-body">
           <div style="display:flex;align-items:flex-end;justify-content:space-between;gap:12px">
-            <div>
-              <div class="surge-num">+{{ g.surge_pct | int }}%</div>
-              <div class="surge-sub">tăng so hôm qua</div>
-            </div>
+            <div><div class="surge-num">+{{ g.surge_pct | int }}%</div><div class="surge-sub">tăng so hôm qua</div></div>
             <div style="text-align:right">
               {% if g.concurrent_peak %}<div style="font-family:var(--fm);font-size:16px;font-weight:500;color:var(--text)">{{ g.concurrent_peak | commas }}</div><div class="surge-sub">players now</div>{% endif %}
             </div>
           </div>
-          <div style="display:flex;align-items:center;gap:8px">
-            <div class="sgc-name">{{ g.name }}</div>
-          </div>
+          <div style="display:flex;align-items:center;gap:8px"><div class="sgc-name">{{ g.name }}</div></div>
           {% if g.peak_yesterday %}
-          <div class="surge-abs">Hôm qua: {{ g.peak_yesterday | commas }} → Hôm nay: {{ g.concurrent_peak | commas if g.concurrent_peak else '?' }}
-            (+{{ g.surge_abs | commas if g.surge_abs else '?' }})</div>
+          <div class="surge-abs">Hôm qua: {{ g.peak_yesterday | commas }} → Hôm nay: {{ g.concurrent_peak | commas if g.concurrent_peak else '?' }} (+{{ g.surge_abs | commas if g.surge_abs else '?' }})</div>
           {% endif %}
           <div class="sgc-tags">
             {% if g.genres %}{% for t in g.genres[:3] %}<span class="tag">{{ t }}</span>{% endfor %}{% endif %}
@@ -426,9 +509,7 @@ footer{border-top:1px solid var(--border);padding:22px 0 0;display:flex;justify-
             <span class="d-cur">{{ d.price_current | usd }}</span>
           </div>
           <div class="d-rev-row">
-            {% if d.review_pct %}
-            <span class="d-rev-badge {% if d.review_pct>=80 %}good{% else %}ok{% endif %}">{{ d.review_pct }}%</span>
-            {% endif %}
+            {% if d.review_pct %}<span class="d-rev-badge {% if d.review_pct>=80 %}good{% else %}ok{% endif %}">{{ d.review_pct }}%</span>{% endif %}
             {% if d.owners_text %}<span class="d-owners">{{ d.owners_text }} owners</span>{% endif %}
           </div>
           {% if d.positive_reviews and d.negative_reviews %}
@@ -450,6 +531,159 @@ footer{border-top:1px solid var(--border);padding:22px 0 0;display:flex;justify-
   {% else %}
   <div style="padding:40px 0;text-align:center;color:var(--muted);font-family:var(--fm);font-size:13px">
     Không có deals thỏa điều kiện hôm nay.
+  </div>
+  {% endif %}
+</div>
+
+<!-- ═══════════════════════════════════════════════════
+     PANEL: GAME MỚI
+═══════════════════════════════════════════════════ -->
+<div class="panel" id="p-new">
+  <div class="sh">
+    <h2 class="st"><span class="dot n"></span>Game mới nổi bật</h2>
+    <span class="sc2">Ra trong 14 ngày · review ≥70% · ≥100 reviews · ≥500 players</span>
+  </div>
+
+  {% if new_releases %}
+
+  {# Tính stats tổng hợp #}
+  {% set avg_review = (new_releases | map(attribute='review_pct') | select | list | sum) / (new_releases | map(attribute='review_pct') | select | list | length) if new_releases else 0 %}
+  {% set feat = new_releases[0] %}
+
+  <!-- Header strip -->
+  <div class="nr-header-strip">
+    <div>
+      <div class="nr-title">✦ New Releases Radar</div>
+      <div class="nr-sub">Lọc tự động · chỉ giữ game đáng theo dõi · sort theo Launch Score</div>
+    </div>
+    <div class="nr-stats">
+      <div class="nrs"><div class="v">{{ new_releases | length }}</div><div class="l">Games tracked</div></div>
+      <div class="nrs"><div class="v">{{ avg_review | int }}%</div><div class="l">Avg review</div></div>
+      {% if feat.days_since_release %}
+      <div class="nrs"><div class="v">{{ feat.days_since_release }}d</div><div class="l">Youngest game</div></div>
+      {% endif %}
+    </div>
+  </div>
+
+  <div class="nr-grid">
+    <!-- Featured card: #1 by launch_score -->
+    <div class="nr-feat">
+      <a href="{{ feat.steam_url }}" target="_blank" rel="noopener">
+        <img class="feat-img" src="{{ feat.img_header }}" alt="{{ feat.name }}"
+          loading="eager" onerror="this.src='{{ feat.img_capsule }}'">
+        <div class="feat-body">
+          <div class="feat-top">
+            <span class="feat-rank">✦ #1 LAUNCH SCORE</span>
+            <span class="feat-days">Ra {{ feat.days_since_release or '?' }} ngày trước</span>
+          </div>
+          <div>
+            <div class="feat-name">{{ feat.name }}</div>
+            <div class="feat-dev">{{ feat.developer or '' }}{% if feat.genres %} · {{ feat.genres[:2] | join(', ') }}{% endif %}</div>
+          </div>
+          <!-- Launch score meter -->
+          <div class="score-meter">
+            <div class="sm-label">
+              <span class="t">Launch Score</span>
+              <span class="v" id="feat-score-val">{{ feat.launch_score or 0 }}</span>
+            </div>
+            <div class="bar-bg">
+              <div class="bar-fill" id="feat-score-bar" style="width:0%"
+                data-target="{{ ((feat.launch_score or 0) * 100) | int }}%"></div>
+            </div>
+          </div>
+          <div class="feat-stats">
+            {% if feat.review_pct %}<div class="feat-stat"><div class="v g">{{ feat.review_pct }}%</div><div class="l">REVIEW</div></div>{% endif %}
+            {% if feat.review_count %}<div class="feat-stat"><div class="v">{{ feat.review_count | commas }}</div><div class="l">REVIEWS</div></div>{% endif %}
+            {% if feat.review_count and feat.days_since_release and feat.days_since_release > 0 %}
+            <div class="feat-stat"><div class="v n">~{{ (feat.review_count / feat.days_since_release) | int }}/ngày</div><div class="l">VELOCITY</div></div>
+            {% endif %}
+            {% if feat.concurrent_peak %}<div class="feat-stat"><div class="v">{{ feat.concurrent_peak | commas }}</div><div class="l">PLAYERS</div></div>{% endif %}
+            {% if feat.is_free %}<div class="feat-stat"><div class="v a">Free</div><div class="l">GIÁ</div></div>
+            {% elif feat.price_usd %}<div class="feat-stat"><div class="v a">{{ feat.price_usd | usd }}</div><div class="l">GIÁ</div></div>{% endif %}
+          </div>
+          {% if feat.review_pct %}
+          <div class="rev-bar" style="margin-top:4px">
+            <div class="rev-pos" style="width:{{ feat.review_pct }}%"></div>
+            <div class="rev-neg" style="width:{{ 100 - feat.review_pct }}%"></div>
+          </div>
+          {% if feat.positive_reviews and feat.negative_reviews %}
+          <div class="rev-counts">
+            <span class="pos">+{{ feat.positive_reviews | abbr }}</span>
+            <span>{{ feat.review_count | abbr }} reviews</span>
+            <span class="neg">-{{ feat.negative_reviews | abbr }}</span>
+          </div>
+          {% endif %}
+          {% endif %}
+          {% if feat.owners_text %}
+          <div class="owners-row" style="margin-top:6px">Owners: <span>{{ feat.owners_text }}</span></div>
+          {% endif %}
+        </div>
+      </a>
+    </div>
+
+    <!-- List: rank 2+ -->
+    <div class="nr-list">
+      {% for g in new_releases[1:] %}
+      {% set velocity = (g.review_count / g.days_since_release) | int if g.review_count and g.days_since_release and g.days_since_release > 0 else 0 %}
+      <div class="nrc">
+        <a href="{{ g.steam_url }}" target="_blank" rel="noopener">
+          <img class="nrc-img" src="{{ g.img_capsule or g.img_header }}" alt="{{ g.name }}"
+            loading="lazy" onerror="this.style.display='none'">
+          <div class="nrc-main">
+            <div class="nrc-top">
+              <span class="nrc-rank">#{{ loop.index + 1 }}</span>
+              <span class="days-badge {% if g.days_since_release and g.days_since_release <= 3 %}fresh{% endif %}">Ra {{ g.days_since_release or '?' }} ngày</span>
+              {% if velocity > 200 %}<span class="vel-badge hot">~{{ velocity }}/ngày 🔥</span>
+              {% elif velocity > 0 %}<span class="vel-badge">~{{ velocity }} reviews/ngày</span>{% endif %}
+            </div>
+            <div class="nrc-name">{{ g.name }}</div>
+            <div class="nrc-meta">
+              {% if g.genres %}{% for t in g.genres[:2] %}<span class="nrc-tag">{{ t }}</span>{% endfor %}{% endif %}
+              {% if g.review_pct %}<span class="nrc-tag" style="color:var(--green)">{{ g.review_pct }}%</span>{% endif %}
+              {% if g.is_free %}<span class="nrc-tag" style="color:var(--amber)">Free</span>
+              {% elif g.price_usd %}<span class="nrc-tag">{{ g.price_usd | usd }}</span>{% endif %}
+            </div>
+          </div>
+          <div class="nrc-right">
+            <div class="nrc-score">{{ "%.3f" | format(g.launch_score or 0) }}</div>
+            <div class="nrc-score-l">LAUNCH SCORE</div>
+            <div class="nrc-bar">
+              <div class="nrc-bar-fill" style="width:0%"
+                data-target="{{ ((g.launch_score or 0) * 100) | int }}%"></div>
+            </div>
+          </div>
+        </a>
+      </div>
+      {% endfor %}
+
+      {% if new_releases | length < 2 %}
+      <div style="padding:20px;background:var(--bg2);border:1px dashed var(--border);border-radius:var(--r);text-align:center">
+        <div style="font-family:var(--fm);font-size:11px;color:var(--muted)">Cập nhật mỗi ngày — game mới đủ tiêu chuẩn sẽ tự động xuất hiện</div>
+      </div>
+      {% endif %}
+    </div>
+  </div>
+
+  <!-- AI Buzz -->
+  {% if new_releases_buzz %}
+  <div class="buzz-card">
+    <div class="buzz-hd">
+      <div class="buzz-icon">🚀</div>
+      <div>
+        <div class="buzz-title">New Releases Buzz — AI Analysis</div>
+        <div class="buzz-sub">Groq · Llama 3.3 70B · velocity, trajectory, dự báo</div>
+      </div>
+    </div>
+    <div class="buzz-body">{{ new_releases_buzz | safe }}</div>
+  </div>
+  {% endif %}
+
+  {% else %}
+  <!-- Empty state -->
+  <div style="padding:60px 20px;text-align:center;background:var(--bg2);border:1px dashed rgba(168,85,247,.2);border-radius:var(--rl)">
+    <div style="font-size:32px;margin-bottom:12px;opacity:.4">🎮</div>
+    <div style="font-family:var(--fh);font-size:18px;color:var(--new-bright);margin-bottom:8px">Chưa có game mới đủ tiêu chuẩn</div>
+    <div style="font-family:var(--fm);font-size:11px;color:var(--muted)">Review ≥70% · ≥100 reviews · ≥500 players · ra trong 14 ngày<br>Pipeline sẽ tự động cập nhật khi có game thỏa điều kiện</div>
   </div>
   {% endif %}
 </div>
@@ -513,6 +747,15 @@ footer{border-top:1px solid var(--border);padding:22px 0 0;display:flex;justify-
       <div class="ic-body">{{ hidden_gems | safe }}</div>
     </div>
     {% endif %}
+    {% if new_releases_buzz %}
+    <div class="ic" style="border-color:rgba(168,85,247,.25);background:linear-gradient(135deg,var(--bg2),rgba(168,85,247,.04))">
+      <div class="ic-hd">
+        <div class="ic-icon" style="background:var(--new-dim);border-color:rgba(168,85,247,.3)">🚀</div>
+        <div><div class="ic-title" style="color:var(--new-bright)">New Releases Buzz</div><div class="ic-sub">new_releases_buzz</div></div>
+      </div>
+      <div class="ic-body">{{ new_releases_buzz | safe }}</div>
+    </div>
+    {% endif %}
   </div>
 </div>
 
@@ -532,6 +775,16 @@ document.querySelectorAll('.tab').forEach(btn => {
     btn.classList.add('active');
     document.getElementById(btn.dataset.panel).classList.add('active');
   });
+});
+
+// ── Animate launch score bars ──────────────────────────────
+window.addEventListener('load', () => {
+  setTimeout(() => {
+    document.querySelectorAll('[data-target]').forEach(el => {
+      el.style.transition = 'width .8s ease';
+      el.style.width = el.dataset.target;
+    });
+  }, 300);
 });
 
 // ── Chart defaults ─────────────────────────────────────────
@@ -559,8 +812,7 @@ new Chart(document.getElementById('lineChart').getContext('2d'),{
       tension:.35, spanGaps:true, fill:false,
     }))
   },
-  options:{...CD, plugins:{...CD.plugins,
-    tooltip:{...TIP,callbacks:{label:c=>` ${c.dataset.label}: ${(c.parsed.y||0).toLocaleString()}`}}}}
+  options:{...CD,plugins:{...CD.plugins,tooltip:{...TIP,callbacks:{label:c=>` ${c.dataset.label}: ${(c.parsed.y||0).toLocaleString()}`}}}}
 });
 {% endif %}
 
@@ -574,8 +826,7 @@ new Chart(document.getElementById('lineChart').getContext('2d'),{
     data:{labels,datasets:[{data:vals,
       backgroundColor:vals.map(v=>`rgba(91,106,248,${.28+v/mx*.55})`),
       borderColor:'rgba(91,106,248,.35)',borderWidth:1,borderRadius:5}]},
-    options:{...CD,plugins:{legend:{display:false},
-      tooltip:{...TIP,callbacks:{label:c=>` ${c.parsed.y.toLocaleString()} players`}}}}
+    options:{...CD,plugins:{legend:{display:false},tooltip:{...TIP,callbacks:{label:c=>` ${c.parsed.y.toLocaleString()} players`}}}}
   });
 })();
 {% endif %}
@@ -590,10 +841,8 @@ new Chart(document.getElementById('lineChart').getContext('2d'),{
       backgroundColor:'rgba(255,107,53,.45)',borderColor:'rgba(255,107,53,.7)',
       borderWidth:1,borderRadius:5}]},
     options:{
-      ...CD,
-      indexAxis:'y',
-      plugins:{legend:{display:false},
-        tooltip:{...TIP,callbacks:{label:c=>` +${c.parsed.x.toFixed(1)}% tăng`}}},
+      ...CD, indexAxis:'y',
+      plugins:{legend:{display:false},tooltip:{...TIP,callbacks:{label:c=>` +${c.parsed.x.toFixed(1)}% tăng`}}},
       scales:{
         x:{...CD.scales.x,ticks:{...CD.scales.x.ticks,callback:v=>'+'+v+'%'}},
         y:{...CD.scales.y,ticks:{color:'#9090aa',font:{family:'DM Mono',size:10}}}
